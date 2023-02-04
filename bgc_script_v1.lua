@@ -12,29 +12,17 @@ local farm = wally:CreateWindow('Auto Farm')
 
 	farm:Section("Farm")
     farm:Toggle('Auto-Bubble Blow', {flag = 'Bubble'})
+	farm:Toggle('Auto-Bubble Blow V2', {flag = 'Bubble2'}, function() library.Variables.AutoClicker = farm.flags.Bubble2 end)
     
 local library = require(game.ReplicatedStorage:WaitForChild("Nevermore"):WaitForChild("Library"))
 	
 spawn(function()
 
 	while(wait()) do
-		local ohTable1 = 
-		{
-			[1] = {
-				[1] = false
-			},
-			[2] = {
-				[1] = 2
-			}
-		}
-
+		local ohTable1 = {[1] = {[1] = false}, [2] = {[1] = 2}}
 		if farm.flags.Bubble then
-			library.Variables.AutoClicker = farm.flags.Bubble
-			
-			--if library.Variables.AutoClicker == false then
-				--game:GetService("ReplicatedStorage").Remotes["blow bubble"]:FireServer(ohTable1)
-				
-			--end
+			game:GetService("ReplicatedStorage").Remotes["blow bubble"]:FireServer(ohTable1)		
+		end
 		end
 	end
 end)
