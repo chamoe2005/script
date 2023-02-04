@@ -29,10 +29,12 @@ spawn(function()
 		}
 
 		if farm.flags.Bubble then
-			if library.Variables.AutoClicker == false then
+			library.Variables.AutoClicker = farm.flags.Bubble
+			
+			--if library.Variables.AutoClicker == false then
 				--game:GetService("ReplicatedStorage").Remotes["blow bubble"]:FireServer(ohTable1)
-				library.Variables.AutoClicker = true
-			end
+				
+			--end
 		end
 	end
 end)
