@@ -50,6 +50,13 @@ local farm = wally:CreateWindow('Auto Farm')
 	end
 	
 	farm:Section("Misc")
+
+local pet = wally:CreateWindow('Pets')
+    pet:Box('Auto Shiny Amount', {location = _G,
+        flag = "AutoShinyNum",
+        type = 'number'
+    })
+_G.AutoShinyNum = 0
    
 
 local SpinPrizeWheel = function()
@@ -87,7 +94,7 @@ end
  
 	
 spawn(function ()
-	while(wait()) do
+	while(wait(1)) do
 		if _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay) then
 			if _G.SellBubbleArea ~= "No Sell" then
 				_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea].Position))
@@ -99,7 +106,7 @@ spawn(function ()
 end)
 
 spawn(function()
-	while(wait()) do	
+	while(wait(60)) do	
 		for a,b in pairs(game:GetService("Workspace").MAP.Chests:GetChildren()) do
 			if _G[b.name] then
 				_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Activations[b.name].Position))
@@ -113,5 +120,52 @@ end)
 spawn(function()
 	while wait(60) do
 		SpinPrizeWheel()
+	end
+end)
+
+spawn(function()
+	while wait(5) do
+		if _G.AutoShinyNum > 0 and _G.AutoShinyNum <= 6 then
+			local playerLibrary = library.Save.Get()
+			local Pets = {}
+			local ohTable1 = {
+				[1] = {
+					[1] = {}
+				},
+				[2] = {
+					[1] = false
+				}
+			}
+			for i,v in pairs(playerLibrary.Pets) do
+				if not v.s then
+					if Pets[v.nk] then
+						Pets[v.nk] ++
+					else
+						Pets[v.nk] = 1
+					end
+				end
+			end
+
+			for i,v in pairs(Pets) do
+				if v >= _G.AutoShinyNum then
+					local counter = 1
+					for a,b in pairs(playerLibrary.Pets) do
+						if counter <= _G.AutoShinyNum and b.nk == i and not b.s and not b.lock then
+							ohTable1[1][1][counter] = b.uid
+							counter++
+						end
+					end
+					
+					print("Making Shiny " .. i)
+					
+					for i,v in pairs(ohTable1[1][1]) do
+						print(i,v)
+					end
+					
+					game:GetService("ReplicatedStorage").Remotes["make pets shiny"]:InvokeServer(ohTable1)
+				end
+			end
+
+		end
 	end
 end)
