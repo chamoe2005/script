@@ -1,16 +1,39 @@
 _G.LastSell = 0
 _G.player = game:GetService("Players").LocalPlayer
 _G.TeleportDelay = 3
+_G.EggDelay = 3
+_G.TripleEggs = false
 
-local vu = game:GetService("VirtualUser")
-game:GetService("Players").LocalPlayer.Idled:connect(function()
-   vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-   wait(1)
-   vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-end)
+local GC = getconnections or get_signal_cons
+	if GC then
+		for i,v in pairs(GC(_G.player.Idled)) do
+			if v["Disable"] then
+				v["Disable"](v)
+			elseif v["Disconnect"] then
+				v["Disconnect"](v)
+			end
+		end
+	else
+		_G.player.Idled:Connect(function()
+			local VirtualUser = game:GetService("VirtualUser")
+			VirtualUser:CaptureController()
+			VirtualUser:ClickButton2(Vector2.new())
+		end)
+	end
 
 local library = require(game.ReplicatedStorage:WaitForChild("Nevermore"):WaitForChild("Library"))
 
+local multiplier = 1
+local VIP = false
+local playerLibrary = library.Save.Get()
+
+for a,b in pairs(playerLibrary.Gamepasses) do
+	if b == library.Directory.Gamepasses["Triple Eggs"].ID then
+		multiplier = 3
+	elseif b == library.Directory.Gamepasses["VIP"].ID then
+		VIP = true
+	end
+end
 
 
 
@@ -45,19 +68,77 @@ local farm = wally:CreateWindow('Auto Farm')
 	
 	farm:Section("Chests")
 	for a,b in pairs(library.Directory.Chests) do
-		farm:Toggle(b.name, {location = _G, flag = b.name})
+		if b.name == "VIP Chest" and not VIP then
+		else
+			farm:Toggle(b.name, {location = _G, flag = b.name})
+		end
 		_G[b.name] = false
 	end
-	
+		
 	farm:Section("Misc")
+	
+local RedeemTwitterCodes = function()
+	
+	local TwitterCodes = {"gofast", "secrets", "season1", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky"} --"happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
 
+	for i,v in pairs(TwitterCodes) do
+		local ohTable1 = {
+			[1] = {
+				[1] = v
+			},
+			[2] = {
+				[1] = false
+			}
+		}
+		print("Redeeming " .. v)
+		game:GetService("ReplicatedStorage").Remotes["redeem twitter code"]:InvokeServer(ohTable1)
+
+		local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
+		local timeout = 3
+		local endTime = os.time() + timeout
+		
+		while (endTime > os.time()) and wait(1) and not NewItemWindow.Enabled do
+			print(NewItemWindow.Enabled)
+			print(endTime - os.time())
+		end
+		
+		if NewItemWindow.Enabled then
+			for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
+				connection:Fire()
+				print("Closing New Item Window")
+			end
+		end
+	end
+	
+end
+	
+	
+	farm:Button('Redeem Twitter Codes', function() RedeemTwitterCodes() end)
+	
+
+	
 local pet = wally:CreateWindow('Pets')
+	pet:Toggle('Equip Best', {flag = 'EquipBest'})
     pet:Box('Auto Shiny Amount', {location = _G,
         flag = "AutoShinyNum",
         type = 'number'
     })
 _G.AutoShinyNum = 0
    
+local EquipBestPets = function()
+	if pet.flags.EquipBest then
+		local ohTable3 = {
+			[1] = {
+			[1] = false
+			},
+			[2] = {
+				[1] = 2
+			}
+		}
+		game:GetService("ReplicatedStorage").Remotes["equip best pets"]:FireServer(ohTable3)
+	end
+end
+
 
 local SpinPrizeWheel = function()
 		local playerLibrary = library.Save.Get()
@@ -83,7 +164,7 @@ local SpinPrizeWheel = function()
 				connection:Fire()
 				print("Closing New Item Window")
 			end
-		else
+		elseif playerLibrary.PrizeWheelTime then
 			print((playerLibrary.PrizeWheelTime - os.time()) / 60 .. " minutes until Prize Wheel")
 			local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
 			print(NewItemWindow.Enabled)
@@ -91,14 +172,100 @@ local SpinPrizeWheel = function()
 end
 
 		farm:Toggle('Free Prize Wheel', {flag = 'FreePrizeWheel'}, function() SpinPrizeWheel() end)
+
+local Eggs = {}
+for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetChildren()) do
+	for c,d in pairs(b:GetChildren()) do
+		if require(d[d.Name]).currency and require(d[d.Name]).cost and not require(d[d.Name]).disabled then
+			Eggs[d.Name] = {}
+			Eggs[d.Name]["World"] = b.Name
+			Eggs[d.Name]["Currency"] = require(d[d.Name]).currency
+			Eggs[d.Name]["Cost"] = require(d[d.Name]).cost
+		end
+	end
+end
+
+
+
+
+function openEgg(egg)
+
+	local tripleEgg = false
+
+	if multiplier == 3 then 
+		tripleEgg = true
+	end
+
+	local ohTable2 = {
+		[1] = {
+			[1] = egg,
+			[2] = tripleEgg
+		},
+		[2] = {
+			[1] = false,
+			[2] = false
+		}
+	}
+	
+	local playerLibrary = library.Save.Get()
+
+	if playerLibrary[Eggs[egg].Currency] > (Eggs[egg].Cost * multiplier) then
+		_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position))
+		wait(.5)
+		--library.Variables.OpeningEgg = false
+		game:GetService("ReplicatedStorage").Remotes["buy egg"]:InvokeServer(ohTable2)
+		wait(_G.EggDelay)
+	end
+end
+
+
+local egg = wally:CreateWindow('Eggs')
+	egg:Section('Select Eggs')
+	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = {"None", "Best", "Any"}})
+	
  
+	for a,b in pairs(Eggs) do
+		egg:Toggle(a, {location = _G, flag = a})
+		_G[a] = false
+	end
+
+spawn(function()
+	while wait(.1) do
+		local bestEgg = {["Name"] = nil, ["Cost"] = 0}
+		local playerLibrary = library.Save.Get()
+		
+	
+		if _G.BuyEggMode == "Best" then
+			for i,v in pairs(Eggs) do
+				if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg.Cost and _G[i] then
+					bestEgg.Name = i
+					bestEgg.Cost = v.Cost
+				end
+			end
+			if bestEgg.Name then
+				print("Opening " .. bestEgg.Name)
+				openEgg(bestEgg.Name)
+			end
+		elseif _G.BuyEggMode == "Any" then
+			for i,v in pairs(Eggs) do
+				if _G[i] then
+					print("Opening " .. i)
+					openEgg(i)
+				end
+			end
+		end
+		
+		
+		
+	end
+end)
 	
 spawn(function ()
 	while(wait(1)) do
 		if _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay) then
 			if _G.SellBubbleArea ~= "No Sell" then
 				_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea].Position))
-				wait(.1)
+				wait(_G.TeleportDelay)
 				_G.LastSell = os.time()
 			end
 		end	
@@ -106,12 +273,14 @@ spawn(function ()
 end)
 
 spawn(function()
-	while(wait(60)) do	
+	while(wait(.5)) do	
 		for a,b in pairs(game:GetService("Workspace").MAP.Chests:GetChildren()) do
 			if _G[b.name] then
-				_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Activations[b.name].Position))
-				print(b.name .. " grabbed!")
-				wait(_G.TeleportDelay)
+				repeat
+					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Activations[b.name].Position))
+					print(b.name .. " grabbed!")
+					wait(_G.TeleportDelay)
+				until not game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name)
 			end
 		end
 	end
@@ -122,6 +291,13 @@ spawn(function()
 		SpinPrizeWheel()
 	end
 end)
+
+spawn(function()
+	while wait(5) do
+		EquipBestPets()
+	end
+end)
+
 
 spawn(function()
 	while wait(5) do
