@@ -1,8 +1,9 @@
 _G.LastSell = 0
 _G.player = game:GetService("Players").LocalPlayer
-_G.TeleportDelay = 3
+_G.TeleportDelay = 5
 _G.EggDelay = 3
 _G.TripleEggs = false
+
 
 local GC = getconnections or get_signal_cons
 	if GC then
@@ -21,6 +22,9 @@ local GC = getconnections or get_signal_cons
 		end)
 	end
 
+local plr = game.Players.LocalPlayer
+local char = plr.Character
+local root = char.HumanoidRootPart
 local library = require(game.ReplicatedStorage:WaitForChild("Nevermore"):WaitForChild("Library"))
 
 local multiplier = 1
@@ -229,6 +233,33 @@ local egg = wally:CreateWindow('Eggs')
 		_G[a] = false
 	end
 
+local pickups = {"Coins Present", "Coins Bag", "Large Coin", "Medium Coin", "Small Coin", "Large Diamonds", "Small Diamond", "Orb"}
+
+
+local drop = wally:CreateWindow('Drops')
+	drop:Toggle('Collect Drops', {location = _G, flag = 'drops'})
+	drop:Box('Range', {location = _G,
+        flag = "droprange",
+        type = 'number'
+    })
+    for a,b in pairs(pickups) do
+		drop:Toggle(b, {location = _G, flag = b})
+		_G[b] = false
+	end
+
+function toTarget(pos, targetPos, targetCFrame)
+    local tween_s = game:service"TweenService"
+    local info = TweenInfo.new((targetPos - pos).Magnitude/200, Enum.EasingStyle.Quad)
+    -- local tic_k = tick()
+    local tween, err = pcall(function()
+        local tween = tween_s:Create(plr.Character["HumanoidRootPart"], info, {CFrame = targetCFrame})
+        tween:Play()
+    end)
+    
+	if not tween then return err end
+end
+
+
 spawn(function()
 	while wait(.1) do
 		local bestEgg = {["Name"] = nil, ["Cost"] = 0}
@@ -259,13 +290,53 @@ spawn(function()
 		
 	end
 end)
+
+spawn(function()	
+	while wait(.1) do
+			--if not _G.collectingchests and not _G.sell and farm.flags.Drops == true and (_G.canafford ~= true or _G.eggSkip == true) then
+		if _G.drops then		
+			local DropTimeout = os.time() + 30
+			--_G.CollectingDrops = true
+			
+			while _G.drops and (DropTimeout > os.time()) and wait() do
+			
+				local closest = nil
+				local dis = math.huge
+				for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
+					for x,y in pairs(pickups) do
+						if _G[y] and tonumber(_G.droprange) ~= nil then
+							if v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (root.Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (root.Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
+								--root.CFrame = CFrame.new(root.CFrame.X,v.CFrame.Y,root.CFrame.Z)
+								closest = v.POS
+								dis = (root.Position-v.POS.Position).magnitude
+							end
+						end
+					end
+				end
+				
+					
+				if closest ~= nil and (target == nil or target.Parent == nil) then
+					local dis = closest.CFrame.Y - root.CFrame.Y
+					if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
+						root.CFrame = CFrame.new(root.CFrame.X,closest.CFrame.Y + 2,root.CFrame.Z)
+					end
+					toTarget(root.Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
+				end
+			end
+			--_G.CollectingDrops = false
+			--end
+		end
+	end
+end)
 	
 spawn(function ()
 	while(wait(1)) do
 		if _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay) then
 			if _G.SellBubbleArea ~= "No Sell" then
-				_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea].Position))
-				wait(_G.TeleportDelay)
+				for i = 1, 5 do
+					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea].Position))
+					wait(.25)
+				end
 				_G.LastSell = os.time()
 			end
 		end	
@@ -277,10 +348,11 @@ spawn(function()
 		for a,b in pairs(game:GetService("Workspace").MAP.Chests:GetChildren()) do
 			if _G[b.name] then
 				repeat
-					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Activations[b.name].Position))
-					print(b.name .. " grabbed!")
-					wait(_G.TeleportDelay)
-				until not game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name)
+					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Activations[b.name].Position.X + math.random(1,8), game:GetService("Workspace").MAP.Activations[b.name].Position.Y + 20, game:GetService("Workspace").MAP.Activations[b.name].Position.Z + math.random(1,8)))
+					wait(1)
+				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil
+				print(b.name .. " grabbed!")
+				wait(_G.TeleportDelay)
 			end
 		end
 	end
