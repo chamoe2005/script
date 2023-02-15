@@ -1,3 +1,5 @@
+_G.autobubble = true
+
 _G.LastSell = 0
 _G.player = game:GetService("Players").LocalPlayer
 _G.TeleportDelay = 5
@@ -61,7 +63,7 @@ local farm = wally:CreateWindow('Auto Farm')
 	local autobubbleGUI = game:GetService("CoreGui").ScreenGui:FindFirstChild("Auto-Bubble Blow V2", true)
 	
 	if _G.autobubble and autobubbleGUI ~= nil then
-		for a,b in pairs(getconnections(autobubbleGUI.MouseButton1Click))
+		for a,b in pairs(getconnections(autobubbleGUI.Checkmark.MouseButton1Click)) do
 			b:Fire()
 		end
 	end
