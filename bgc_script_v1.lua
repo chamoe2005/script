@@ -4,6 +4,11 @@ _G.TeleportDelay = 5
 _G.EggDelay = 3
 _G.TripleEggs = false
 
+local dropdowns = {}
+dropdowns.Bubblesell = {"No Sell", "Sell 1", "Sell 2"}
+dropdowns.Eggmode = {"None", "Best", "Any"}
+
+
 
 local GC = getconnections or get_signal_cons
 	if GC then
@@ -67,7 +72,7 @@ local farm = wally:CreateWindow('Auto Farm')
 	end
 	
 	_G.SellBubbleDelay = 0
-	farm:Dropdown("Sell Bubble Area", {location = _G, flag = "SellBubbleArea", list = {"No Sell", "Sell 1", "Sell 2"}})
+	farm:Dropdown("Sell Bubble Area", {location = _G, flag = "SellBubbleArea", list = dropdowns.Bubblesell })
 	_G.SellBubbleArea = "No Sell"
     
 	farm:Button('Unknown', function() 
@@ -227,7 +232,7 @@ end
 
 local egg = wally:CreateWindow('Eggs')
 	egg:Section('Select Eggs')
-	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = {"None", "Best", "Any"}})
+	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = dropdowns.Eggmode })
 	
  
 	for a,b in pairs(Eggs) do
@@ -261,6 +266,111 @@ function toTarget(pos, targetPos, targetCFrame)
 	if not tween then return err end
 end
 
+local saveSettings = function()
+
+	local update = {}
+	local counter = 1
+
+
+	for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
+
+		
+			if b.Name == "Checkmark" and b.Text == utf8.char(10003) then
+			
+				update[b.Parent.name] = true
+				
+			elseif b.Name == "Checkmark" and b.Text ~= utf8.char(10003) then
+			
+				update[b.Parent.name] = false
+
+			elseif b.Name == "Box" and b.Text ~= nil and b.Text ~= "" and b.Text ~= 0 then
+			
+				update[b.Parent.name] = b.Parent.Text
+				
+			elseif b.Name == "Box" and (b.Text == nil or b.Text == "" or b.Text == 0) then
+			
+				update[b.Parent.name] = 0
+
+			elseif b.Name == "Selection" then
+				for c,d in pairs(dropdowns) do
+					for e,f in pairs(d) do
+						if f == b.Text then
+							print(c)
+							update[c] = b.Text
+						end
+					end
+				end
+			end
+			
+			
+			writefile("bgcsettings.txt", game:GetService("HttpService"):JSONEncode(update))
+			
+	end
+
+end
+
+local loadSettings = function()
+
+		if isfile("bgcsettings.txt") then
+
+			local json = game:GetService("HttpService"):JSONDecode(readfile("bgcsettings.txt"))
+
+			for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
+
+					if b.Name == "Checkmark" and json[b.Parent.name] and b.Text ~= utf8.char(10003) then
+				
+						for a,b in pairs(getconnections(b.MouseButton1Click)) do
+							b:Fire()
+						end
+				
+					elseif b.Name == "Checkmark" and not json[b.Parent.name] and b.Text == utf8.char(10003) then
+					
+						for a,b in pairs(getconnections(b.MouseButton1Click)) do
+							b:Fire()
+						end
+						
+					elseif b.Name == "Box" and json[b.Parent.name] ~= nil and json[b.Parent.name]~= "" and json[b.Parent.name] ~= 0 then
+					
+						b.Parent.Text = json[b.Parent.name]
+					
+					elseif b.Name == "Selection" then
+					
+						local selectionname = ""
+					
+						for c,d in pairs(dropdowns) do
+							for e,f in pairs(d) do
+								if f == b.Text then
+									selectionname = c
+								end
+							end
+						end
+					
+					
+						if json[selectionname] ~= nil and json[selectionname] ~= "" and json[selectionname] ~= 0 and b.Text ~= json[selectionname] then 
+							--b.Text = json[selectionname]
+							for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
+								v:Fire()
+							end
+							wait(.5)
+							for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
+								if v.Name == "TextButton" and v.Text == json[selectionname] then
+									for x,y in pairs(getconnections(v.MouseButton1Click)) do
+										y:Fire()
+									end
+								end
+							end
+							
+							
+						end
+					end			
+			end
+	end
+end
+
+local settingsGUI = wally:CreateWindow('Settings')
+settingsGUI:Button('Load Settings', function() loadSettings() end)
+settingsGUI:Button('Save Settings', function() saveSettings() end)
+	
 
 spawn(function()
 	while wait(.1) do
@@ -502,3 +612,8 @@ spawn(function()
 		end
 	end
 end)
+
+
+if _G.autoloadsettings then
+	loadSettings()
+end
