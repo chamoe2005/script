@@ -96,22 +96,23 @@ local RedeemTwitterCodes = function()
 		}
 		print("Redeeming " .. v)
 		game:GetService("ReplicatedStorage").Remotes["redeem twitter code"]:InvokeServer(ohTable1)
+		wait(2)
 
-		local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
-		local timeout = 3
-		local endTime = os.time() + timeout
+		--local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
+		--local timeout = 3
+		--local endTime = os.time() + timeout
 		
-		while (endTime > os.time()) and wait(1) and not NewItemWindow.Enabled do
-			print(NewItemWindow.Enabled)
-			print(endTime - os.time())
-		end
+		--while (endTime > os.time()) and wait(1) and not NewItemWindow.Enabled do
+			--print(NewItemWindow.Enabled)
+			--print(endTime - os.time())
+		--end
 		
-		if NewItemWindow.Enabled then
-			for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
-				connection:Fire()
-				print("Closing New Item Window")
-			end
-		end
+		--if NewItemWindow.Enabled then
+			--for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
+				--connection:Fire()
+				--print("Closing New Item Window")
+			--end
+		--end
 	end
 	
 end
@@ -158,20 +159,10 @@ local SpinPrizeWheel = function()
 
 			game:GetService("ReplicatedStorage").Remotes["free wheel spin"]:InvokeServer(ohTable1)
 			
-			local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
-			
-			while wait(1) and not NewItemWindow.Enabled do
-				print(NewItemWindow.Enabled)
-			end
-			
-			for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
-				connection:Fire()
-				print("Closing New Item Window")
-			end
 		elseif playerLibrary.PrizeWheelTime then
 			print((playerLibrary.PrizeWheelTime - os.time()) / 60 .. " minutes until Prize Wheel")
-			local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
-			print(NewItemWindow.Enabled)
+			--local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
+			--print(NewItemWindow.Enabled)
 		end
 end
 
@@ -189,6 +180,8 @@ for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetCh
 	end
 end
 
+		farm:Toggle('Free Loot', {flag = 'FreeLoot'})
+		farm:Toggle('Claim Bubble Pass', {flag = 'ClaimPass'})
 
 
 
@@ -274,13 +267,13 @@ spawn(function()
 				end
 			end
 			if bestEgg.Name then
-				print("Opening " .. bestEgg.Name)
+				--print("Opening " .. bestEgg.Name)
 				openEgg(bestEgg.Name)
 			end
 		elseif _G.BuyEggMode == "Any" then
 			for i,v in pairs(Eggs) do
 				if _G[i] then
-					print("Opening " .. i)
+					--print("Opening " .. i)
 					openEgg(i)
 				end
 			end
@@ -326,6 +319,43 @@ spawn(function()
 			--_G.CollectingDrops = false
 			--end
 		end
+		
+		if farm.flags.FreeLoot then
+		
+			local playerLibrary = library.Save.Get()
+			for a,b in pairs(library.Directory.FreeGifts) do
+				local found = false
+				for c,d in pairs(playerLibrary.FreeGiftsRedeemed) do
+					if a == d then
+						found = true
+					end
+				end
+				if playerLibrary.FreeGiftsTime > b.waitTime and not found then
+					game:GetService("ReplicatedStorage").Remotes["redeem free gift"]:InvokeServer({[1] = {[1] = a},[2] = {[1] = false}})
+					print("Claiming Loot Bag " .. a)
+					wait(1)
+				end
+				wait(1)
+			end
+		
+		
+			local closest = nil
+			local dis = math.huge
+			for i , v in ipairs(game:GetService("Workspace").Stuff.Lootbags:GetChildren()) do
+				closest = v:FindFirstChildWhichIsA("MeshPart")
+				dis = (root.Position-v:FindFirstChildWhichIsA("MeshPart").Position).magnitude
+				if closest ~= nil then
+					local dis = closest.CFrame.Y - root.CFrame.Y
+					if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
+						root.CFrame = CFrame.new(root.CFrame.X,closest.CFrame.Y + 2,root.CFrame.Z)
+					end
+					toTarget(root.Position,closest.Position + Vector3.new(0,0,2),closest.CFrame + Vector3.new(0,0,2))
+					print("TP to Lootbag " .. v.Name)
+					wait(.5)
+				end
+			end
+		
+		end
 	end
 end)
 	
@@ -344,6 +374,37 @@ spawn(function ()
 end)
 
 spawn(function()
+	while wait(1) do
+
+		local playerLibrary = library.Save.Get()
+
+		if playerLibrary.BubblePass.Owned and farm.flags.ClaimPass then
+
+			for a,b in pairs(library.Directory.BubblePass) do
+
+				if b.eggs <= playerLibrary.BubblePass.CurrentEggs and not playerLibrary.BubblePass.Claimed[a] then
+					print("Claiming Bubble Pass Prize #" .. a .. " - " .. b.eggs .. " eggs")
+
+					local ohTable1 = {
+						[1] = {
+							[1] = a
+						},
+						[2] = {
+							[1] = false
+						}
+					}
+
+					game:GetService("ReplicatedStorage").Remotes["claim pass prize"]:FireServer(ohTable1)
+					wait(1)
+
+				end
+
+			end
+		end
+	end
+end)
+
+spawn(function()
 	while(wait(.5)) do	
 		for a,b in pairs(game:GetService("Workspace").MAP.Chests:GetChildren()) do
 			if _G[b.name] then
@@ -351,7 +412,7 @@ spawn(function()
 					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Activations[b.name].Position.X + math.random(1,8), game:GetService("Workspace").MAP.Activations[b.name].Position.Y + 20, game:GetService("Workspace").MAP.Activations[b.name].Position.Z + math.random(1,8)))
 					wait(1)
 				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil
-				print(b.name .. " grabbed!")
+				print("Attempting to grab " .. b.name)
 				wait(_G.TeleportDelay)
 			end
 		end
@@ -370,6 +431,21 @@ spawn(function()
 	end
 end)
 
+spawn(function()
+	while wait(1) do
+		local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
+				
+		--while wait(1) and not NewItemWindow.Enabled do
+			--print(NewItemWindow.Enabled)
+		--end
+		if NewItemWindow.Enabled then		
+			for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
+				connection:Fire()
+				print("Closing New Item Window")
+			end
+		end
+	end
+end)
 
 spawn(function()
 	while wait(5) do
@@ -404,7 +480,7 @@ spawn(function()
 						end
 					end
 					
-					print("Making Shiny " .. i)
+					print("Attempting Shiny " .. i)
 					
 					for i,v in pairs(ohTable1[1][1]) do
 						print(i,v)
