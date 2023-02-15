@@ -351,7 +351,7 @@ spawn(function()
 					end
 					toTarget(root.Position,closest.Position + Vector3.new(0,0,2),closest.CFrame + Vector3.new(0,0,2))
 					print("TP to Lootbag " .. v.Name)
-					wait(.5)
+					wait(1)
 				end
 			end
 		
