@@ -1,5 +1,3 @@
-_G.autobubble = true
-
 _G.LastSell = 0
 _G.player = game:GetService("Players").LocalPlayer
 _G.TeleportDelay = 5
