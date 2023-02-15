@@ -57,6 +57,15 @@ local farm = wally:CreateWindow('Auto Farm')
         flag = "SellBubbleDelay",
         type = 'number'
     })
+	
+	local autobubbleGUI = game:GetService("CoreGui").ScreenGui:FindFirstChild("Auto-Bubble Blow V2", true)
+	
+	if _G.autobubble and autobubbleGUI ~= nil then
+		for a,b in pairs(getconnections(autobubbleGUI.MouseButton1Click))
+			b:Fire()
+		end
+	end
+	
 	_G.SellBubbleDelay = 0
 	farm:Dropdown("Sell Bubble Area", {location = _G, flag = "SellBubbleArea", list = {"No Sell", "Sell 1", "Sell 2"}})
 	_G.SellBubbleArea = "No Sell"
