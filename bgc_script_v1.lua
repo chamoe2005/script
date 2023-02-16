@@ -535,9 +535,11 @@ spawn(function()
 		local playerLibrary = library.Save.Get()
 
 		if playerLibrary.BubblePass.Owned and farm.flags.ClaimPass then
+		
+			local allClaimed = true
 
 			for a,b in pairs(library.Directory.BubblePass) do
-
+			
 				if b.eggs <= playerLibrary.BubblePass.CurrentEggs and not playerLibrary.BubblePass.Claimed[a] then
 					print("Claiming Bubble Pass Prize #" .. a .. " - " .. b.eggs .. " eggs")
 
@@ -552,10 +554,27 @@ spawn(function()
 
 					game:GetService("ReplicatedStorage").Remotes["claim pass prize"]:FireServer(ohTable1)
 					wait(1)
-
+				elseif not playerLibrary.BubblePass.Claimed[a] then
+					allClaimed = false
+					print("Bubble Pass Prize " .. a .. " not claimed")
 				end
 
 			end
+			
+			if allClaimed then
+				local ohTable1 = {
+					[1] = {
+						[1] = false
+					},
+					[2] = {
+						[1] = 2
+					}
+				}
+
+				game:GetService("ReplicatedStorage").Remotes["restart bubble pass"]:FireServer(ohTable1)
+			end
+			
+			
 		end
 	end
 end)
