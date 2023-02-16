@@ -284,7 +284,38 @@ function doChallenge()
 					}
 
 					game:GetService("ReplicatedStorage").Remotes[_G.ChallengeRemote]:FireServer(ohTable1)
+					
+					if b.challengeType == "CoinPickups" then
+						print("Switching OFF Coin Pickups")
+						changeSetting("Collect Drops", false)
+						changeSetting("Coins Bag", false)
+						changeSetting("Large Coin", false)
+						changeSetting("Medium Coin", false)
+						changeSetting("Small Coin", false)
+						changeSetting("Range", 0)
+					elseif b.challengeType == "DiamondPickups" then
+						print("Switching OFF Diamond Pickups")
+						changeSetting("Collect Drops", false)
+						changeSetting("Large Diamonds", false)
+						changeSetting("Small Diamond", false)
+						changeSetting("Range", 0)
+					end
 				elseif a == (playerLibrary[_G.ChallengeName].Claimed + 1) then
+					if b.challengeType == "CoinPickups" then
+						print("Switching ON Coin Pickups")
+						changeSetting("Collect Drops", true)
+						changeSetting("Coins Bag", true)
+						changeSetting("Large Coin", true)
+						changeSetting("Medium Coin", true)
+						changeSetting("Small Coin", true)
+						changeSetting("Range", 50000)
+					elseif b.challengeType == "DiamondPickups" then
+						print("Switching ON Diamond Pickups")
+						changeSetting("Collect Drops", true)
+						changeSetting("Large Diamonds", true)
+						changeSetting("Small Diamond", true)
+						changeSetting("Range", 50000)
+					end
 					print ((b.amount - playerLibrary[_G.ChallengeName].Progress[b.challengeType]) .. " " .. b.challengeType .. " remaining to claim " .. _G.ChallengeName .. " " .. a)
 				end
 			end
@@ -464,27 +495,15 @@ local loadSettings = function()
 						
 						elseif b.Name == "Selection" then
 						
+							local currentValue = b.Text
+						
 							for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
 								v:Fire()
 							end
 							wait(.5)
 							local selectionname = b.Text
 						
-							--for c,d in pairs(dropdowns) do
-								--for e,f in pairs(d) do
-									--if f == b.Text then
-										--selectionname = c
-									--end
-								--end
-							--end
-						
-						
-							if json[plr.Name][selectionname] ~= nil and json[plr.Name][selectionname] ~= "" and json[plr.Name][selectionname] ~= 0 and b.Text ~= json[plr.Name][selectionname] then 
-								--b.Text = json[selectionname]
-								--for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
-									--v:Fire()
-								--end
-								--wait(.5)
+							if json[plr.Name][selectionname] ~= nil and json[plr.Name][selectionname] ~= "" and json[plr.Name][selectionname] ~= 0 then
 								for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
 									if v.Name == "TextButton" and v.Text == json[plr.Name][selectionname] then
 										for x,y in pairs(getconnections(v.MouseButton1Click)) do
@@ -503,6 +522,50 @@ local loadSettings = function()
 						end			
 				end
 			end
+	end
+end
+
+local changeSetting = function(setting, value)
+
+	for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
+	
+		if b.Name == "Checkmark" and b.Parent.name == setting and ((value and b.Text ~= utf8.char(10003)) or (not value and b.Text == utf8.char(10003))) then
+			for a,b in pairs(getconnections(b.MouseButton1Click)) do
+				b:Fire()
+			end
+		elseif b.Name == "Box" and b.Parent.name == setting and setting ~= "" and setting ~= 0 then
+			b.Text = value
+			for i,v in pairs(getconnections(b.FocusLost)) do
+				v:Fire()
+			end
+		elseif b.Name == "Selection" then
+		
+			local currentValue = b.Text			
+						
+			for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
+				v:Fire()
+			end
+			wait(.5)
+			local selectionname = b.Text
+			
+			if selectionname == setting then
+				for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
+					if v.Name == "TextButton" and v.Text == value then
+						for x,y in pairs(getconnections(v.MouseButton1Click)) do
+							y:Fire()
+						end
+					end
+				end
+			else
+				for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
+					if v.Name == "TextButton" and v.Text == currentValue then
+						for x,y in pairs(getconnections(v.MouseButton1Click)) do
+							y:Fire()
+						end
+					end
+				end
+			end	
+		end
 	end
 end
 
