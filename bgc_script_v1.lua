@@ -919,7 +919,7 @@ spawn(function()
 			
 			for i,v in pairs(Pets) do
 			
-					
+				print(i,v)
 			
 				local bestpetid = 0
 				local bestbubble = 0
@@ -935,10 +935,12 @@ spawn(function()
 					end
 				end
 				
-				sortedPets[bestpetid] = Pets[bestpetid]
+				table.insert(sortedPets, {[bestpetid] = Pets[bestpetid]})
 			end
 
 			for i,v in ipairs(sortedPets) do
+			
+				print(i,v)
 			
 				local petid = 0
 			
@@ -948,7 +950,6 @@ spawn(function()
 					end
 				end
 			
-				print(i,v)
 					
 				if petid ~= 0 and v >= _G.AutoShinyNum and (playerLibrary["Diamonds"] > library.Shared.ShinyCost(petid, _G.AutoShinyNum)) then
 				
