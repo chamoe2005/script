@@ -189,7 +189,7 @@ function DeletePets()
 						--print(lowestdiamonds,library.Directory.Pets[b.id].buffs.Diamonds)
 						
 				
-					if not petFound and (library.Directory.Pets[b.id].buffs.Bubbles < lowestbubbles or library.Directory.Pets[b.id].buffs.Coins < lowestcoins or library.Directory.Pets[b.id].buffs.Diamonds < lowestdiamonds) then
+					if not petFound and not b.lock and (library.Directory.Pets[b.id].buffs.Bubbles < lowestbubbles or library.Directory.Pets[b.id].buffs.Coins < lowestcoins or library.Directory.Pets[b.id].buffs.Diamonds < lowestdiamonds) then
 						lowestuid = b.uid
 						lowestbubbles = library.Directory.Pets[b.id].buffs.Bubbles
 						lowestcoins = library.Directory.Pets[b.id].buffs.Coins
@@ -211,7 +211,11 @@ function DeletePets()
 
 		for i,v in pairs(petsTable) do
 			table.insert(ohTable1[1][1], v)
-			print(v .. " is being deleted.")
+			for a,b in pairs(playerLibrary.Pets) do
+				if v == b.uid then
+					print(b.nk .. " is being deleted.")
+				end
+			end
 		end
 					
 		game:GetService("ReplicatedStorage").Remotes["delete pets"]:FireServer(ohTable1)
