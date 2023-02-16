@@ -275,6 +275,7 @@ function doTierRewards()
 				}
 
 				game:GetService("ReplicatedStorage").Remotes["buy rewards"]:FireServer(ohTable1)
+				wait(5)
 			else
 				print((library.Directory.Rewards[a].price(b + 1) - playerLibrary["Diamonds"]) .. " Diamonds until " .. a .. " Reward Slot #" .. b + 1 .. " can be redeemed")
 			end
