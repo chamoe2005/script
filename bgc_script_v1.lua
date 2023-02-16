@@ -272,7 +272,7 @@ local SpinPrizeWheel = function()
 		end
 end
 
-		farm:Toggle('Free Prize Wheel', {flag = 'FreePrizeWheel'}, function() SpinPrizeWheel() end)
+		farm:Toggle('Free Prize Wheel', {flag = 'FreePrizeWheel'})--, function() SpinPrizeWheel() end)
 
 local Eggs = {}
 for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetChildren()) do
@@ -345,7 +345,7 @@ function doBubblePass()
 		end
 
 end
-		farm:Toggle('Claim Bubble Pass', {flag = 'ClaimPass'}, function() doBubblePass() end)
+		farm:Toggle('Claim Bubble Pass', {flag = 'ClaimPass'})--, function() doBubblePass() end)
 		
 function doTierRewards()
 
@@ -376,7 +376,7 @@ function doTierRewards()
 	
 end
 		
-		farm:Toggle('Tier Rewards', {flag = 'Tier Rewards'}, function() doTierRewards() end)
+		farm:Toggle('Tier Rewards', {flag = 'Tier Rewards'})
 		
 		
 local changeSetting = function(settingtype, settingname, value)
@@ -501,7 +501,7 @@ function doChallenge()
 end
 
 		if _G.ChallengeName ~= nil then
-			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() doChallenge() end)
+			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName})--, function() doChallenge() end)
 		end
 
 
