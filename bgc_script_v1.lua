@@ -297,7 +297,7 @@ function doChallenge()
 end
 
 		if _G.ChallengeName ~= nil then
-			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() doChallenge() end})
+			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() doChallenge() end)
 		end
 
 
