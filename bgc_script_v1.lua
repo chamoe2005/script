@@ -980,8 +980,9 @@ spawn(function()
 						game:GetService("ReplicatedStorage").Remotes["make pets shiny"]:InvokeServer(ohTable1)
 						wait(5)
 						
-						break
 					end
+					
+					break
 				end
 			end
 
