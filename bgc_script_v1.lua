@@ -275,7 +275,7 @@ function doTierRewards()
 				}
 
 				game:GetService("ReplicatedStorage").Remotes["buy rewards"]:FireServer(ohTable1)
-				wait(5)
+				wait(.5)
 			else
 				print((library.Directory.Rewards[a].price(b + 1) - playerLibrary["Diamonds"]) .. " Diamonds until " .. a .. " Reward Slot #" .. b + 1 .. " can be redeemed")
 			end
@@ -742,8 +742,7 @@ spawn(function()
 
 		doBubblePass()
 		doChallenge()
-		doTierRewards()
-		
+		SpinPrizeWheel()
 	end
 end)
 
@@ -763,14 +762,9 @@ spawn(function()
 end)
 
 spawn(function()
-	while wait(180) do
-		SpinPrizeWheel()
-	end
-end)
-
-spawn(function()
 	while wait(5) do
 		EquipBestPets()
+		doTierRewards()
 	end
 end)
 
