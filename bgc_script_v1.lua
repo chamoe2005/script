@@ -919,7 +919,6 @@ spawn(function()
 			
 			for i,v in pairs(Pets) do
 			
-				print(i,v)
 					
 			
 				local bestpetid = 0
@@ -949,7 +948,7 @@ spawn(function()
 					end
 				end
 			
-				--print(i,v)
+				print(i,v)
 					
 				if petid ~= 0 and v >= _G.AutoShinyNum and (playerLibrary["Diamonds"] > library.Shared.ShinyCost(petid, _G.AutoShinyNum)) then
 				
