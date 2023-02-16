@@ -196,6 +196,10 @@ end
 
 		farm:Toggle('Free Loot', {flag = 'FreeLoot'})
 		farm:Toggle('Claim Bubble Pass', {flag = 'ClaimPass'})
+		
+		if _G.ChallengeName ~= nil then
+			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName})
+		end
 
 
 
