@@ -4,9 +4,9 @@ _G.TeleportDelay = 5
 _G.EggDelay = 3
 _G.TripleEggs = false
 
-local dropdowns = {}
-dropdowns.Bubblesell = {"No Sell", "Sell 1", "Sell 2"}
-dropdowns.Eggmode = {"None", "Best", "Any"}
+--local dropdowns = {}
+--dropdowns.Bubblesell = {"No Sell", "Sell 1", "Sell 2"}
+--dropdowns.Eggmode = {"None", "Best", "Any"}
 
 
 
@@ -72,7 +72,7 @@ local farm = wally:CreateWindow('Auto Farm')
 	end
 	
 	_G.SellBubbleDelay = 0
-	farm:Dropdown("Sell Bubble Area", {location = _G, flag = "SellBubbleArea", list = dropdowns.Bubblesell })
+	farm:Dropdown("Sell Bubble Area", {location = _G, flag = "SellBubbleArea", list = {"No Sell", "Sell 1", "Sell 2"} })
 	_G.SellBubbleArea = "No Sell"
     
 	farm:Button('Unknown', function() 
@@ -232,7 +232,7 @@ end
 
 local egg = wally:CreateWindow('Eggs')
 	egg:Section('Select Eggs')
-	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = dropdowns.Eggmode })
+	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = {"None", "Best", "Any"} })
 	
  
 	for a,b in pairs(Eggs) do
@@ -273,11 +273,14 @@ local saveSettings = function()
 	
 	if isfile("bgcsettings.txt") then
 		update = game:GetService("HttpService"):JSONDecode(readfile("bgcsettings.txt"))
-	end if
+	end
+	
+	if update[plr.Name] == nil then
+		update[plr.Name] = {}
+	end
 		
 	for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
-
-		
+	
 			if b.Name == "Checkmark" and b.Text == utf8.char(10003) then
 			
 				update[plr.Name][b.Parent.name] = true
@@ -288,21 +291,37 @@ local saveSettings = function()
 
 			elseif b.Name == "Box" and b.Text ~= nil and b.Text ~= "" and b.Text ~= 0 then
 			
-				update[plr.Name][b.Parent.name] = b.Parent.Text
+				update[plr.Name][b.Parent.name] = b.Text
 				
 			elseif b.Name == "Box" and (b.Text == nil or b.Text == "" or b.Text == 0) then
 			
 				update[plr.Name][b.Parent.name] = 0
 
 			elseif b.Name == "Selection" then
-				for c,d in pairs(dropdowns) do
-					for e,f in pairs(d) do
-						if f == b.Text then
-							print(c)
-							update[plr.Name][c] = b.Text
+			
+				local currentsetting = b.Text
+			
+				for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
+					v:Fire()
+				end
+				wait(.5)
+				update[plr.Name][b.Text] = currentsetting
+				for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
+					if v.Name == "TextButton" and v.Text == currentsetting then
+						for x,y in pairs(getconnections(v.MouseButton1Click)) do
+							y:Fire()
 						end
 					end
 				end
+			
+				--for c,d in pairs(dropdowns) do
+					--for e,f in pairs(d) do
+						--if f == b.Text then
+							--print(c)
+							--update[plr.Name][c] = b.Text
+						--end
+					--end
+				--end
 			end
 			
 			
@@ -336,33 +355,45 @@ local loadSettings = function()
 							
 						elseif b.Name == "Box" and json[plr.Name][b.Parent.name] ~= nil and json[plr.Name][b.Parent.name]~= "" and json[plr.Name][b.Parent.name] ~= 0 then
 						
-							b.Parent.Text = json[plr.Name][b.Parent.name]
+							b.Text = json[plr.Name][b.Parent.name]
+							for i,v in pairs(getconnections(b.FocusLost)) do
+								v:Fire()
+							end
 						
 						elseif b.Name == "Selection" then
 						
-							local selectionname = ""
-						
-							for c,d in pairs(dropdowns) do
-								for e,f in pairs(d) do
-									if f == b.Text then
-										selectionname = c
-									end
-								end
+							for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
+								v:Fire()
 							end
+							wait(.5)
+							local selectionname = b.Text
+						
+							--for c,d in pairs(dropdowns) do
+								--for e,f in pairs(d) do
+									--if f == b.Text then
+										--selectionname = c
+									--end
+								--end
+							--end
 						
 						
 							if json[plr.Name][selectionname] ~= nil and json[plr.Name][selectionname] ~= "" and json[plr.Name][selectionname] ~= 0 and b.Text ~= json[plr.Name][selectionname] then 
 								--b.Text = json[selectionname]
-								for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
-									v:Fire()
-								end
-								wait(.5)
+								--for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
+									--v:Fire()
+								--end
+								--wait(.5)
 								for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
 									if v.Name == "TextButton" and v.Text == json[plr.Name][selectionname] then
 										for x,y in pairs(getconnections(v.MouseButton1Click)) do
 											y:Fire()
 										end
 									end
+								end
+							else
+							
+								for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
+									v:Fire()
 								end
 								
 								
