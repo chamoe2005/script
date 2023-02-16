@@ -942,6 +942,7 @@ spawn(function()
 			
 				for i,v in pairs(that) do
 			
+					print("Sorted Pets")
 					print(i,v)
 				
 					local petid = 0
