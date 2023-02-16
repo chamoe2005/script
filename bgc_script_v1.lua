@@ -963,8 +963,8 @@ spawn(function()
 					print("Attempting Shiny " .. i)
 					print("Shiny Cost " .. library.Shared.ShinyCost(petid, _G.AutoShinyNum))
 					
-					for i,v in pairs(ohTable1[1][1]) do
-						print(i,v)
+					for c,d in pairs(ohTable1[1][1]) do
+						print(c,d)
 					end
 					
 					game:GetService("ReplicatedStorage").Remotes["make pets shiny"]:InvokeServer(ohTable1)
