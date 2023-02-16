@@ -340,6 +340,8 @@ function doBubblePass()
 			else
 				print((highestEggPrize - playerLibrary.BubblePass.CurrentEggs) .. " eggs left before Bubble Pass is complete")
 			end
+		else
+			print("Bubble Pass not Owned")
 			
 			
 		end
