@@ -919,7 +919,7 @@ spawn(function()
 			
 			for i,v in pairs(Pets) do
 			
-				--print(i,v)
+				print(i,v)
 					
 			
 				local bestpetid = 0
@@ -932,11 +932,11 @@ spawn(function()
 						bestbubble = y.buffs.Bubbles
 						bestcoin = y.buffs.Coins
 						bestdiamond = y.buffs.Diamonds
-						bestpetid = x
+						bestpetid = i
 					end
 				end
 				
-				sortedPets[i] = v
+				sortedPets[bestpetid] = Pets[bestpetid]
 			end
 
 			for i,v in pairs(sortedPets) do
