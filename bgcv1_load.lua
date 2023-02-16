@@ -1,4 +1,6 @@
 _G.autoloadsettings = true
+_G.ChallengeName = "Valentines"
+_G.ChallengeRemote = "claim valentines prize"
 
 print("BGS Script Loader Started")
 
