@@ -938,40 +938,43 @@ spawn(function()
 				table.insert(sortedPets, {[bestpetid] = Pets[bestpetid]})
 			end
 
-			for i,v in ipairs(sortedPets) do
+			for this,that in ipairs(sortedPets) do
 			
-				print(i,v)
+				for i,v in pairs(that) do
 			
-				local petid = 0
-			
-				for x,y in pairs(library.Directory.Pets) do
-					if i == y.name then 
-						petid = x
-					end
-				end
-			
-					
-				if petid ~= 0 and v >= _G.AutoShinyNum and (playerLibrary["Diamonds"] > library.Shared.ShinyCost(petid, _G.AutoShinyNum)) then
+					print(i,v)
 				
-					local counter = 1
-					for a,b in pairs(playerLibrary.Pets) do
-						if counter <= _G.AutoShinyNum and b.nk == i and not b.s and not b.lock then
-							ohTable1[1][1][counter] = b.uid
-							counter++
+					local petid = 0
+				
+					for x,y in pairs(library.Directory.Pets) do
+						if i == y.name then 
+							petid = x
 						end
 					end
+				
+						
+					if petid ~= 0 and v >= _G.AutoShinyNum and (playerLibrary["Diamonds"] > library.Shared.ShinyCost(petid, _G.AutoShinyNum)) then
 					
-					print("Attempting Shiny " .. i)
-					print("Shiny Cost " .. library.Shared.ShinyCost(petid, _G.AutoShinyNum))
-					
-					for c,d in pairs(ohTable1[1][1]) do
-						print(c,d)
+						local counter = 1
+						for a,b in pairs(playerLibrary.Pets) do
+							if counter <= _G.AutoShinyNum and b.nk == i and not b.s and not b.lock then
+								ohTable1[1][1][counter] = b.uid
+								counter++
+							end
+						end
+						
+						print("Attempting Shiny " .. i)
+						print("Shiny Cost " .. library.Shared.ShinyCost(petid, _G.AutoShinyNum))
+						
+						for c,d in pairs(ohTable1[1][1]) do
+							print(c,d)
+						end
+						
+						game:GetService("ReplicatedStorage").Remotes["make pets shiny"]:InvokeServer(ohTable1)
+						wait(5)
+						
+						break
 					end
-					
-					game:GetService("ReplicatedStorage").Remotes["make pets shiny"]:InvokeServer(ohTable1)
-					wait(5)
-					
-					break
 				end
 			end
 
