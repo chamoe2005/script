@@ -889,7 +889,7 @@ spawn(function()
 end)
 
 spawn(function()
-	while wait(60) do	
+	while wait(15) do	
 
 		DeletePets()
 
@@ -984,6 +984,9 @@ spawn(function()
 					
 					break
 				end
+				
+				break
+				
 			end
 
 		end
