@@ -917,10 +917,12 @@ spawn(function()
 			
 			local sortedPets = {}
 			
+				--print("Unsorted Pets")
+				
+			
 			for i,v in pairs(Pets) do
 				
-				print("Unsorted Pets")
-				print(i,v)
+				--print(i,v)
 			
 				local bestpetid = 0
 				local bestbubble = 0
@@ -939,12 +941,15 @@ spawn(function()
 				table.insert(sortedPets, {[bestpetid] = Pets[bestpetid]})
 			end
 
+			print("Sorted Pets")					
+
 			for this,that in ipairs(sortedPets) do
 			
 				for i,v in pairs(that) do
 			
-					print("Sorted Pets")
-					print(i,v)
+					if v >= _G.AutoShinyNum then
+						print(i,v)
+					end
 				
 					local petid = 0
 				
