@@ -557,7 +557,9 @@ spawn(function()
 					wait(1)
 				elseif not playerLibrary.BubblePass.Claimed[a] then
 					allClaimed = false
-				elseif b.eggs > highestEggPrize then
+				end
+				
+				if b.eggs > highestEggPrize then
 					highestEggPrize = b.eggs
 				end
 
