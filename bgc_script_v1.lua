@@ -530,13 +530,14 @@ spawn(function ()
 end)
 
 spawn(function()
-	while wait(1) do
+	while wait(30) do
 
 		local playerLibrary = library.Save.Get()
 
 		if playerLibrary.BubblePass.Owned and farm.flags.ClaimPass then
 		
 			local allClaimed = true
+			local highestEggPrize = 0
 
 			for a,b in pairs(library.Directory.BubblePass) do
 			
@@ -556,12 +557,16 @@ spawn(function()
 					wait(1)
 				elseif not playerLibrary.BubblePass.Claimed[a] then
 					allClaimed = false
-					print("Bubble Pass Prize " .. a .. " not claimed")
+				elseif b.eggs > highestEggPrize then
+					highestEggPrize = b.eggs
 				end
 
 			end
 			
-			if allClaimed then
+			if allClaimed and playerLibrary.BubblePass.CurrentEggs > highestEggPrize then
+			
+				print("All Bubble Pass Prizes claimed, restarting pass")
+			
 				local ohTable1 = {
 					[1] = {
 						[1] = false
@@ -572,6 +577,8 @@ spawn(function()
 				}
 
 				game:GetService("ReplicatedStorage").Remotes["restart bubble pass"]:FireServer(ohTable1)
+			else
+				print((highestEggPrize - playerLibrary.BubblePass.CurrentEggs) .. " left before Bubble Pass is complete")
 			end
 			
 			
