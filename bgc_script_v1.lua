@@ -580,7 +580,7 @@ spawn(function()
 
 				game:GetService("ReplicatedStorage").Remotes["restart bubble pass"]:FireServer(ohTable1)
 			else
-				print((highestEggPrize - playerLibrary.BubblePass.CurrentEggs) .. " left before Bubble Pass is complete")
+				print((highestEggPrize - playerLibrary.BubblePass.CurrentEggs) .. " eggs left before Bubble Pass is complete")
 			end
 			
 			
@@ -596,7 +596,7 @@ spawn(function()
 					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Activations[b.name].Position.X + math.random(1,8), game:GetService("Workspace").MAP.Activations[b.name].Position.Y + 20, game:GetService("Workspace").MAP.Activations[b.name].Position.Z + math.random(1,8)))
 					wait(1)
 				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil
-				print("Attempting to grab " .. b.name)
+				print("Grabbed " .. b.name .. "!!!")
 				wait(_G.TeleportDelay)
 			end
 		end
