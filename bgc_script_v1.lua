@@ -323,7 +323,7 @@ function doBubblePass()
 
 			end
 			
-			if allClaimed and playerLibrary.BubblePass.CurrentEggs > highestEggPrize then
+			if allClaimed and playerLibrary.BubblePass.CurrentEggs > highestEggPrize and playerLibrary["Diamonds"] >= 500000000 then
 			
 				print("All Bubble Pass Prizes claimed, restarting pass")
 			
