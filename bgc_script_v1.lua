@@ -939,7 +939,7 @@ spawn(function()
 				sortedPets[bestpetid] = Pets[bestpetid]
 			end
 
-			for i,v in pairs(sortedPets) do
+			for i,v in ipairs(sortedPets) do
 			
 				local petid = 0
 			
