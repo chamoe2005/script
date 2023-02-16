@@ -594,6 +594,41 @@ spawn(function()
 			
 			
 		end
+		
+		
+		if _G.ChallengeName ~= nil and farm.flags[_G.ChallengeName] and playerLibrary[_G.ChallengeName] ~= nil and playerLibrary[_G.ChallengeName].Claimed ~= nil then
+			--print("Claimed " .. playerLibrary.Valentines.Claimed)
+
+			local lastPrize = 0
+
+			for a,b in pairs(library.Directory.Valentines) do
+				if a > lastPrize then
+					lastPrize = a
+				end
+				
+				if a == (playerLibrary.Valentines.Claimed + 1) and playerLibrary.Valentines.Progress[b.challengeType] >= b.amount  then
+					--print(playerLibrary.Valentines.Progress[b.challengeType] .. " " .. b.challengeType)
+					--print(b.amount)
+					print("Attempting to claim " .. a)
+					local ohTable1 = {
+						[1] = {
+							[1] = false
+						},
+						[2] = {
+							[1] = 2
+						}
+					}
+
+					game:GetService("ReplicatedStorage").Remotes["claim valentines prize"]:FireServer(ohTable1)
+				elseif a == (playerLibrary.Valentines.Claimed + 1) then
+					print ((b.amount - playerLibrary.Valentines.Progress[b.challengeType]) .. " " .. b.challengeType .. " remaining to claim " .. a)
+				end
+			end
+			
+			if playerLibrary.Valentines.Claimed == lastPrize then
+				print("All Valentines Prizes Claimed")
+			end
+		end
 	end
 end)
 
