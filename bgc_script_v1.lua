@@ -158,6 +158,94 @@ local EquipBestPets = function()
 	end
 end
 
+function DeletePets()
+
+	local playerLibrary = library.Save.Get()
+		
+	local doDelete = function(num)
+
+		local petsTable = {}
+
+	
+		for x = 1, num do
+
+			local lowestuid = 0
+			local lowestbubbles = math.huge
+			local lowestcoins = math.huge
+			local lowestdiamonds = math.huge
+				
+			for a,b in pairs(playerLibrary.Pets) do
+				
+					local petFound = false
+					for i,v in pairs(petsTable) do
+						--print(b.uid,v)
+						if b.uid == v then
+							petFound = true
+							--print("Pet Found")
+						end
+					end
+						--print(lowestbubbles,library.Directory.Pets[b.id].buffs.Bubbles)
+						--print(lowestcoins,library.Directory.Pets[b.id].buffs.Coins)
+						--print(lowestdiamonds,library.Directory.Pets[b.id].buffs.Diamonds)
+						
+				
+					if not petFound and (library.Directory.Pets[b.id].buffs.Bubbles < lowestbubbles or library.Directory.Pets[b.id].buffs.Coins < lowestcoins or library.Directory.Pets[b.id].buffs.Diamonds < lowestdiamonds) then
+						lowestuid = b.uid
+						lowestbubbles = library.Directory.Pets[b.id].buffs.Bubbles
+						lowestcoins = library.Directory.Pets[b.id].buffs.Coins
+						lowestdiamonds = library.Directory.Pets[b.id].buffs.Diamonds
+					end
+			end
+
+			table.insert(petsTable,lowestuid)
+		end
+		
+		local ohTable1 = {
+			[1] = {
+				[1] = {}
+			},
+			[2] = {
+				[1] = false
+			}
+		}
+
+		for i,v in pairs(petsTable) do
+			table.insert(ohTable1[1][1], v)
+			print(v .. " is being deleted.")
+		end
+					
+		game:GetService("ReplicatedStorage").Remotes["delete pets"]:FireServer(ohTable1)
+	end	
+
+	if _G["DeletePetMode"] == "Delete When Full" and table.getn(playerLibrary.Pets) >= (playerLibrary.MaxSlots - 1) and pet.flags.AutoDeleteNum ~= nil and tonumber(pet.flags.AutoDeleteNum) > 0 then
+	
+		print("Will Delete " .. pet.flags.AutoDeleteNum .. " Pets")
+		doDelete(pet.flags.AutoDeleteNum)
+
+	elseif _G["DeletePetMode"] == "Delete When Full" and table.getn(playerLibrary.Pets) < (playerLibrary.MaxSlots - 1) then
+	
+		print(playerLibrary.MaxSlots - table.getn(playerLibrary.Pets) .. " Pet Slots Left in Inventory")
+		
+	elseif _G["DeletePetMode"] == "Custom Delete" and pet.flags["KeepOnlyNum"] ~= nil and pet.flags["KeepOnlyNum"] ~= "" and tonumber(pet.flags["KeepOnlyNum"]) > 0 and table.getn(playerLibrary.Pets) > pet.flags["KeepOnlyNum"] then
+	
+		print("Will Delete " .. (table.getn(playerLibrary.Pets) - pet.flags.KeepOnlyNum) .. " Pets")
+		doDelete(table.getn(playerLibrary.Pets) - pet.flags.KeepOnlyNum)
+		
+	elseif _G["DeletePetMode"] == "Custom Delete" and pet.flags["KeepOnlyNum"] ~= nil and pet.flags["KeepOnlyNum"] ~= "" and tonumber(pet.flags["KeepOnlyNum"]) > 0 and table.getn(playerLibrary.Pets) < pet.flags["KeepOnlyNum"] then
+
+		print((pet.flags["KeepOnlyNum"] - table.getn(playerLibrary.Pets)) .. " Pet Slots Left until Auto Delete")
+
+	end
+end
+
+	pet:Dropdown("Delete Mode", {location = _G, flag = "DeletePetMode", list = {"Off", "Delete When Full", "Custom Delete"} })
+	pet:Box('Num Pets to Delete', {flag = "AutoDeleteNum",
+        type = 'number'
+    })
+	pet:Box('Delete at Pet #', {flag = "KeepOnlyNum",
+    type = 'number'
+    })
+
 
 local SpinPrizeWheel = function()
 		local playerLibrary = library.Save.Get()
@@ -200,7 +288,7 @@ function doBubblePass()
 
 		local playerLibrary = library.Save.Get()
 
-		if playerLibrary.BubblePass.Owned and farm.flags.ClaimPass then
+		if playerLibrary.BubblePass and playerLibrary.BubblePass.Owned and farm.flags.ClaimPass then
 		
 			local allClaimed = true
 			local highestEggPrize = 0
@@ -614,20 +702,30 @@ settingsGUI:Button('Save Settings', function() saveSettings() end)
 
 spawn(function()
 	while wait(.5) do
-		local bestEgg = {["Name"] = nil, ["Cost"] = 0}
+		local bestEgg = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
+						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0}
+						}
 		local playerLibrary = library.Save.Get()
 		
 	
 		if _G.BuyEggMode == "Best" then
 			for i,v in pairs(Eggs) do
-				if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg.Cost and _G[i] then
-					bestEgg.Name = i
-					bestEgg.Cost = v.Cost
+				if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] then
+					bestEgg[v.Currency].Name = i
+					bestEgg[v.Currency].Cost = v.Cost
 				end
 			end
-			if bestEgg.Name then
+			if bestEgg["Diamonds"].Name and bestEgg["Coins"].Name then
 				--print("Opening " .. bestEgg.Name)
-				openEgg(bestEgg.Name)
+				if bestEgg["Diamonds"].Name == "Valentine's 2023 Egg" then
+					openEgg(bestEgg["Diamonds"].Name)
+				else
+					openEgg(bestEgg["Coins"].Name)
+				end
+			elseif bestEgg["Coins"].Name then
+				openEgg(bestEgg["Coins"].Name)
+			elseif bestEgg["Diamonds"].Name then
+				openEgg(bestEgg["Diamonds"].Name)
 			end
 		elseif _G.BuyEggMode == "Any" then
 			for i,v in pairs(Eggs) do
@@ -785,7 +883,11 @@ spawn(function()
 end)
 
 spawn(function()
-	while wait(10) do
+	while wait(60) do	
+
+		DeletePets()
+
+	
 		if _G.AutoShinyNum > 0 and _G.AutoShinyNum <= 6 then
 			local playerLibrary = library.Save.Get()
 			local Pets = {}
@@ -808,7 +910,19 @@ spawn(function()
 			end
 
 			for i,v in pairs(Pets) do
-				if v >= _G.AutoShinyNum then
+			
+				local petid = 0
+			
+				for x,y in pairs(library.Directory.Pets) do
+					if i == y.name then 
+						petid = x
+					end
+				end
+			
+				--print(i,v)
+					
+				if petid ~= 0 and v >= _G.AutoShinyNum and (playerLibrary["Diamonds"] > library.Shared.ShinyCost(petid, _G.AutoShinyNum)) then
+				
 					local counter = 1
 					for a,b in pairs(playerLibrary.Pets) do
 						if counter <= _G.AutoShinyNum and b.nk == i and not b.s and not b.lock then
@@ -818,12 +932,16 @@ spawn(function()
 					end
 					
 					print("Attempting Shiny " .. i)
+					print("Shiny Cost " .. library.Shared.ShinyCost(petid, _G.AutoShinyNum))
 					
 					for i,v in pairs(ohTable1[1][1]) do
 						print(i,v)
 					end
 					
 					game:GetService("ReplicatedStorage").Remotes["make pets shiny"]:InvokeServer(ohTable1)
+					wait(5)
+					
+					break
 				end
 			end
 
