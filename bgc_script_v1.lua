@@ -914,8 +914,32 @@ spawn(function()
 					end
 				end
 			end
-
+			
+			local sortedPets = {}
+			
 			for i,v in pairs(Pets) do
+			
+				--print(i,v)
+					
+			
+				local bestpetid = 0
+				local bestbubble = 0
+				local bestcoin = 0
+				local bestdiamond = 0
+			
+				for x,y in pairs(library.Directory.Pets) do
+					if i == y.name and not sortedPets[i] and (y.buffs.Bubbles > bestbubble or y.buffs.Coins > bestcoin or y.buffs.Diamonds > bestdiamond) then 
+						bestbubble = y.buffs.Bubbles
+						bestcoin = y.buffs.Coins
+						bestdiamond = y.buffs.Diamonds
+						bestpetid = x
+					end
+				end
+				
+				sortedPets[i] = v
+			end
+
+			for i,v in pairs(sortedPets) do
 			
 				local petid = 0
 			
