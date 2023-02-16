@@ -253,8 +253,38 @@ function doBubblePass()
 		end
 
 end
-		
 		farm:Toggle('Claim Bubble Pass', {flag = 'ClaimPass'}, function() doBubblePass() end)
+		
+function doTierRewards()
+
+	if farm.flags["Tier Rewards"] then
+
+		local playerLibrary = library.Save.Get()
+
+		for a,b in pairs(playerLibrary.Rewards) do
+			if library.Directory.Rewards[a].price(b + 1) <= playerLibrary["Diamonds"] then
+				print("Redeeming " .. a .. " Reward Slot #" .. b + 1 .. " for " .. library.Directory.Rewards[a].price(b + 1) .. " Diamonds")
+				
+				local ohTable1 = {
+					[1] = {
+						[1] = "Spawn World"
+					},
+					[2] = {
+						[1] = false
+					}
+				}
+
+				game:GetService("ReplicatedStorage").Remotes["buy rewards"]:FireServer(ohTable1)
+			else
+				print((library.Directory.Rewards[a].price(b + 1) - playerLibrary["Diamonds"]) .. " Diamonds until " .. a .. " Reward Slot #" .. b + 1 .. " can be redeemed")
+			end
+		end
+	end
+	
+end
+		
+		farm:Toggle('Tier Rewards', {flag = 'Tier Rewards'}, function() doTierRewards() end)
+		
 		
 local changeSetting = function(settingtype, settingname, value)
 
@@ -711,6 +741,7 @@ spawn(function()
 
 		doBubblePass()
 		doChallenge()
+		doTierRewards()
 		
 	end
 end)
