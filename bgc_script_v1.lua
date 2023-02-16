@@ -195,12 +195,110 @@ for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetCh
 end
 
 		farm:Toggle('Free Loot', {flag = 'FreeLoot'})
-		farm:Toggle('Claim Bubble Pass', {flag = 'ClaimPass'})
 		
-		if _G.ChallengeName ~= nil then
-			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName})
+function doBubblePass()
+
+		local playerLibrary = library.Save.Get()
+
+		if playerLibrary.BubblePass.Owned and farm.flags.ClaimPass then
+		
+			local allClaimed = true
+			local highestEggPrize = 0
+
+			for a,b in pairs(library.Directory.BubblePass) do
+			
+				if b.eggs <= playerLibrary.BubblePass.CurrentEggs and not playerLibrary.BubblePass.Claimed[a] then
+					print("Claiming Bubble Pass Prize #" .. a .. " - " .. b.eggs .. " eggs")
+
+					local ohTable1 = {
+						[1] = {
+							[1] = a
+						},
+						[2] = {
+							[1] = false
+						}
+					}
+
+					game:GetService("ReplicatedStorage").Remotes["claim pass prize"]:FireServer(ohTable1)
+					wait(1)
+				elseif not playerLibrary.BubblePass.Claimed[a] then
+					allClaimed = false
+				end
+				
+				if b.eggs > highestEggPrize then
+					highestEggPrize = b.eggs
+				end
+
+			end
+			
+			if allClaimed and playerLibrary.BubblePass.CurrentEggs > highestEggPrize then
+			
+				print("All Bubble Pass Prizes claimed, restarting pass")
+			
+				local ohTable1 = {
+					[1] = {
+						[1] = false
+					},
+					[2] = {
+						[1] = 2
+					}
+				}
+
+				game:GetService("ReplicatedStorage").Remotes["restart bubble pass"]:FireServer(ohTable1)
+			else
+				print((highestEggPrize - playerLibrary.BubblePass.CurrentEggs) .. " eggs left before Bubble Pass is complete")
+			end
+			
+			
 		end
 
+end
+		
+		farm:Toggle('Claim Bubble Pass', {flag = 'ClaimPass'}, function() doBubblePass() end)
+		
+function doChallenge()
+
+		local playerLibrary = library.Save.Get()
+
+		if _G.ChallengeName ~= nil and farm.flags[_G.ChallengeName] and playerLibrary[_G.ChallengeName] ~= nil and playerLibrary[_G.ChallengeName].Claimed ~= nil then
+			--print("Claimed " .. playerLibrary.Valentines.Claimed)
+
+			local lastPrize = 0
+
+			for a,b in pairs(library.Directory[_G.ChallengeName]) do
+				if a > lastPrize then
+					lastPrize = a
+				end
+				
+				if a == (playerLibrary[_G.ChallengeName].Claimed + 1) and playerLibrary[_G.ChallengeName].Progress[b.challengeType] >= b.amount  then
+					--print(playerLibrary.Valentines.Progress[b.challengeType] .. " " .. b.challengeType)
+					--print(b.amount)
+					print("Attempting to claim " .. a .. " " .. _G.ChallengeName)
+					local ohTable1 = {
+						[1] = {
+							[1] = false
+						},
+						[2] = {
+							[1] = 2
+						}
+					}
+
+					game:GetService("ReplicatedStorage").Remotes[_G.ChallengeRemote]:FireServer(ohTable1)
+				elseif a == (playerLibrary[_G.ChallengeName].Claimed + 1) then
+					print ((b.amount - playerLibrary[_G.ChallengeName].Progress[b.challengeType]) .. " " .. b.challengeType .. " remaining to claim " .. _G.ChallengeName .. " " .. a)
+				end
+			end
+			
+			if playerLibrary[_G.ChallengeName].Claimed == lastPrize then
+				print("All " .. _G.ChallengeName .. " Prizes Claimed")
+			end
+		end
+
+end
+
+		if _G.ChallengeName ~= nil then
+			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName, function() doChallenge() end})
+		end
 
 
 function openEgg(egg)
@@ -541,94 +639,9 @@ end)
 spawn(function()
 	while wait(180) do
 
-		local playerLibrary = library.Save.Get()
-
-		if playerLibrary.BubblePass.Owned and farm.flags.ClaimPass then
+		doBubblePass()
+		doChallenge()
 		
-			local allClaimed = true
-			local highestEggPrize = 0
-
-			for a,b in pairs(library.Directory.BubblePass) do
-			
-				if b.eggs <= playerLibrary.BubblePass.CurrentEggs and not playerLibrary.BubblePass.Claimed[a] then
-					print("Claiming Bubble Pass Prize #" .. a .. " - " .. b.eggs .. " eggs")
-
-					local ohTable1 = {
-						[1] = {
-							[1] = a
-						},
-						[2] = {
-							[1] = false
-						}
-					}
-
-					game:GetService("ReplicatedStorage").Remotes["claim pass prize"]:FireServer(ohTable1)
-					wait(1)
-				elseif not playerLibrary.BubblePass.Claimed[a] then
-					allClaimed = false
-				end
-				
-				if b.eggs > highestEggPrize then
-					highestEggPrize = b.eggs
-				end
-
-			end
-			
-			if allClaimed and playerLibrary.BubblePass.CurrentEggs > highestEggPrize then
-			
-				print("All Bubble Pass Prizes claimed, restarting pass")
-			
-				local ohTable1 = {
-					[1] = {
-						[1] = false
-					},
-					[2] = {
-						[1] = 2
-					}
-				}
-
-				game:GetService("ReplicatedStorage").Remotes["restart bubble pass"]:FireServer(ohTable1)
-			else
-				print((highestEggPrize - playerLibrary.BubblePass.CurrentEggs) .. " eggs left before Bubble Pass is complete")
-			end
-			
-			
-		end
-		
-		
-		if _G.ChallengeName ~= nil and farm.flags[_G.ChallengeName] and playerLibrary[_G.ChallengeName] ~= nil and playerLibrary[_G.ChallengeName].Claimed ~= nil then
-			--print("Claimed " .. playerLibrary.Valentines.Claimed)
-
-			local lastPrize = 0
-
-			for a,b in pairs(library.Directory.Valentines) do
-				if a > lastPrize then
-					lastPrize = a
-				end
-				
-				if a == (playerLibrary.Valentines.Claimed + 1) and playerLibrary.Valentines.Progress[b.challengeType] >= b.amount  then
-					--print(playerLibrary.Valentines.Progress[b.challengeType] .. " " .. b.challengeType)
-					--print(b.amount)
-					print("Attempting to claim " .. a)
-					local ohTable1 = {
-						[1] = {
-							[1] = false
-						},
-						[2] = {
-							[1] = 2
-						}
-					}
-
-					game:GetService("ReplicatedStorage").Remotes["claim valentines prize"]:FireServer(ohTable1)
-				elseif a == (playerLibrary.Valentines.Claimed + 1) then
-					print ((b.amount - playerLibrary.Valentines.Progress[b.challengeType]) .. " " .. b.challengeType .. " remaining to claim " .. a)
-				end
-			end
-			
-			if playerLibrary.Valentines.Claimed == lastPrize then
-				print("All Valentines Prizes Claimed")
-			end
-		end
 	end
 end)
 
