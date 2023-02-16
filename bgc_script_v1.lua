@@ -918,7 +918,8 @@ spawn(function()
 			local sortedPets = {}
 			
 			for i,v in pairs(Pets) do
-			
+				
+				print("Unsorted Pets")
 				print(i,v)
 			
 				local bestpetid = 0
