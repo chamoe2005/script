@@ -410,7 +410,7 @@ settingsGUI:Button('Save Settings', function() saveSettings() end)
 	
 
 spawn(function()
-	while wait(.1) do
+	while wait(.5) do
 		local bestEgg = {["Name"] = nil, ["Cost"] = 0}
 		local playerLibrary = library.Save.Get()
 		
@@ -516,7 +516,7 @@ spawn(function()
 end)
 	
 spawn(function ()
-	while(wait(1)) do
+	while(wait(.5)) do
 		if _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay) then
 			if _G.SellBubbleArea ~= "No Sell" then
 				for i = 1, 5 do
@@ -530,7 +530,7 @@ spawn(function ()
 end)
 
 spawn(function()
-	while wait(30) do
+	while wait(180) do
 
 		local playerLibrary = library.Save.Get()
 
@@ -604,7 +604,7 @@ spawn(function()
 end)
 
 spawn(function()
-	while wait(60) do
+	while wait(180) do
 		SpinPrizeWheel()
 	end
 end)
@@ -632,7 +632,7 @@ spawn(function()
 end)
 
 spawn(function()
-	while wait(5) do
+	while wait(10) do
 		if _G.AutoShinyNum > 0 and _G.AutoShinyNum <= 6 then
 			local playerLibrary = library.Save.Get()
 			local Pets = {}
