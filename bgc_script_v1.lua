@@ -344,7 +344,10 @@ function doChallenge()
 						changeSetting("Checkmark", "Large Diamonds", false)
 						changeSetting("Checkmark", "Small Diamond", false)
 						changeSetting("Box", "Range", 0)
+					else
+						wait(5)
 					end
+					
 				elseif a == (playerLibrary[_G.ChallengeName].Claimed + 1) then
 				
 					print ((b.amount - playerLibrary[_G.ChallengeName].Progress[b.challengeType]) .. " " .. b.challengeType .. " remaining to claim " .. _G.ChallengeName .. " " .. a)
