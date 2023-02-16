@@ -739,7 +739,7 @@ end)
 
 spawn(function()
 	while wait(180) do
-
+		doTierRewards()
 		doBubblePass()
 		doChallenge()
 		SpinPrizeWheel()
@@ -764,7 +764,6 @@ end)
 spawn(function()
 	while wait(5) do
 		EquipBestPets()
-		doTierRewards()
 	end
 end)
 
