@@ -270,33 +270,36 @@ local saveSettings = function()
 
 	local update = {}
 	local counter = 1
-
-
+	
+	if isfile("bgcsettings.txt") then
+		update = game:GetService("HttpService"):JSONDecode(readfile("bgcsettings.txt"))
+	end if
+		
 	for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
 
 		
 			if b.Name == "Checkmark" and b.Text == utf8.char(10003) then
 			
-				update[b.Parent.name] = true
+				update[plr.Name][b.Parent.name] = true
 				
 			elseif b.Name == "Checkmark" and b.Text ~= utf8.char(10003) then
 			
-				update[b.Parent.name] = false
+				update[plr.Name][b.Parent.name] = false
 
 			elseif b.Name == "Box" and b.Text ~= nil and b.Text ~= "" and b.Text ~= 0 then
 			
-				update[b.Parent.name] = b.Parent.Text
+				update[plr.Name][b.Parent.name] = b.Parent.Text
 				
 			elseif b.Name == "Box" and (b.Text == nil or b.Text == "" or b.Text == 0) then
 			
-				update[b.Parent.name] = 0
+				update[plr.Name][b.Parent.name] = 0
 
 			elseif b.Name == "Selection" then
 				for c,d in pairs(dropdowns) do
 					for e,f in pairs(d) do
 						if f == b.Text then
 							print(c)
-							update[c] = b.Text
+							update[plr.Name][c] = b.Text
 						end
 					end
 				end
@@ -314,55 +317,58 @@ local loadSettings = function()
 		if isfile("bgcsettings.txt") then
 
 			local json = game:GetService("HttpService"):JSONDecode(readfile("bgcsettings.txt"))
+			
+			if json[plr.Name] ~= nil then
 
-			for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
+				for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
 
-					if b.Name == "Checkmark" and json[b.Parent.name] and b.Text ~= utf8.char(10003) then
-				
-						for a,b in pairs(getconnections(b.MouseButton1Click)) do
-							b:Fire()
-						end
-				
-					elseif b.Name == "Checkmark" and not json[b.Parent.name] and b.Text == utf8.char(10003) then
+						if b.Name == "Checkmark" and json[plr.Name][b.Parent.name] and b.Text ~= utf8.char(10003) then
 					
-						for a,b in pairs(getconnections(b.MouseButton1Click)) do
-							b:Fire()
-						end
+							for a,b in pairs(getconnections(b.MouseButton1Click)) do
+								b:Fire()
+							end
+					
+						elseif b.Name == "Checkmark" and not json[plr.Name][b.Parent.name] and b.Text == utf8.char(10003) then
 						
-					elseif b.Name == "Box" and json[b.Parent.name] ~= nil and json[b.Parent.name]~= "" and json[b.Parent.name] ~= 0 then
-					
-						b.Parent.Text = json[b.Parent.name]
-					
-					elseif b.Name == "Selection" then
-					
-						local selectionname = ""
-					
-						for c,d in pairs(dropdowns) do
-							for e,f in pairs(d) do
-								if f == b.Text then
-									selectionname = c
-								end
+							for a,b in pairs(getconnections(b.MouseButton1Click)) do
+								b:Fire()
 							end
-						end
-					
-					
-						if json[selectionname] ~= nil and json[selectionname] ~= "" and json[selectionname] ~= 0 and b.Text ~= json[selectionname] then 
-							--b.Text = json[selectionname]
-							for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
-								v:Fire()
-							end
-							wait(.5)
-							for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
-								if v.Name == "TextButton" and v.Text == json[selectionname] then
-									for x,y in pairs(getconnections(v.MouseButton1Click)) do
-										y:Fire()
+							
+						elseif b.Name == "Box" and json[plr.Name][b.Parent.name] ~= nil and json[plr.Name][b.Parent.name]~= "" and json[plr.Name][b.Parent.name] ~= 0 then
+						
+							b.Parent.Text = json[plr.Name][b.Parent.name]
+						
+						elseif b.Name == "Selection" then
+						
+							local selectionname = ""
+						
+							for c,d in pairs(dropdowns) do
+								for e,f in pairs(d) do
+									if f == b.Text then
+										selectionname = c
 									end
 								end
 							end
-							
-							
-						end
-					end			
+						
+						
+							if json[plr.Name][selectionname] ~= nil and json[plr.Name][selectionname] ~= "" and json[plr.Name][selectionname] ~= 0 and b.Text ~= json[plr.Name][selectionname] then 
+								--b.Text = json[selectionname]
+								for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
+									v:Fire()
+								end
+								wait(.5)
+								for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
+									if v.Name == "TextButton" and v.Text == json[plr.Name][selectionname] then
+										for x,y in pairs(getconnections(v.MouseButton1Click)) do
+											y:Fire()
+										end
+									end
+								end
+								
+								
+							end
+						end			
+				end
 			end
 	end
 end
