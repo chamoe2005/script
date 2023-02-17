@@ -917,12 +917,12 @@ spawn(function()
 			
 			local sortedPets = {}
 			
-				--print("Unsorted Pets")
+				print("Unsorted Pets")
 				
 			
 			for i,v in pairs(Pets) do
 				
-				--print(i,v)
+				print(i,v)
 			
 				local bestpetid = 0
 				local bestbubble = 0
