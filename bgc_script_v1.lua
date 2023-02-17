@@ -917,12 +917,12 @@ spawn(function()
 			
 			local sortedPets = {}
 			
-				print("Unsorted Pets")
+				--print("Unsorted Pets")
 				
 			
 			for j,k in pairs(Pets) do
 				
-				print(j,k)
+				--print(j,k)
 			
 				local bestpetid = 0
 				local bestbubble = 0
@@ -955,12 +955,11 @@ spawn(function()
 						bestpetid = i
 					end
 				end
-				end
 				
 				table.insert(sortedPets, {[bestpetid] = Pets[bestpetid]})
 			end
 
-			print("Sorted Pets")					
+			--print("Pets to Shiny")					
 
 			for this,that in ipairs(sortedPets) do
 			
