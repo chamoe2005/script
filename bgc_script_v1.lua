@@ -920,18 +920,19 @@ spawn(function()
 				print("Unsorted Pets")
 				
 			
-			for i,v in pairs(Pets) do
+			for j,k in pairs(Pets) do
 				
-				print(i,v)
+				print(j,k)
 			
 				local bestpetid = 0
 				local bestbubble = 0
 				local bestcoin = 0
 				local bestdiamond = 0
-			
-				for x,y in pairs(library.Directory.Pets) do
 				
-					local petFound = false
+				for i,v in pairs(Pets) do
+				
+				local petFound = false
+				
 					for a,b in pairs(sortedPets) do
 						for this,that in pairs(b) do
 							if i == this then
@@ -939,13 +940,21 @@ spawn(function()
 							end
 						end
 					end
+				local petid = 0
+				for x,y in pairs(library.Directory.Pets) do
+					if i == y.name then
+						petid = x
+					end
+				end
+				local petDir = library.Directory.Pets
 				
-					if i == y.name and v >= _G.AutoShinyNum and not petFound and (y.buffs.Bubbles > bestbubble or y.buffs.Coins > bestcoin or y.buffs.Diamonds > bestdiamond) then 
-						bestbubble = y.buffs.Bubbles
-						bestcoin = y.buffs.Coins
-						bestdiamond = y.buffs.Diamonds
+					if petid ~= 0 and v >= _G.AutoShinyNum and not petFound and (petDir[petid].buffs.Bubbles > bestbubble or petDir[petid].buffs.Coins > bestcoin or petDir[petid].buffs.Diamonds > bestdiamond) then 
+						bestbubble = petDir[petid].buffs.Bubbles
+						bestcoin = petDir[petid].buffs.Coins
+						bestdiamond = petDir[petid].buffs.Diamonds
 						bestpetid = i
 					end
+				end
 				end
 				
 				table.insert(sortedPets, {[bestpetid] = Pets[bestpetid]})
