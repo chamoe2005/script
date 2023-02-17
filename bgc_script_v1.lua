@@ -930,7 +930,7 @@ spawn(function()
 				local bestdiamond = 0
 			
 				for x,y in pairs(library.Directory.Pets) do
-					if i == y.name and not sortedPets[i] and (y.buffs.Bubbles > bestbubble or y.buffs.Coins > bestcoin or y.buffs.Diamonds > bestdiamond) then 
+					if i == y.name and v >= _G.AutoShinyNum and not sortedPets[i] and (y.buffs.Bubbles > bestbubble or y.buffs.Coins > bestcoin or y.buffs.Diamonds > bestdiamond) then 
 						bestbubble = y.buffs.Bubbles
 						bestcoin = y.buffs.Coins
 						bestdiamond = y.buffs.Diamonds
