@@ -725,13 +725,15 @@ spawn(function()
 				--print("Opening " .. bestEgg.Name)
 				if bestEgg["Diamonds"].Name == "Valentine's 2023 Egg" then
 					openEgg(bestEgg["Diamonds"].Name)
-				else
+				elseif bestEgg["Coins"].Cost > bestEgg["Diamonds"].Cost then
 					openEgg(bestEgg["Coins"].Name)
+				else
+					openEgg(bestEgg["Diamonds"].Name)
 				end
-			elseif bestEgg["Coins"].Name then
-				openEgg(bestEgg["Coins"].Name)
 			elseif bestEgg["Diamonds"].Name then
 				openEgg(bestEgg["Diamonds"].Name)
+			elseif bestEgg["Coins"].Name then
+				openEgg(bestEgg["Coins"].Name)
 			end
 		elseif _G.BuyEggMode == "Any" then
 			for i,v in pairs(Eggs) do
