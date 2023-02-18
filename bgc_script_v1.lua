@@ -1,5 +1,4 @@
 _G.LastSell = 0
-_G.player = game:GetService("Players").LocalPlayer
 _G.TeleportDelay = 5
 _G.EggDelay = 3
 
@@ -16,6 +15,8 @@ if not game:IsLoaded() then
 	notLoaded:Destroy()
 end
 Players = game:GetService("Players")
+_G.player = game:GetService("Players"):WaitForChild("LocalPlayer")
+
 local Dir = COREGUI:FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOverlay")
 	Dir.DescendantAdded:Connect(function(Err)
 		if Err.Name == "ErrorTitle" then
