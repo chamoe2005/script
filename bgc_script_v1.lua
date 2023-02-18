@@ -21,6 +21,7 @@ function GetLocalPlayer()
 	while not player do
 		player = Players:FindFirstChild("LocalPlayer")
 		wait(1)
+		print("Waiting for Localplayer")
 	end
 	return player
 end
@@ -30,6 +31,7 @@ function GetPlayerChar()
 	while not character do
 		character = GetLocalPlayer():FindFirstChild("Character")
 		wait(1)
+		print("Waiting for Character")
 	end
 	return character
 end
@@ -40,6 +42,7 @@ function GetPlayerRoot()
 	while not playerroot do
 		playerroot = GetPlayerChar():FindFirstChild("HumanoidRootPart")
 		wait(1)
+		print("Waiting for Root")
 	end
 	return playerroot
 end
