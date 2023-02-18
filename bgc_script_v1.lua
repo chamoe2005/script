@@ -3,6 +3,7 @@ print("Version 1.1")
 _G.LastSell = 0
 _G.TeleportDelay = 5
 _G.EggDelay = 3
+_G.oldeggs = {}
 
 --local dropdowns = {}
 --dropdowns.Bubblesell = {"No Sell", "Sell 1", "Sell 2"}
@@ -573,6 +574,10 @@ function doChallenge()
 						changeSetting("Checkmark", "Large Diamonds", false)
 						changeSetting("Checkmark", "Small Diamond", false)
 						changeSetting("Box", "Range", 0)
+					elseif b.challengeType == "LegendaryPets" then
+						switchEggs({"Magma Egg"})
+					elseif b.challengeType == "GodlyPets" then
+						switchEggs({"Void Egg", "Galaxy Egg"})
 					else
 						wait(5)
 					end
@@ -595,6 +600,8 @@ function doChallenge()
 						changeSetting("Checkmark", "Large Diamonds", true)
 						changeSetting("Checkmark", "Small Diamond", true)
 						changeSetting("Box", "Range", 50000)
+					elseif b.challengeType == "LegendaryPets" or b.challengeType == "GodlyPets" then
+						switchEggs({"old"})						
 					end
 				end
 			end
@@ -651,6 +658,35 @@ local egg = wally:CreateWindow('Eggs')
 		egg:Toggle(a, {location = _G, flag = a})
 		_G[a] = false
 	end
+
+local switchEggs = function (new)
+	print("Switching Eggs")
+
+	if new == {"old"} then
+		new = _G.oldeggs
+	end
+	
+	_G.oldeggs = {}
+
+	for a,b in pairs(Eggs) do
+	
+		if _G[a] then
+			table.insert(_G.oldeggs, a)
+		end
+		
+		enabled = false
+		for c,d in pairs(new) do
+			if a == d then
+				enabled = true
+				print(d)
+			end
+		end
+		
+		changeSetting("Checkmark", a, enabled)
+			
+	end
+end
+
 
 local pickups = {"Coins Present", "Coins Bag", "Large Coin", "Medium Coin", "Small Coin", "Large Diamonds", "Small Diamond", "Orb"}
 
@@ -1121,3 +1157,47 @@ end)
 if _G.autoloadsettings then
 	loadSettings()
 end
+
+function NoobSim()
+						print("BGClicker n00b Challenge SIMULATOR")
+						wait(1)
+						print("...")
+						wait(3)
+						print("Rdy?")
+						wait(10)
+						print("Get some coins you bugger!")
+						wait(5)
+						changeSetting("Checkmark", "Collect Drops", true)
+						changeSetting("Checkmark", "Coins Bag", true)
+						changeSetting("Checkmark", "Large Coin", true)
+						changeSetting("Checkmark", "Medium Coin", true)
+						changeSetting("Checkmark", "Small Coin", true)
+						changeSetting("Box", "Range", 50000)
+						wait(10)
+						print("Now get some more stupid pets!")
+						changeSetting("Checkmark", "Collect Drops", false)
+						changeSetting("Checkmark", "Coins Bag", false)
+						changeSetting("Checkmark", "Large Coin", false)
+						changeSetting("Checkmark", "Medium Coin", false)
+						changeSetting("Checkmark", "Small Coin", false)
+						changeSetting("Box", "Range", 0)
+						switchEggs({"Void Egg", "Galaxy Egg"})
+						wait(15)
+						print("Colleca crap lo of Diamon")
+						switchEggs({"old"})
+						changeSetting("Checkmark", "Collect Drops", true)
+						changeSetting("Checkmark", "Large Diamonds", true)
+						changeSetting("Checkmark", "Small Diamond", true)
+						changeSetting("Box", "Range", 50000)
+						wait(10)
+						print("Hatch 100 Legendaries!")
+						changeSetting("Checkmark", "Collect Drops", false)
+						changeSetting("Checkmark", "Large Diamonds", false)
+						changeSetting("Checkmark", "Small Diamond", false)
+						changeSetting("Box", "Range", 0)
+						switchEggs({"Magma Egg"})
+						wait(10)
+						print("Blow 1 kagillion bubbles!!!")
+						switchEggs({"old"})
+end
+						
