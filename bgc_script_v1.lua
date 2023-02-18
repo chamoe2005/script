@@ -22,6 +22,7 @@ function GetLocalPlayer()
 		player = Players.LocalPlayer
 		wait(1)
 		print("Waiting for LocalPlayer")
+	end
 	return player
 end
 
@@ -31,6 +32,7 @@ function GetPlayerChar()
 		character = Players.LocalPlayer
 		wait(1)
 		print("Waiting for Character")
+	end
 	return character
 end
 
@@ -45,7 +47,7 @@ function GetPlayerRoot()
 	return playerroot
 end
 
-_G.Player = GetLocalPlayer()
+_G.player = GetLocalPlayer()
 local plr = GetLocalPlayer()
 local char = GetPlayerChar()
 local root = GetPlayerRoot()
