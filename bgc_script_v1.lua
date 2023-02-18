@@ -364,12 +364,11 @@ for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetCh
 				disabled = true
 			end
 		end
-			if require(d[d.Name]).currency and require(d[d.Name]).cost and not require(d[d.Name]).disabled and not disabled then
-				Eggs[d.Name] = {}
-				Eggs[d.Name]["World"] = b.Name
-				Eggs[d.Name]["Currency"] = require(d[d.Name]).currency
-				Eggs[d.Name]["Cost"] = require(d[d.Name]).cost
-			end
+		if require(d[d.Name]).currency and require(d[d.Name]).cost and not require(d[d.Name]).disabled and not disabled then
+			Eggs[d.Name] = {}
+			Eggs[d.Name]["World"] = b.Name
+			Eggs[d.Name]["Currency"] = require(d[d.Name]).currency
+			Eggs[d.Name]["Cost"] = require(d[d.Name]).cost
 		end
 	end
 end
