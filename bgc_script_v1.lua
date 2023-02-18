@@ -17,26 +17,37 @@ end
 Players = game:GetService("Players")
 
 function GetLocalPlayer()
-	_G.player = Players:FindFirstChild("LocalPlayer")
-	while not _G.player do
-		_G.player = Players:FindFirstChild("LocalPlayer")
+	local player = Players:FindFirstChild("LocalPlayer")
+	while not player do
+		player = Players:FindFirstChild("LocalPlayer")
+		wait(1)
 	end
+	return player
 end
 
-local plr = _G.Player
-local char = plr.Character
-local root = char.HumanoidRootPart
+function GetPlayerChar()
+	local character = GetLocalPlayer():FindFirstChild("Character")
+	while not character do
+		character = GetLocalPlayer():FindFirstChild("Character")
+		wait(1)
+	end
+	return character
+end
+
 
 function GetPlayerRoot()
-	char = GetLocalPlayer():FindFirstChild("Character")
-	while not char do
-		char = GetLocalPlayer():FindFirstChild("Character")
+	local playerroot = GetPlayerChar():FindFirstChild("HumanoidRootPart")
+	while not playerroot do
+		playerroot = GetPlayerChar():FindFirstChild("HumanoidRootPart")
+		wait(1)
 	end
-	root = char:FindFirstChild("HumanoidRootPart")
-	while not root do
-		root = char:FindFirstChild("HumanoidRootPart")
-	end
+	return playerroot
 end
+
+_G.Player = GetLocalPlayer()
+local plr = GetLocalPlayer()
+local char = GetPlayerChar()
+local root = GetPlayerRoot()
 
 local Dir = COREGUI:FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOverlay")
 	Dir.DescendantAdded:Connect(function(Err)
