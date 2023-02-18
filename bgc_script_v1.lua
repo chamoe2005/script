@@ -56,6 +56,40 @@ local plr = GetLocalPlayer()
 local char = GetPlayerChar()
 local root = GetPlayerRoot()
 
+function GetWorkspace()
+	local workspace = game:GetService("Workspace")
+	while not workspace do
+		workspace = game:GetService("Workspace")
+		wait(1)
+		print("Waiting for Workspace")
+	end
+	return workspace
+end
+
+function GetMap()
+	local map = GetWorkspace():FindFirstChild("MAP")
+	while not map to
+		map = GetWorkspace():FindFirstChild("MAP")
+		wait(1)
+		print("Waiting on MAP")
+	end
+	return map
+end
+
+function GetChests()
+	local chest = GetMap():FindFirstChild("Chests")
+	while not chest to
+		chest = GetWorkspace():FindFirstChild("MAP")
+		wait(1)
+		print("Waiting on Chests")
+	end
+	return chest
+end
+		
+local workspace = GetWorkspace()
+local map = GetMap()
+local chests = GetChests()
+
 local Dir = COREGUI:FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOverlay")
 	Dir.DescendantAdded:Connect(function(Err)
 		if Err.Name == "ErrorTitle" then
