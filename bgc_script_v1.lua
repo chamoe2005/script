@@ -68,7 +68,7 @@ end
 
 function GetMap()
 	local map = GetWorkspace():FindFirstChild("MAP")
-	while not map to
+	while not map do
 		map = GetWorkspace():FindFirstChild("MAP")
 		wait(1)
 		print("Waiting on MAP")
@@ -78,7 +78,7 @@ end
 
 function GetChests()
 	local chest = GetMap():FindFirstChild("Chests")
-	while not chest to
+	while not chest do
 		chest = GetWorkspace():FindFirstChild("MAP")
 		wait(1)
 		print("Waiting on Chests")
