@@ -1,4 +1,4 @@
-print("Version 1.1")
+print("Version 1.2")
 
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
 _G.LastSell = 0
