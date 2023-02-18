@@ -86,7 +86,22 @@ local GC = getconnections or get_signal_cons
 		end)
 	end
 
-local library = require(game.ReplicatedStorage:WaitForChild("Nevermore"):WaitForChild("Library"))
+
+
+local nevermore = game.ReplicatedStorage:FindFirstChild("Nevermore")
+while not nevermore do
+	nevermore = game.ReplicatedStorage:FindFirstChild("Nevermore")
+	wait(1)
+	print("Waiting on Replicated Storage")
+end
+local lib = nevermore:FindFirstChild("Library")
+while not lib do
+	lib = nevermore:FindFirstChild("Library")
+	wait(1)
+	print("Waiting on Game Library")
+end
+
+library = require(lib)
 
 local multiplier = 1
 local VIP = false
