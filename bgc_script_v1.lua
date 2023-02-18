@@ -103,6 +103,12 @@ end
 
 library = require(lib)
 
+while not library.Save do
+	print("Waiting on Game Library")
+	wait(1)
+end
+	
+
 local multiplier = 1
 local VIP = false
 local playerLibrary = library.Save.Get()
