@@ -15,7 +15,28 @@ if not game:IsLoaded() then
 	notLoaded:Destroy()
 end
 Players = game:GetService("Players")
-_G.player = game:GetService("Players"):WaitForChild("LocalPlayer")
+
+function GetLocalPlayer()
+	_G.player = Players:FindFirstChild("LocalPlayer")
+	while not _G.player do
+		_G.player = Players:FindFirstChild("LocalPlayer")
+	end
+end
+
+local plr = _G.Player
+local char = plr.Character
+local root = char.HumanoidRootPart
+
+function GetPlayerRoot()
+	char = GetLocalPlayer():FindFirstChild("Character")
+	while not char do
+		char = GetLocalPlayer():FindFirstChild("Character")
+	end
+	root = char:FindFirstChild("HumanoidRootPart")
+	while not root do
+		root = char:FindFirstChild("HumanoidRootPart")
+	end
+end
 
 local Dir = COREGUI:FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOverlay")
 	Dir.DescendantAdded:Connect(function(Err)
@@ -51,9 +72,6 @@ local GC = getconnections or get_signal_cons
 		end)
 	end
 
-local plr = game.Players.LocalPlayer
-local char = plr.Character
-local root = char.HumanoidRootPart
 local library = require(game.ReplicatedStorage:WaitForChild("Nevermore"):WaitForChild("Library"))
 
 local multiplier = 1
