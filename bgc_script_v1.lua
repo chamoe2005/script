@@ -1,5 +1,6 @@
 print("Version 1.1")
 
+_G.DisabledEggs = {"Valentine's 2023 Egg"}
 _G.LastSell = 0
 _G.TeleportDelay = 5
 _G.EggDelay = 3
@@ -357,11 +358,18 @@ end
 local Eggs = {}
 for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetChildren()) do
 	for c,d in pairs(b:GetChildren()) do
-		if require(d[d.Name]).currency and require(d[d.Name]).cost and not require(d[d.Name]).disabled then
-			Eggs[d.Name] = {}
-			Eggs[d.Name]["World"] = b.Name
-			Eggs[d.Name]["Currency"] = require(d[d.Name]).currency
-			Eggs[d.Name]["Cost"] = require(d[d.Name]).cost
+		local disabled = false
+		for e,f in pairs(_G.DisabledEggs) do
+			if d.Name == f then
+				disabled = true
+			end
+		end
+			if require(d[d.Name]).currency and require(d[d.Name]).cost and not require(d[d.Name]).disabled and not disabled then
+				Eggs[d.Name] = {}
+				Eggs[d.Name]["World"] = b.Name
+				Eggs[d.Name]["Currency"] = require(d[d.Name]).currency
+				Eggs[d.Name]["Cost"] = require(d[d.Name]).cost
+			end
 		end
 	end
 end
