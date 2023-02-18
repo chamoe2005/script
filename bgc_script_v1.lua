@@ -17,12 +17,20 @@ end
 Players = game:GetService("Players")
 
 function GetLocalPlayer()
-	local player = Players:FindFirstChild("LocalPlayer")
+	local player = Players.LocalPlayer
+	while not player do
+		player = Players.LocalPlayer
+		wait(1)
+		print("Waiting for LocalPlayer")
 	return player
 end
 
 function GetPlayerChar()
-	local character = GetLocalPlayer():FindFirstChild("Character")
+	local character = GetLocalPlayer().Character
+	while not character do
+		character = Players.LocalPlayer
+		wait(1)
+		print("Waiting for Character")
 	return character
 end
 
