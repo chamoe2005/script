@@ -18,21 +18,11 @@ Players = game:GetService("Players")
 
 function GetLocalPlayer()
 	local player = Players:FindFirstChild("LocalPlayer")
-	while not player do
-		player = Players:FindFirstChild("LocalPlayer")
-		wait(1)
-		print("Waiting for Localplayer")
-	end
 	return player
 end
 
 function GetPlayerChar()
 	local character = GetLocalPlayer():FindFirstChild("Character")
-	while not character do
-		character = GetLocalPlayer():FindFirstChild("Character")
-		wait(1)
-		print("Waiting for Character")
-	end
 	return character
 end
 
