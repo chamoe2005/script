@@ -1,3 +1,5 @@
+print("Version 1.1")
+
 _G.LastSell = 0
 _G.TeleportDelay = 5
 _G.EggDelay = 3
