@@ -2,13 +2,36 @@ _G.LastSell = 0
 _G.player = game:GetService("Players").LocalPlayer
 _G.TeleportDelay = 5
 _G.EggDelay = 3
-_G.TripleEggs = false
 
 --local dropdowns = {}
 --dropdowns.Bubblesell = {"No Sell", "Sell 1", "Sell 2"}
 --dropdowns.Eggmode = {"None", "Best", "Any"}
 
-
+COREGUI = game:GetService("CoreGui")
+if not game:IsLoaded() then
+	local notLoaded = Instance.new("Message")
+	notLoaded.Parent = COREGUI
+	notLoaded.Text = 'Waiting for the game to load'
+	game.Loaded:Wait()
+	notLoaded:Destroy()
+end
+Players = game:GetService("Players")
+local Dir = COREGUI:FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOverlay")
+	Dir.DescendantAdded:Connect(function(Err)
+		if Err.Name == "ErrorTitle" then
+			Err:GetPropertyChangedSignal("Text"):Connect(function()
+				if Err.Text:sub(0, 12) == "Disconnected" then
+					if #Players:GetPlayers() <= 1 then
+						Players.LocalPlayer:Kick("\nRejoining...")
+						wait()
+						TeleportService:Teleport(PlaceId, Players.LocalPlayer)
+					else
+						TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Players.LocalPlayer)
+					end
+				end
+			end)
+		end
+	end)
 
 local GC = getconnections or get_signal_cons
 	if GC then
@@ -189,7 +212,7 @@ function DeletePets()
 						--print(lowestdiamonds,library.Directory.Pets[b.id].buffs.Diamonds)
 						
 				
-					if not petFound and not b.lock and (library.Directory.Pets[b.id].buffs.Bubbles < lowestbubbles or library.Directory.Pets[b.id].buffs.Coins < lowestcoins or library.Directory.Pets[b.id].buffs.Diamonds < lowestdiamonds) then
+					if not petFound and not b.lock and library.Directory.Pets[b.id].rarity ~= "Exclusive" and library.Directory.Pets[b.id].rarity ~= "Godly" and (library.Directory.Pets[b.id].buffs.Bubbles < lowestbubbles or library.Directory.Pets[b.id].buffs.Coins < lowestcoins or library.Directory.Pets[b.id].buffs.Diamonds < lowestdiamonds) then
 						lowestuid = b.uid
 						lowestbubbles = library.Directory.Pets[b.id].buffs.Bubbles
 						lowestcoins = library.Directory.Pets[b.id].buffs.Coins
@@ -340,6 +363,22 @@ function doBubblePass()
 			else
 				print((highestEggPrize - playerLibrary.BubblePass.CurrentEggs) .. " eggs left before Bubble Pass is complete")
 			end
+			
+		elseif not playerLibrary.BubblePass and farm.flags.ClaimPass and playerLibrary["Diamonds"] >= 1000000000 then
+		
+			print("Purchasing Bubble Pass")
+		
+			local ohTable1 = {
+				[1] = {
+					[1] = false
+				},
+				[2] = {
+					[1] = 2
+				}
+			}
+
+			game:GetService("ReplicatedStorage").Remotes["buy bubble pass"]:FireServer(ohTable1)
+		
 		else
 			print("Bubble Pass not Owned")
 			
@@ -354,26 +393,35 @@ function doTierRewards()
 	if farm.flags["Tier Rewards"] then
 
 		local playerLibrary = library.Save.Get()
-
-		for a,b in pairs(playerLibrary.Rewards) do
-			if library.Directory.Rewards[a].price(b + 1) <= playerLibrary["Diamonds"] then
-				print("Redeeming " .. a .. " Reward Slot #" .. b + 1 .. " for " .. library.Directory.Rewards[a].price(b + 1) .. " Diamonds")
-				
-				local ohTable1 = {
-					[1] = {
-						[1] = "Spawn World"
-					},
-					[2] = {
-						[1] = false
-					}
-				}
-
-				game:GetService("ReplicatedStorage").Remotes["buy rewards"]:FireServer(ohTable1)
-				wait(.5)
-			else
-				print((library.Directory.Rewards[a].price(b + 1) - playerLibrary["Diamonds"]) .. " Diamonds until " .. a .. " Reward Slot #" .. b + 1 .. " can be redeemed")
+		local Rewards = {["Spawn World"] = 0}
+		
+		for a,b in pairs(Rewards) do
+			if playerLibrary.Rewards[a] then
+				Rewards[a] = playerLibrary.Rewards[a]
 			end
 		end
+
+			for a,b in pairs(Rewards) do
+				if library.Directory.Rewards[a].price(b + 1) <= playerLibrary["Diamonds"] then
+					print("Redeeming " .. a .. " Reward Slot #" .. b + 1 .. " for " .. library.Directory.Rewards[a].price(b + 1) .. " Diamonds")
+					
+					local ohTable1 = {
+						[1] = {
+							[1] = "Spawn World"
+						},
+						[2] = {
+							[1] = false
+						}
+					}
+
+					game:GetService("ReplicatedStorage").Remotes["buy rewards"]:FireServer(ohTable1)
+					wait(.5)
+				else
+					print((library.Directory.Rewards[a].price(b + 1) - playerLibrary["Diamonds"]) .. " Diamonds until " .. a .. " Reward Slot #" .. b + 1 .. " can be redeemed")
+				end
+			end
+		--elseif library.Directory.Rewards[a].price(1) <= playerLibrary["Diamonds"] then
+		
 	end
 	
 end
