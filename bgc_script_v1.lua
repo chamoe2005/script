@@ -472,9 +472,9 @@ function doFreeLoot()
 					local startTime = os.time()
 					repeat
 						LogMe("TP to Lootbag " .. v.Name)
-						game:GetService("Workspace").Stuff.Lootbags.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
-																	if v.Name ~= "" and v.Name ~= nil then
-																		LogMe("Drop " .. v.Name .. " removed")
+						game:GetService("Workspace").Stuff.Lootbags.ChildRemoved:connect(function(meshpart) --_G.Pickups[v.Name] = false 
+																	if meshpart ~= "" and meshpart ~= nil then
+																		LogMe("Drop " .. meshpart .. " removed")
 																	end
 																end)
 						_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
