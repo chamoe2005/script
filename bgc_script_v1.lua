@@ -1065,11 +1065,10 @@ spawn(function()
 		end
 		
 		_G.LastEgg = os.time()
-		print("Hatching Stopped")
 		if farm.flags.FreeLoot then
-			print("Do Free Loot")
+			--print("Do Free Loot")
 			doFreeLoot()
-			print("End Free Loot")
+			--print("End Free Loot")
 		end
 		
 
@@ -1149,7 +1148,7 @@ spawn(function()
 				local chest = game:GetService("Workspace").MAP.Activations[b.name]
 				repeat
 					print("TP to Chest")
-					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X+math.random(3,8), chest.Position.Y + 10, chest.Position.Z+math.random(3,8))
+					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X + math.random(3,8), chest.Position.Y + 10, chest.Position.Z + math.random(3,8)))
 					wait(_G.TeleportDelay)
 					toTarget(GetPlayerRoot().Position,chest.Position,chest.CFrame)
 				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil
