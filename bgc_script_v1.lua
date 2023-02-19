@@ -425,7 +425,7 @@ function doFreeLoot()
 						wait(.5)
 						game:GetService("ReplicatedStorage").Remotes["redeem free gift"]:InvokeServer({[1] = {[1] = a},[2] = {[1] = false}})
 						wait()
-					until game:GetService("Workspace").Stuff.Lootbags:FindFirstChildWhichIsA("MeshPart") ~= nil
+					until game:GetService("Workspace").Stuff.Lootbags:FindFirstChildWhichIsA("MeshPart", true) ~= nil
 					print("Claiming Loot Bag " .. a)
 					wait(1)
 				end
