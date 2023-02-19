@@ -1,4 +1,4 @@
-print("Version 1.2.7")
+print("Version 1.2.7.1")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1079,8 +1079,9 @@ spawn(function()
 			--spawn(function()
 				_G.DropCoolOff = os.time() + _G.DropTimeOut
 				_G.LastDrop = os.time() + _G.DropCoolOff
-				
+				print("Starting Drops")
 				while _G.drops and (os.time() < _G.DropCoolOff) do
+					
 				
 					local closest = nil
 					local dis = math.huge
@@ -1114,7 +1115,7 @@ spawn(function()
 						wait(.1)
 					end
 				end
-				
+				print("Ending Drops")
 				_G.LastDrop = os.time()
 				
 			wait(_G.TeleportDelay)
@@ -1127,6 +1128,7 @@ spawn(function()
 		
 		if _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay) then
 			if _G.SellBubbleArea ~= "No Sell" then
+				print("Sell Bubble")
 				_G.LastSell = os.time()
 				local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
 				--local playerLibrary = library.Save.Get()
@@ -1146,6 +1148,7 @@ spawn(function()
 			if _G[b.name] then
 				local chest = game:GetService("Workspace").MAP.Activations[b.name]
 				repeat
+					print("TP to Chest")
 					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X+math.random(3,8), chest.Position.Y + 10, chest.Position.Z+math.random(3,8))
 					wait(_G.TeleportDelay)
 					toTarget(GetPlayerRoot().Position,chest.Position,chest.CFrame)
