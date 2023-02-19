@@ -799,7 +799,7 @@ local drop = wally:CreateWindow('Drops')
 
 function toTarget(pos, targetPos, targetCFrame)
     local tween_s = game:service"TweenService"
-    local info = TweenInfo.new((targetPos - pos).Magnitude/200, Enum.EasingStyle.Quad)
+    local info = TweenInfo.new((targetPos - pos).Magnitude/80, Enum.EasingStyle.Quad)
     -- local tic_k = tick()
     local tween, err = pcall(function()
         local tween = tween_s:Create(GetPlayerRoot(), info, {CFrame = targetCFrame})
