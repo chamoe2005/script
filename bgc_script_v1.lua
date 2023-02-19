@@ -1,4 +1,4 @@
-print("Version 1.2.8")
+print("Version 1.2.9")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1179,12 +1179,13 @@ spawn(function()
 		for a,b in pairs(game:GetService("Workspace").MAP.Chests:GetChildren()) do
 			if _G[b.name] then
 				local chest = game:GetService("Workspace").MAP.Activations[b.name]
+				local startTime = os.time()
 				repeat
 					LogMe("TP to Chest")
-					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X + math.random(3,8), chest.Position.Y + 10, chest.Position.Z + math.random(3,8)))
+					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X + math.random(8,20), chest.Position.Y + 10, chest.Position.Z + math.random(8,20)))
 					wait(_G.TeleportDelay)
 					toTarget(GetPlayerRoot().Position,chest.Position,chest.CFrame)
-				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil
+				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil or os.time() > startTime + 10
 				LogMe("Grabbed " .. b.name .. "!!!")
 				wait(_G.TeleportDelay)
 			end
