@@ -1,4 +1,4 @@
-print("Version 1.2")
+print("Version 1.2.1")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -604,7 +604,7 @@ local changeSetting = function(settingtype, settingname, value)
 						for x,y in pairs(getconnections(v.MouseButton1Click)) do
 							y:Fire()
 						end
-						print(selectionname, value)
+						--print(selectionname, value)
 					end
 				end
 			else
@@ -613,7 +613,7 @@ local changeSetting = function(settingtype, settingname, value)
 						for x,y in pairs(getconnections(v.MouseButton1Click)) do
 							y:Fire()
 						end
-						print(selectionname, currentValue)
+						--print(selectionname, currentValue)
 					end
 				end
 			end	
