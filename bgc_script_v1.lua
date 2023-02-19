@@ -1,4 +1,4 @@
-print("Version 1.3.3")
+print("Version 1.3.4")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -848,7 +848,7 @@ local doChallenge = function()
 end
 
 		if _G.ChallengeName ~= nil then
-			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end doChallenge() end) end)
+			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doChallenge() end) end)
 		end
 
 
