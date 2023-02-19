@@ -5,7 +5,7 @@ _G.DisabledEggs = {"Valentine's 2023 Egg"}
 _G.LastSell = 0
 _G.LastDrop = 0
 _G.TeleportDelay = 1
-_G.EggDelay = .3
+_G.EggDelay = 5
 _G.oldeggs = {}
 _G.DropTimeOut = 30
 _G.DropDelay = 60
@@ -425,11 +425,10 @@ function doFreeLoot()
 				end
 				if playerLibrary.FreeGiftsTime > b.waitTime and not found then
 					--repeat
-						--_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position))
-						--toTarget(root.Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").CFrame)
-						wait()
+						_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position))
+						toTarget(root.Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").CFrame)
+						wait(_G.TeleportDelay)
 						game:GetService("ReplicatedStorage").Remotes["redeem free gift"]:InvokeServer({[1] = {[1] = a},[2] = {[1] = false}})
-						wait()
 					--until game:GetService("Workspace").Stuff.Lootbags:FindFirstChildWhichIsA("MeshPart", true) ~= nil
 					print("Claiming Loot Bag " .. a)
 				end
@@ -442,7 +441,7 @@ function doFreeLoot()
 				closest = v:FindFirstChildWhichIsA("MeshPart")
 				dis = (GetPlayerRoot().Position-v:FindFirstChildWhichIsA("MeshPart").Position).magnitude
 				if closest ~= nil then
-					--_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X, closest.Position.Y - 25, closest.Position.Z))
+					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
 					local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
 					if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
 						GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y,GetPlayerRoot().CFrame.Z)
@@ -850,7 +849,7 @@ end
 
 local egg = wally:CreateWindow('Eggs')
 	egg:Section('Select Eggs')
-	--egg:Toggle('Fast Hatch', {flag = "FastHatch"}, function(fasthatch) if fasthatch then _G.EggDelay = 3 else _G.EggDelay = 5 end end)
+	egg:Toggle('Fast Hatch', {flag = "FastHatch"}, function(fasthatch) if fasthatch then _G.EggDelay = 3 else _G.EggDelay = 5 end end)
 	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = {"None", "Best", "Any"} })
 	
  
@@ -1029,39 +1028,42 @@ spawn(function()
 						}
 		local playerLibrary = library.Save.Get()
 		
-	
-		if _G.BuyEggMode == "Best" then
-			for i,v in pairs(Eggs) do
-				if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] then
-					bestEgg[v.Currency].Name = i
-					bestEgg[v.Currency].Cost = v.Cost
+		while os.time < (_G.LastEgg + _G.EggDelay) do
+			if _G.BuyEggMode == "Best" then
+				for i,v in pairs(Eggs) do
+					if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] then
+						bestEgg[v.Currency].Name = i
+						bestEgg[v.Currency].Cost = v.Cost
+					end
 				end
-			end
-			if bestEgg["Diamonds"].Name and bestEgg["Coins"].Name then
-				--print("Opening " .. bestEgg.Name)
-				if bestEgg["Diamonds"].Name == "Valentine's 2023 Egg" then
+				if bestEgg["Diamonds"].Name and bestEgg["Coins"].Name then
+					--print("Opening " .. bestEgg.Name)
+					if bestEgg["Diamonds"].Name == "Valentine's 2023 Egg" then
+						openEgg(bestEgg["Diamonds"].Name)
+					elseif bestEgg["Coins"].Cost > bestEgg["Diamonds"].Cost then
+						openEgg(bestEgg["Coins"].Name)
+					else
+						openEgg(bestEgg["Diamonds"].Name)
+					end
+				elseif bestEgg["Diamonds"].Name then
 					openEgg(bestEgg["Diamonds"].Name)
-				elseif bestEgg["Coins"].Cost > bestEgg["Diamonds"].Cost then
+				elseif bestEgg["Coins"].Name then
 					openEgg(bestEgg["Coins"].Name)
-				else
-					openEgg(bestEgg["Diamonds"].Name)
 				end
-			elseif bestEgg["Diamonds"].Name then
-				openEgg(bestEgg["Diamonds"].Name)
-			elseif bestEgg["Coins"].Name then
-				openEgg(bestEgg["Coins"].Name)
-			end
-			wait(_G.EggDelay)
-		elseif _G.BuyEggMode == "Any" then
-			for i,v in pairs(Eggs) do
-				if _G[i] then
-					--print("Opening " .. i)
-					openEgg(i)
+				
+			elseif _G.BuyEggMode == "Any" then
+				for i,v in pairs(Eggs) do
+					if _G[i] then
+						--print("Opening " .. i)
+						openEgg(i)
+					end
 				end
+				
 			end
-			wait(_G.EggDelay)
+			wait(_G.TeleportDelay)
 		end
-			
+		
+		_G.LastEgg = os.time()
 	
 		if farm.flags.FreeLoot then
 		
@@ -1112,14 +1114,17 @@ spawn(function()
 					end
 				end
 				
-
+			wait(_G.TeleportDelay)
 			--end)
 			--_G.CollectingDrops = false
 			--end
 		end
 		
+		
+		
 		if _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay) then
 			if _G.SellBubbleArea ~= "No Sell" then
+				_G.LastSell = os.time()
 				local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
 				--local playerLibrary = library.Save.Get()
 				--for i = 1, 5 do
@@ -1129,7 +1134,8 @@ spawn(function()
 					
 					--playerLibrary = library.Save.Get()
 					
-				_G.LastSell = os.time()
+				
+				wait(_G.TeleportDelay)
 			end
 		end	
 		
@@ -1142,7 +1148,9 @@ spawn(function()
 					toTarget(GetPlayerRoot().Position,chest.Position,chest.CFrame)
 				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil
 				print("Grabbed " .. b.name .. "!!!")
+				wait(_G.TeleportDelay)
 			end
+			
 		end
 			
 
