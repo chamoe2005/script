@@ -1,4 +1,4 @@
-print("Version 1.2.7.1")
+print("Version 1.2.8")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -8,7 +8,7 @@ _G.TeleportDelay = 1.5
 _G.LastEgg = os.time()
 _G.EggDelay = 5
 _G.oldeggs = {}
-_G.DropTimeOut = 30
+_G.DropTimeOut = 15
 _G.DropDelay = 60
 _G.DropCoolOff = os.time() + _G.DropDelay
 
@@ -1103,6 +1103,9 @@ spawn(function()
 					
 						
 					if closest ~= nil and (target == nil or target.Parent == nil) then
+						closest.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
+																print(v.Name .. " removed") 
+															end)
 						local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
 						--if dis > 250 then
 							--G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+1, closest.Position.Y+3, closest.Position.Z+1))
