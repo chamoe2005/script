@@ -1103,8 +1103,8 @@ spawn(function()
 					
 						
 					if closest ~= nil and (target == nil or target.Parent == nil) then
-						closest.Parent.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
-																print(object.Name .. " removed") 
+						closest.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
+																if object.Name == "POS" then print("Drop " .. object.Parent.Name .. " removed" end) 
 															end)
 						local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
 						--if dis > 250 then
