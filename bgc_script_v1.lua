@@ -38,10 +38,24 @@ function GetLocalPlayer()
 	return player
 end
 
-if not isfile("bgclog" .. GetLocalPlayer() .. ".txt") then
-	writefile("bgclog" .. GetLocalPlayer() .. ".txt", "Start of Log File\n")
+if not isfile("bgclog" .. GetLocalPlayer().name .. ".txt") then
+	writefile("bgclog" .. GetLocalPlayer().name .. ".txt", "Start of Log File\n")
 end
 
+function LogMe(message)
+
+	local TIME_ZONE = -5
+	local date = os.date("!*t")
+	local hour = (date.hour + TIME_ZONE) % 24
+	local ampm = hour < 12 and "AM" or "PM"
+	local timestamp = string.format("%02i:%02i %s", ((hour - 1) % 12) + 1, date.min, ampm)
+
+	if message and message ~= "" then
+		print(message)
+		appendfile("bgclog" .. GetLocalPlayer().name .. ".txt", timestamp .. "\t" .. message .. "\n")
+	end
+
+end
 
 function GetPlayerChar()
 	local character = GetLocalPlayer().Character
@@ -66,20 +80,7 @@ end
 
 
 
-function LogMe(message)
 
-	local TIME_ZONE = 5
-	local date = os.date("!*t")
-	local hour = (date.hour + TIME_ZONE) % 24
-	local ampm = hour < 12 and "AM" or "PM"
-	local timestamp = string.format("%02i:%02i %s", ((hour - 1) % 12) + 1, date.min, ampm)
-
-	if message and message ~= "" then
-		print(message)
-		appendfile("bgclog" .. GetLocalPlayer() .. ".txt", timestamp .. "\t" .. message)
-	end
-
-end
 
 
 
