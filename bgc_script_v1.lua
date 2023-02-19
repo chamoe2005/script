@@ -1046,15 +1046,15 @@ spawn(function ()
 		if _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay) then
 			if _G.SellBubbleArea ~= "No Sell" then
 				local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
-				local playerLibrary = library.Save.Get()
-				repeat
+				--local playerLibrary = library.Save.Get()
+				for i = 1, 5 do
 				_G.player.Character:SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X + 25, sellarea.Position.Y, sellarea.Position.Z - 25))
 				
 					toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,0,0),sellarea.CFrame + Vector3.new(0,0,0))
 					wait(.5)
-					playerLibrary = library.Save.Get()
+					--playerLibrary = library.Save.Get()
 					
-				until playerLibrary["Bubbles"] == 0
+				end
 				_G.LastSell = os.time()
 			end
 		end	
