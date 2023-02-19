@@ -1,9 +1,10 @@
 print("Version 1.2")
 
+_G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
 _G.LastSell = 0
 _G.TeleportDelay = 5
-_G.EggDelay = 3
+_G.EggDelay = 5
 _G.oldeggs = {}
 
 --local dropdowns = {}
@@ -408,7 +409,50 @@ for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetCh
 	end
 end
 
-		farm:Toggle('Free Loot', {flag = 'FreeLoot'})
+function doFreeLoot()
+
+			local playerLibrary = library.Save.Get()
+			for a,b in pairs(library.Directory.FreeGifts) do
+				local found = false
+				for c,d in pairs(playerLibrary.FreeGiftsRedeemed) do
+					if a == d then
+						found = true
+					end
+				end
+				if playerLibrary.FreeGiftsTime > b.waitTime and not found then
+					repeat
+						toTarget(root.Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").CFrame)
+						wait(.5)
+						game:GetService("ReplicatedStorage").Remotes["redeem free gift"]:InvokeServer({[1] = {[1] = a},[2] = {[1] = false}})
+						wait()
+					until game:GetService("Workspace").Stuff.Lootbags:FindFirstChildWhichIsA("MeshPart") ~= nil
+					print("Claiming Loot Bag " .. a)
+					wait(1)
+				end
+				wait(1)
+			end
+		
+		
+			local closest = nil
+			local dis = math.huge
+			for i , v in ipairs(game:GetService("Workspace").Stuff.Lootbags:GetChildren()) do
+				closest = v:FindFirstChildWhichIsA("MeshPart")
+				dis = (root.Position-v:FindFirstChildWhichIsA("MeshPart").Position).magnitude
+				if closest ~= nil then
+					local dis = closest.CFrame.Y - root.CFrame.Y
+					if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
+						root.CFrame = CFrame.new(root.CFrame.X,closest.CFrame.Y + 2,root.CFrame.Z)
+					end
+					toTarget(root.Position,closest.Position + Vector3.new(0,0,2),closest.CFrame + Vector3.new(0,0,2))
+					print("TP to Lootbag " .. v.Name)
+					wait(1)
+				end
+			end
+		
+
+end
+
+		farm:Toggle('Free Loot', {flag = 'FreeLoot'}, spawn(function() doFreeLoot() end))
 		
 function doBubblePass()
 
@@ -572,6 +616,34 @@ local changeSetting = function(settingtype, settingname, value)
 	end
 end
 
+local switchEggs = function (new)
+	print("Switching Eggs")
+
+	if new == {"old"} then
+		new = _G.oldeggs
+	end
+	
+	_G.oldeggs = {}
+
+	for a,b in pairs(Eggs) do
+	
+		if _G[a] then
+			table.insert(_G.oldeggs, a)
+		end
+		
+		enabled = false
+		for c,d in pairs(new) do
+			if a == d then
+				enabled = true
+				print(d)
+			end
+		end
+		
+		changeSetting("Checkmark", a, enabled)
+			
+	end
+end
+
 		
 function doChallenge()
 
@@ -616,10 +688,9 @@ function doChallenge()
 						changeSetting("Checkmark", "Large Diamonds", false)
 						changeSetting("Checkmark", "Small Diamond", false)
 						changeSetting("Box", "Range", 0)
-					elseif b.challengeType == "LegendaryPets" then
-						switchEggs({"Magma Egg", "Common Egg"})
-					elseif b.challengeType == "GodlyPets" then
-						switchEggs({"Void Egg", "Galaxy Egg", "Common Egg"})
+					elseif b.challengeType == "LegendaryPets" or b.challengeType == "GodlyPets" then
+						print("Switch Back Eggs")
+						switchEggs({"old"})
 					else
 						wait(5)
 					end
@@ -642,8 +713,12 @@ function doChallenge()
 						changeSetting("Checkmark", "Large Diamonds", true)
 						changeSetting("Checkmark", "Small Diamond", true)
 						changeSetting("Box", "Range", 50000)
-					elseif b.challengeType == "LegendaryPets" or b.challengeType == "GodlyPets" then
-						switchEggs({"old"})						
+					elseif b.challengeType == "LegendaryPets" then
+						print("Switch to Legendary Challenege")
+						switchEggs({"Magma Egg", "Common Egg"})
+					elseif b.challengeType == "GodlyPets" then
+						print("Switch to Godly Challenege")
+						switchEggs({"Void Egg", "Galaxy Egg", "Common Egg"})					
 					end
 				end
 			end
@@ -656,7 +731,7 @@ function doChallenge()
 end
 
 		if _G.ChallengeName ~= nil then
-			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() doChallenge() end) end)
+			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() while not _G.settingsloaded do print("Settings not loaded") wait(1) end doChallenge() end) end)
 		end
 
 
@@ -693,6 +768,7 @@ end
 
 local egg = wally:CreateWindow('Eggs')
 	egg:Section('Select Eggs')
+	egg:Toggle('Fast Hatch', {flag = "FastHatch"}, function(fasthatch) if fasthatch then _G.EggDelay = 3 else _G.EggDelay = 5 end end)
 	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = {"None", "Best", "Any"} })
 	
  
@@ -700,35 +776,6 @@ local egg = wally:CreateWindow('Eggs')
 		egg:Toggle(a, {location = _G, flag = a})
 		_G[a] = false
 	end
-
-local switchEggs = function (new)
-	print("Switching Eggs")
-
-	if new == {"old"} then
-		new = _G.oldeggs
-	end
-	
-	_G.oldeggs = {}
-
-	for a,b in pairs(Eggs) do
-	
-		if _G[a] then
-			table.insert(_G.oldeggs, a)
-		end
-		
-		enabled = false
-		for c,d in pairs(new) do
-			if a == d then
-				enabled = true
-				print(d)
-			end
-		end
-		
-		changeSetting("Checkmark", a, enabled)
-			
-	end
-end
-
 
 local pickups = {"Coins Present", "Coins Bag", "Large Coin", "Medium Coin", "Small Coin", "Large Diamonds", "Small Diamond", "Orb"}
 
@@ -879,7 +926,9 @@ local loadSettings = function()
 						end			
 				end
 			end
-	end
+		end
+		
+		_G.settingsloaded = true
 end
 
 
@@ -974,39 +1023,8 @@ spawn(function()
 		
 		if farm.flags.FreeLoot then
 		
-			local playerLibrary = library.Save.Get()
-			for a,b in pairs(library.Directory.FreeGifts) do
-				local found = false
-				for c,d in pairs(playerLibrary.FreeGiftsRedeemed) do
-					if a == d then
-						found = true
-					end
-				end
-				if playerLibrary.FreeGiftsTime > b.waitTime and not found then
-					game:GetService("ReplicatedStorage").Remotes["redeem free gift"]:InvokeServer({[1] = {[1] = a},[2] = {[1] = false}})
-					print("Claiming Loot Bag " .. a)
-					wait(1)
-				end
-				wait(1)
-			end
-		
-		
-			local closest = nil
-			local dis = math.huge
-			for i , v in ipairs(game:GetService("Workspace").Stuff.Lootbags:GetChildren()) do
-				closest = v:FindFirstChildWhichIsA("MeshPart")
-				dis = (root.Position-v:FindFirstChildWhichIsA("MeshPart").Position).magnitude
-				if closest ~= nil then
-					local dis = closest.CFrame.Y - root.CFrame.Y
-					if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
-						root.CFrame = CFrame.new(root.CFrame.X,closest.CFrame.Y + 2,root.CFrame.Z)
-					end
-					toTarget(root.Position,closest.Position + Vector3.new(0,0,2),closest.CFrame + Vector3.new(0,0,2))
-					print("TP to Lootbag " .. v.Name)
-					wait(1)
-				end
-			end
-		
+			doFreeLoot()
+			
 		end
 	end
 end)
@@ -1198,7 +1216,11 @@ end)
 
 if _G.autoloadsettings then
 	loadSettings()
+else
+	_G.settingsloaded = true
 end
+
+
 
 function NoobSim()
 						print("BGClicker n00b Challenge SIMULATOR")
