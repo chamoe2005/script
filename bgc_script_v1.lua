@@ -1,10 +1,10 @@
-print("Version 1.2.5")
+print("Version 1.2.6")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
-_G.LastSell = 0
-_G.LastDrop = 0
-_G.TeleportDelay = 1
+_G.LastSell = os.time()
+_G.LastDrop = os.time()
+_G.TeleportDelay = 1.5
 _G.LastEgg = os.time()
 _G.EggDelay = 5
 _G.oldeggs = {}
@@ -1115,6 +1115,8 @@ spawn(function()
 					end
 				end
 				
+				_G.LastDrop = os.time()
+				
 			wait(_G.TeleportDelay)
 			--end)
 			--_G.CollectingDrops = false
@@ -1130,7 +1132,7 @@ spawn(function()
 				--local playerLibrary = library.Save.Get()
 				--for i = 1, 5 do
 				_G.player.Character:SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
-				wait(_G.TeleportDelay)
+				wait(.5)
 				toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
 					
 					--playerLibrary = library.Save.Get()
