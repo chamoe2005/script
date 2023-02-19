@@ -421,8 +421,9 @@ function doFreeLoot()
 				end
 				if playerLibrary.FreeGiftsTime > b.waitTime and not found then
 					repeat
-						toTarget(root.Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").CFrame)
-						wait(.5)
+						_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").CFrame))
+						--toTarget(root.Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").CFrame)
+						wait()
 						game:GetService("ReplicatedStorage").Remotes["redeem free gift"]:InvokeServer({[1] = {[1] = a},[2] = {[1] = false}})
 						wait()
 					until game:GetService("Workspace").Stuff.Lootbags:FindFirstChildWhichIsA("MeshPart", true) ~= nil
@@ -439,6 +440,7 @@ function doFreeLoot()
 				closest = v:FindFirstChildWhichIsA("MeshPart")
 				dis = (root.Position-v:FindFirstChildWhichIsA("MeshPart").Position).magnitude
 				if closest ~= nil then
+					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.CFrame.X - 25, closest.CFrame.Y - 25, closest.CFrame.Z))
 					local dis = closest.CFrame.Y - root.CFrame.Y
 					if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
 						root.CFrame = CFrame.new(root.CFrame.X,closest.CFrame.Y + 2,root.CFrame.Z)
@@ -452,7 +454,7 @@ function doFreeLoot()
 
 end
 
-		farm:Toggle('Free Loot', {flag = 'FreeLoot'}, spawn(function() doFreeLoot() end))
+		farm:Toggle('Free Loot', {flag = 'FreeLoot'})
 		
 function doBubblePass()
 
@@ -983,7 +985,12 @@ end)
 spawn(function()	
 	while wait(.1) do
 			--if not _G.collectingchests and not _G.sell and farm.flags.Drops == true and (_G.canafford ~= true or _G.eggSkip == true) then
-		if _G.drops then		
+	if _G.settingsloaded then
+		if farm.flags.FreeLoot then
+		
+			doFreeLoot()
+			
+		elseif _G.drops then		
 			local DropTimeout = os.time() + 30
 			--_G.CollectingDrops = true
 			
@@ -1020,12 +1027,8 @@ spawn(function()
 			--_G.CollectingDrops = false
 			--end
 		end
+	end	
 		
-		if farm.flags.FreeLoot then
-		
-			doFreeLoot()
-			
-		end
 	end
 end)
 	
