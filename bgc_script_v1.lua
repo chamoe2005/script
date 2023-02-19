@@ -1,4 +1,4 @@
-print("Version 1.3.2")
+print("Version 1.3.3")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -440,7 +440,7 @@ for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetCh
 	end
 end
 
-game:GetService("Workspace").Stuff.Lootbags.DescendantRemoving:Connect(function(desc) if desc:IsA("MeshPart") then LogMe("Drop " .. desc.name .. " removed") end end)
+game:GetService("Workspace").Stuff.Lootbags.DescendantRemoving:Connect(function(desc) if desc:IsA("Model") then LogMe("Drop " .. desc.name .. " removed") end end)
 
 function doFreeLoot()
 
@@ -1062,7 +1062,9 @@ spawn(function()
 						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0}
 						}
 		local playerLibrary = library.Save.Get()
-		LogMe("Hatching Eggs")
+		if _G.BuyEggMode ~= "None" then
+			LogMe("Hatching Eggs")
+		end
 		while os.time() < (_G.LastEgg + _G.EggDelay) do
 			if _G.BuyEggMode == "Best" then
 				for i,v in pairs(Eggs) do
