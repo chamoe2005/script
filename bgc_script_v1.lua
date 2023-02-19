@@ -633,7 +633,7 @@ local switchEggs = function (args)
 		_G.oldeggs[1] = _G.BuyEggMode
 		
 		print(args[1])
-		changeSetting("Dropdown", "Buy Mode", args[1])
+		changeSetting("Selection", "Buy Mode", args[1])
 		
 		for a,b in pairs(Eggs) do
 		
