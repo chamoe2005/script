@@ -472,7 +472,7 @@ function doFreeLoot()
 					local startTime = os.time()
 					repeat
 						LogMe("TP to Lootbag " .. v.Name)
-						closest.Parent.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
+						game:GetService("Workspace").Stuff.Lootbags.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
 																	objectname = object.name
 																end)
 						_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
