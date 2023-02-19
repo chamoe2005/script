@@ -1,4 +1,4 @@
-print("Version 1.3.4")
+print("Version 1.3.4.1")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1075,7 +1075,7 @@ spawn(function()
 				end
 				if bestEgg["Diamonds"].Name and bestEgg["Coins"].Name then
 					--print("Opening " .. bestEgg.Name)
-					if bestEgg["Diamonds"].Name == "Valentine's 2023 Egg" then
+					if bestEgg["Diamonds"].Name == "Safe Egg" then
 						openEgg(bestEgg["Diamonds"].Name)
 					elseif bestEgg["Coins"].Cost > bestEgg["Diamonds"].Cost then
 						openEgg(bestEgg["Coins"].Name)
