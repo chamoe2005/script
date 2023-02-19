@@ -1028,7 +1028,7 @@ spawn(function()
 						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0}
 						}
 		local playerLibrary = library.Save.Get()
-		
+		print("Hatching Eggs")
 		while os.time() < (_G.LastEgg + _G.EggDelay) do
 			if _G.BuyEggMode == "Best" then
 				for i,v in pairs(Eggs) do
@@ -1065,11 +1065,11 @@ spawn(function()
 		end
 		
 		_G.LastEgg = os.time()
-	
+		print("Hatching Stopped")
 		if farm.flags.FreeLoot then
-		
+			print("Do Free Loot")
 			doFreeLoot()
-			
+			print("End Free Loot")
 		end
 		
 
