@@ -619,35 +619,40 @@ local changeSetting = function(settingtype, settingname, value)
 end
 
 local switchEggs = function (args)
-	print("Switching Eggs")
-	--print(args[2])
-	if args[2] == {"old"} then
-		args = _G.oldeggs
-	end
-	
-	_G.oldeggs = {[1] = "None", [2] = {}}
-	_G.oldeggs[1] = _G.BuyEggMode
-	
-	changeSetting("Dropdown", "Buy Mode", args[1])
-	
-	for a,b in pairs(Eggs) do
-	
+	if _G.settingsloaded then
+		print("Switching Eggs")
+		--print(args[2])
+		if args[2] == {"old"} then
+			args = _G.oldeggs
+		end
+		
+		_G.oldeggs = {[1] = "None", [2] = {}}
+		_G.oldeggs[1] = _G.BuyEggMode
+		
+		print(args[1])
+		changeSetting("Dropdown", "Buy Mode", args[1])
+		
+		for a,b in pairs(Eggs) do
+		
 
-		if _G[a] then
-			table.insert(_G.oldeggs[2], a)
-		end
-		
-		enabled = false
-		for c,d in pairs(args[2]) do
-			if a == d then
-				enabled = true
-				print(a, enabled)
+			if _G[a] then
+				table.insert(_G.oldeggs[2], a)
 			end
-		end
-		
-		
-		changeSetting("Checkmark", a, enabled)
 			
+			enabled = false
+			for c,d in pairs(args[2]) do
+				if a == d then
+					enabled = true
+					print(a, enabled)
+				end
+			end
+			
+			
+			changeSetting("Checkmark", a, enabled)
+				
+		end
+	else
+		print("Settings not loaded")
 	end
 end
 
