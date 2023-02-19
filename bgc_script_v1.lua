@@ -725,7 +725,7 @@ function doChallenge()
 						switchEggs({[1] = "Best", [2] = {"Magma Egg", "Common Egg"}})
 					elseif b.challengeType == "GodlyPets" then
 						print("Switch to Godly Challenege")
-						switchEggs({[1] = "Best", [2] = {"Void Egg", "Galaxy Egg", "Common Egg"}})					
+						switchEggs({[1] = "Best", [2] = {"Safe Egg", "Galaxy Egg", "Common Egg"}})					
 					end
 				end
 			end
