@@ -440,6 +440,8 @@ for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetCh
 	end
 end
 
+game:GetService("Workspace").Stuff.Lootbags.DescendantRemoving:Connect(function(desc) LogMe("Drop " .. desc .. " removed") end)
+
 function doFreeLoot()
 
 			local playerLibrary = library.Save.Get()
@@ -469,23 +471,16 @@ function doFreeLoot()
 				dis = (GetPlayerRoot().Position-v:FindFirstChildWhichIsA("MeshPart").Position).magnitude
 				local objectname = ""
 				if closest ~= nil then
+					--closest.Destroying:connect(function() 
 					local startTime = os.time()
 					repeat
 						LogMe("TP to Lootbag " .. v.Name)
-						game:GetService("Workspace").Stuff.Lootbags.ChildRemoved:connect(function(meshpart) --_G.Pickups[v.Name] = false 
-																	if meshpart ~= "" and meshpart ~= nil then
-																		LogMe("Drop " .. meshpart .. " removed")
-																	end
-																end)
 						_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
 						local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
 						if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
 							GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y,GetPlayerRoot().CFrame.Z)
 						end
 						toTarget(GetPlayerRoot().Position,closest.Position,closest.CFrame)
-						if objectname ~= "" and objectname ~= nil then
-								LogMe("Drop " .. objectname .. " removed")
-							end
 						wait(_G.TeleportDelay)
 						closest = v:FindFirstChildWhichIsA("MeshPart")
 					until closest == nil
