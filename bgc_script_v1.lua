@@ -3,6 +3,7 @@ print("Version 1.2.2")
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
 _G.LastSell = 0
+_G.LastDrop = 0
 _G.TeleportDelay = 1
 _G.EggDelay = .3
 _G.oldeggs = {}
@@ -1069,11 +1070,11 @@ spawn(function()
 		end
 		
 
-		if _G.drops and os.time() > _G.DropCoolOff  then		
+		if _G.drops and os.time() > (_G.LastDrop + _G.DropDelay)  then		
 			--_G.DropCoolOff = os.time() + _G.DropDelay			
 			--_G.CollectingDrops = true
 			--spawn(function()
-				_G.DropCoolOff = os.time() + _G.DropDelay
+				_G.DropCoolOff = os.time() + _G.DropTimeOut
 		
 				while _G.drops and (os.time() < _G.DropCoolOff) and wait() do
 				
@@ -1109,6 +1110,8 @@ spawn(function()
 						toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
 					end
 				end
+				
+				_G.LastDrop = os.time()
 			--end)
 			--_G.CollectingDrops = false
 			--end
