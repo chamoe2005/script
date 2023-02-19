@@ -1076,9 +1076,9 @@ spawn(function()
 			if _G[b.name] then
 				local chest = game:GetService("Workspace").MAP.Activations[b.name]
 				repeat
-					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X + 25, chest.Position.Y + 25, chest.Position.Z + 25))
+					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X, chest.Position.Y + 25, chest.Position.Z))
 					wait()
-					toTarget(GetPlayerRoot().Position,chest.Position + Vector3.new(0,0,0),chest.CFrame + Vector3.new(0,0,0))
+					toTarget(GetPlayerRoot().Position,chest.Position,chest.CFrame)
 				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil
 				print("Grabbed " .. b.name .. "!!!")
 				wait(_G.TeleportDelay)
