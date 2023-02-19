@@ -1184,7 +1184,7 @@ spawn(function()
 					LogMe("TP to Chest")
 					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X + math.random(8,20), chest.Position.Y + 10, chest.Position.Z + math.random(8,20)))
 					wait(_G.TeleportDelay)
-					toTarget(GetPlayerRoot().Position,chest.Position,chest.CFrame)
+					toTarget(GetPlayerRoot().Position,chest.Position + Vector3.new(math.random(1,3), 0, math.random(1,3)),chest.CFrame)
 				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil or os.time() > startTime + 10
 				LogMe("Grabbed " .. b.name .. "!!!")
 				wait(_G.TeleportDelay)
