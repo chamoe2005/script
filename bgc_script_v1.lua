@@ -1129,7 +1129,7 @@ spawn(function()
 					
 						
 					if closest ~= nil and (target == nil or target.Parent == nil) then
-						closest.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
+						closest.Parent.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
 																if object.Name == "POS" then LogMe("Drop " .. object.Name .. " removed") end 
 															end)
 						local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
