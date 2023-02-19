@@ -16,6 +16,7 @@ _G.DropCoolOff = os.time() + _G.DropDelay
 --dropdowns.Bubblesell = {"No Sell", "Sell 1", "Sell 2"}
 --dropdowns.Eggmode = {"None", "Best", "Any"}
 
+
 COREGUI = game:GetService("CoreGui")
 if not game:IsLoaded() then
 	local notLoaded = Instance.new("Message")
@@ -37,12 +38,17 @@ function GetLocalPlayer()
 	return player
 end
 
+if not isfile("bgclog" .. GetLocalPlayer() .. ".txt") then
+	writefile("bgclog" .. GetLocalPlayer() .. ".txt", "Start of Log File\n")
+end
+
+
 function GetPlayerChar()
 	local character = GetLocalPlayer().Character
 	while not character do
 		character = Players.LocalPlayer
 		wait(1)
-		print("Waiting for Character")
+		LogMe("Waiting for Character")
 	end
 	return character
 end
@@ -53,10 +59,29 @@ function GetPlayerRoot()
 	while not playerroot do
 		playerroot = GetPlayerChar():FindFirstChild("HumanoidRootPart")
 		wait(1)
-		print("Waiting for Root")
+		LogMe("Waiting for Root")
 	end
 	return playerroot
 end
+
+
+
+function LogMe(message)
+
+	local TIME_ZONE = 5
+	local date = os.date("!*t")
+	local hour = (date.hour + TIME_ZONE) % 24
+	local ampm = hour < 12 and "AM" or "PM"
+	local timestamp = string.format("%02i:%02i %s", ((hour - 1) % 12) + 1, date.min, ampm)
+
+	if message and message ~= "" then
+		print(message)
+		appendfile("bgclog" .. GetLocalPlayer() .. ".txt", timestamp .. "\t" .. message)
+	end
+
+end
+
+
 
 _G.player = GetLocalPlayer()
 local plr = GetLocalPlayer()
@@ -68,7 +93,7 @@ function GetWorkspace()
 	while not workspace do
 		workspace = game:GetService("Workspace")
 		wait(1)
-		print("Waiting for Workspace")
+		LogMe("Waiting for Workspace")
 	end
 	return workspace
 end
@@ -78,7 +103,7 @@ function GetMap()
 	while not map do
 		map = GetWorkspace():FindFirstChild("MAP")
 		wait(1)
-		print("Waiting on MAP")
+		LogMe("Waiting on MAP")
 	end
 	return map
 end
@@ -88,7 +113,7 @@ function GetChests()
 	while not chest do
 		chest = GetWorkspace():FindFirstChild("MAP")
 		wait(1)
-		print("Waiting on Chests")
+		LogMe("Waiting on Chests")
 	end
 	return chest
 end
@@ -137,19 +162,19 @@ local nevermore = game.ReplicatedStorage:FindFirstChild("Nevermore")
 while not nevermore do
 	nevermore = game.ReplicatedStorage:FindFirstChild("Nevermore")
 	wait(1)
-	print("Waiting on Replicated Storage")
+	LogMe("Waiting on Replicated Storage")
 end
 local lib = nevermore:FindFirstChild("Library")
 while not lib do
 	lib = nevermore:FindFirstChild("Library")
 	wait(1)
-	print("Waiting on Game Library")
+	LogMe("Waiting on Game Library")
 end
 
 library = require(lib)
 
 while not library.Save do
-	print("Waiting on Game Library")
+	LogMe("Waiting on Game Library")
 	wait(1)
 end
 	
@@ -230,7 +255,7 @@ local RedeemTwitterCodes = function()
 				[1] = false
 			}
 		}
-		print("Redeeming " .. v)
+		LogMe("Redeeming " .. v)
 		game:GetService("ReplicatedStorage").Remotes["redeem twitter code"]:InvokeServer(ohTable1)
 		wait(2)
 
@@ -335,7 +360,7 @@ function DeletePets()
 			table.insert(ohTable1[1][1], v)
 			for a,b in pairs(playerLibrary.Pets) do
 				if v == b.uid then
-					print(b.nk .. " is being deleted.")
+					LogMe(b.nk .. " is being deleted.")
 				end
 			end
 		end
@@ -345,21 +370,21 @@ function DeletePets()
 
 	if _G["DeletePetMode"] == "Delete When Full" and table.getn(playerLibrary.Pets) >= (playerLibrary.MaxSlots - 1) and pet.flags.AutoDeleteNum ~= nil and tonumber(pet.flags.AutoDeleteNum) > 0 then
 	
-		print("Will Delete " .. pet.flags.AutoDeleteNum .. " Pets")
+		LogMe("Will Delete " .. pet.flags.AutoDeleteNum .. " Pets")
 		doDelete(pet.flags.AutoDeleteNum)
 
 	elseif _G["DeletePetMode"] == "Delete When Full" and table.getn(playerLibrary.Pets) < (playerLibrary.MaxSlots - 1) then
 	
-		print(playerLibrary.MaxSlots - table.getn(playerLibrary.Pets) .. " Pet Slots Left in Inventory")
+		LogMe(playerLibrary.MaxSlots - table.getn(playerLibrary.Pets) .. " Pet Slots Left in Inventory")
 		
 	elseif _G["DeletePetMode"] == "Custom Delete" and pet.flags["KeepOnlyNum"] ~= nil and pet.flags["KeepOnlyNum"] ~= "" and tonumber(pet.flags["KeepOnlyNum"]) > 0 and table.getn(playerLibrary.Pets) > pet.flags["KeepOnlyNum"] then
 	
-		print("Will Delete " .. (table.getn(playerLibrary.Pets) - pet.flags.KeepOnlyNum) .. " Pets")
+		LogMe("Will Delete " .. (table.getn(playerLibrary.Pets) - pet.flags.KeepOnlyNum) .. " Pets")
 		doDelete(table.getn(playerLibrary.Pets) - pet.flags.KeepOnlyNum)
 		
 	elseif _G["DeletePetMode"] == "Custom Delete" and pet.flags["KeepOnlyNum"] ~= nil and pet.flags["KeepOnlyNum"] ~= "" and tonumber(pet.flags["KeepOnlyNum"]) > 0 and table.getn(playerLibrary.Pets) < pet.flags["KeepOnlyNum"] then
 
-		print((pet.flags["KeepOnlyNum"] - table.getn(playerLibrary.Pets)) .. " Pet Slots Left until Auto Delete")
+		LogMe((pet.flags["KeepOnlyNum"] - table.getn(playerLibrary.Pets)) .. " Pet Slots Left until Auto Delete")
 
 	end
 end
@@ -388,7 +413,7 @@ local SpinPrizeWheel = function()
 			game:GetService("ReplicatedStorage").Remotes["free wheel spin"]:InvokeServer(ohTable1)
 			
 		elseif playerLibrary.PrizeWheelTime then
-			print((playerLibrary.PrizeWheelTime - os.time()) / 60 .. " minutes until Prize Wheel")
+			LogMe((playerLibrary.PrizeWheelTime - os.time()) / 60 .. " minutes until Prize Wheel")
 			--local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
 			--print(NewItemWindow.Enabled)
 		end
@@ -431,7 +456,7 @@ function doFreeLoot()
 						wait(_G.TeleportDelay)
 						game:GetService("ReplicatedStorage").Remotes["redeem free gift"]:InvokeServer({[1] = {[1] = a},[2] = {[1] = false}})
 					--until game:GetService("Workspace").Stuff.Lootbags:FindFirstChildWhichIsA("MeshPart", true) ~= nil
-					print("Claiming Loot Bag " .. a)
+					LogMe("Claiming Loot Bag " .. a)
 				end
 			end
 		
@@ -448,7 +473,7 @@ function doFreeLoot()
 						GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y,GetPlayerRoot().CFrame.Z)
 					end
 					toTarget(GetPlayerRoot().Position,closest.Position,closest.CFrame)
-					print("TP to Lootbag " .. v.Name)
+					LogMe("TP to Lootbag " .. v.Name)
 					wait(_G.TeleportDelay)
 				end
 			end
@@ -470,7 +495,7 @@ function doBubblePass()
 			for a,b in pairs(library.Directory.BubblePass) do
 			
 				if b.eggs <= playerLibrary.BubblePass.CurrentEggs and not playerLibrary.BubblePass.Claimed[a] then
-					print("Claiming Bubble Pass Prize #" .. a .. " - " .. b.eggs .. " eggs")
+					LogMe("Claiming Bubble Pass Prize #" .. a .. " - " .. b.eggs .. " eggs")
 
 					local ohTable1 = {
 						[1] = {
@@ -495,7 +520,7 @@ function doBubblePass()
 			
 			if allClaimed and playerLibrary.BubblePass.CurrentEggs > highestEggPrize and playerLibrary["Diamonds"] >= 500000000 then
 			
-				print("All Bubble Pass Prizes claimed, restarting pass")
+				LogMe("All Bubble Pass Prizes claimed, restarting pass")
 			
 				local ohTable1 = {
 					[1] = {
@@ -508,12 +533,12 @@ function doBubblePass()
 
 				game:GetService("ReplicatedStorage").Remotes["restart bubble pass"]:FireServer(ohTable1)
 			else
-				print((highestEggPrize - playerLibrary.BubblePass.CurrentEggs) .. " eggs left before Bubble Pass is complete")
+				LogMe((highestEggPrize - playerLibrary.BubblePass.CurrentEggs) .. " eggs left before Bubble Pass is complete")
 			end
 			
 		elseif not playerLibrary.BubblePass and farm.flags.ClaimPass and playerLibrary["Diamonds"] >= 1000000000 then
 		
-			print("Purchasing Bubble Pass")
+			LogMe("Purchasing Bubble Pass")
 		
 			local ohTable1 = {
 				[1] = {
@@ -527,7 +552,7 @@ function doBubblePass()
 			game:GetService("ReplicatedStorage").Remotes["buy bubble pass"]:FireServer(ohTable1)
 		
 		else
-			print("Bubble Pass not Owned")
+			LogMe("Bubble Pass not Owned")
 			
 			
 		end
@@ -550,7 +575,7 @@ function doTierRewards()
 
 			for a,b in pairs(Rewards) do
 				if library.Directory.Rewards[a].price(b + 1) <= playerLibrary["Diamonds"] then
-					print("Redeeming " .. a .. " Reward Slot #" .. b + 1 .. " for " .. library.Directory.Rewards[a].price(b + 1) .. " Diamonds")
+					LogMe("Redeeming " .. a .. " Reward Slot #" .. b + 1 .. " for " .. library.Directory.Rewards[a].price(b + 1) .. " Diamonds")
 					
 					local ohTable1 = {
 						[1] = {
@@ -564,7 +589,7 @@ function doTierRewards()
 					game:GetService("ReplicatedStorage").Remotes["buy rewards"]:FireServer(ohTable1)
 					wait(.5)
 				else
-					print((library.Directory.Rewards[a].price(b + 1) - playerLibrary["Diamonds"]) .. " Diamonds until " .. a .. " Reward Slot #" .. b + 1 .. " can be redeemed")
+					LogMe((library.Directory.Rewards[a].price(b + 1) - playerLibrary["Diamonds"]) .. " Diamonds until " .. a .. " Reward Slot #" .. b + 1 .. " can be redeemed")
 				end
 			end
 		--elseif library.Directory.Rewards[a].price(1) <= playerLibrary["Diamonds"] then
@@ -628,7 +653,7 @@ function switchEggs(args, old, switch)
 		print("Switching Eggs")
 		--print(args[2])
 		if old["Buy Mode"] == nil then
-			print("New Settings")
+			LogMe("New Settings")
 			old = {["Buy Mode"] = _G.BuyEggMode}
 		elseif switch then
 			args = old
@@ -638,18 +663,18 @@ function switchEggs(args, old, switch)
 		if old["Buy Mode"] == nil then
 			old = {["Buy Mode"] = _G.BuyEggMode}
 		else
-			print("old",old["Buy Mode"])
+			LogMe("old",old["Buy Mode"])
 		end
 		if old["Eggs"] == nil then
-			print("New Settings")
+			LogMe("New Settings")
 		else
 			for a,b in pairs(old["Eggs"]) do
-				print("old",b)
+				LogMe("old",b)
 			end
 		end
-		print("new",args["Buy Mode"])
+		LogMe("new",args["Buy Mode"])
 		for a,b in pairs(args["Eggs"]) do
-			print("new",b)
+			LogMe("new",b)
 		end
 		
 		local oldeggs = {}
@@ -658,7 +683,7 @@ function switchEggs(args, old, switch)
 	
 			if old["Eggs"] == nil then
 				if _G[a] then
-					print("Insert Egg")
+					LogMe("Insert Egg")
 					table.insert(oldeggs, a)
 				end
 			end
@@ -667,7 +692,7 @@ function switchEggs(args, old, switch)
 			for c,d in pairs(args["Eggs"]) do
 				if a == d then
 					enabled = true
-					print(a, enabled)
+					LogMe(a, enabled)
 				end
 			end
 			
@@ -679,8 +704,8 @@ function switchEggs(args, old, switch)
 
 		changeSetting("Selection", "Buy Mode", args["Buy Mode"])
 		
-		print("Old Eggs")
-		print(old["Buy Mode"])
+		LogMe("Old Eggs")
+		LogMe(old["Buy Mode"])
 		--old["Eggs"] = {}
 		if old["Eggs"] == nil then
 			old["Eggs"] = {}
@@ -688,16 +713,16 @@ function switchEggs(args, old, switch)
 				table.insert(old["Eggs"], b)
 			end
 			for a,b in pairs(old["Eggs"]) do
-				print(b)
+				LogMe(b)
 			end
 		else
-			print("Old Settings")
+			LogMe("Old Settings")
 		end	
 		
 		return old
 		
 	else
-		print("Settings not loaded")
+		LogMe("Settings not loaded")
 	end
 end
 
@@ -720,7 +745,7 @@ local doChallenge = function()
 				if a == (playerLibrary[_G.ChallengeName].Claimed + 1) and playerLibrary[_G.ChallengeName].Progress[b.challengeType] >= b.amount  then
 					--print(playerLibrary.Valentines.Progress[b.challengeType] .. " " .. b.challengeType)
 					--print(b.amount)
-					print("Attempting to claim " .. a .. " " .. _G.ChallengeName)
+					LogMe("Attempting to claim " .. a .. " " .. _G.ChallengeName)
 					local ohTable1 = {
 						[1] = {
 							[1] = false
@@ -733,7 +758,7 @@ local doChallenge = function()
 					game:GetService("ReplicatedStorage").Remotes[_G.ChallengeRemote]:FireServer(ohTable1)
 					
 					if b.challengeType == "CoinPickups" then
-						print("Switching OFF Coin Pickups")
+						LogMe("Switching OFF Coin Pickups")
 						changeSetting("Checkmark", "Collect Drops", false)
 						changeSetting("Checkmark", "Coins Bag", false)
 						changeSetting("Checkmark", "Large Coin", false)
@@ -741,13 +766,13 @@ local doChallenge = function()
 						changeSetting("Checkmark", "Small Coin", false)
 						changeSetting("Box", "Range", 0)
 					elseif b.challengeType == "DiamondPickups" then
-						print("Switching OFF Diamond Pickups")
+						LogMe("Switching OFF Diamond Pickups")
 						changeSetting("Checkmark", "Collect Drops", false)
 						changeSetting("Checkmark", "Large Diamonds", false)
 						changeSetting("Checkmark", "Small Diamond", false)
 						changeSetting("Box", "Range", 0)
 					elseif b.challengeType == "LegendaryPets" or b.challengeType == "GodlyPets" then
-						print("Switch Back Eggs")
+						LogMe("Switch Back Eggs")
 						switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
 						_G.oldeggs = {}
 					else
@@ -759,7 +784,7 @@ local doChallenge = function()
 					print ((b.amount - playerLibrary[_G.ChallengeName].Progress[b.challengeType]) .. " " .. b.challengeType .. " remaining to claim " .. _G.ChallengeName .. " " .. a)
 				
 					if b.challengeType == "CoinPickups" then
-						print("Switching ON Coin Pickups")
+						LogMe("Switching ON Coin Pickups")
 						changeSetting("Checkmark", "Collect Drops", true)
 						changeSetting("Checkmark", "Coins Bag", true)
 						changeSetting("Checkmark", "Large Coin", true)
@@ -767,36 +792,36 @@ local doChallenge = function()
 						changeSetting("Checkmark", "Small Coin", true)
 						changeSetting("Box", "Range", 50000)
 					elseif b.challengeType == "DiamondPickups" then
-						print("Switching ON Diamond Pickups")
+						LogMe("Switching ON Diamond Pickups")
 						changeSetting("Checkmark", "Collect Drops", true)
 						changeSetting("Checkmark", "Large Diamonds", true)
 						changeSetting("Checkmark", "Small Diamond", true)
 						changeSetting("Box", "Range", 50000)
 					elseif b.challengeType == "LegendaryPets" then
-						print("Switch to Legendary Challenege")
+						LogMe("Switch to Legendary Challenege")
 						if _G.oldeggs["Buy Mode"] == nil then
 							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}}, {}, true)
-							print("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+							LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
 							_G.oldeggs = oldeggs
 						else
-							print("Chal" .. _G.oldeggs["Buy Mode"])
+							LogMe("Chal" .. _G.oldeggs["Buy Mode"])
 							for a,b in pairs(_G.oldeggs["Eggs"]) do
-								print(b)
+								LogMe(b)
 							end
 							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}}, _G.oldeggs, false)
 							--_G.oldeggs = oldeggs
 						end
 						--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}})
 					elseif b.challengeType == "GodlyPets" then
-						print("Switch to Godly Challenege")
+						LogMe("Switch to Godly Challenege")
 						if _G.oldeggs["Buy Mode"] == nil then
 							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Safe Egg", "Galaxy Egg", "Common Egg"}}, {}, true)
-							print("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+							LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
 							_G.oldeggs = oldeggs
 						else
-							print("Chal" .. _G.oldeggs["Buy Mode"])
+							LogMe("Chal" .. _G.oldeggs["Buy Mode"])
 							for a,b in pairs(_G.oldeggs["Eggs"]) do
-								print(b)
+								LogMe(b)
 							end
 							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Safe Egg", "Galaxy Egg", "Common Egg"}}, _G.oldeggs, false)
 							--_G.oldeggs = oldeggs
@@ -807,14 +832,14 @@ local doChallenge = function()
 			end
 			
 			if playerLibrary[_G.ChallengeName].Claimed == lastPrize then
-				print("All " .. _G.ChallengeName .. " Prizes Claimed")
+				LogMe("All " .. _G.ChallengeName .. " Prizes Claimed")
 			end
 		end
 
 end
 
 		if _G.ChallengeName ~= nil then
-			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() while not _G.settingsloaded do print("Settings not loaded") wait(1) end doChallenge() end) end)
+			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end doChallenge() end) end)
 		end
 
 
@@ -1028,7 +1053,7 @@ spawn(function()
 						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0}
 						}
 		local playerLibrary = library.Save.Get()
-		print("Hatching Eggs")
+		LogMe("Hatching Eggs")
 		while os.time() < (_G.LastEgg + _G.EggDelay) do
 			if _G.BuyEggMode == "Best" then
 				for i,v in pairs(Eggs) do
@@ -1078,7 +1103,7 @@ spawn(function()
 			--spawn(function()
 				_G.DropCoolOff = os.time() + _G.DropTimeOut
 				_G.LastDrop = os.time() + _G.DropCoolOff
-				print("Starting Drops")
+				LogMe("Starting Drops")
 				while _G.drops and (os.time() < _G.DropCoolOff) do
 					
 				
@@ -1104,7 +1129,7 @@ spawn(function()
 						
 					if closest ~= nil and (target == nil or target.Parent == nil) then
 						closest.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
-																if object.Name == "POS" then print("Drop " .. object.Parent.Name .. " removed" end) 
+																if object.Name == "POS" then LogMe("Drop " .. object.Parent.Name .. " removed") end 
 															end)
 						local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
 						--if dis > 250 then
@@ -1117,7 +1142,7 @@ spawn(function()
 						wait(.1)
 					end
 				end
-				print("Ending Drops")
+				LogMe("Ending Drops")
 				_G.LastDrop = os.time()
 				
 			wait(_G.TeleportDelay)
@@ -1130,7 +1155,7 @@ spawn(function()
 		
 		if _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay) then
 			if _G.SellBubbleArea ~= "No Sell" then
-				print("Sell Bubble")
+				LogMe("Sell Bubble")
 				_G.LastSell = os.time()
 				local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
 				--local playerLibrary = library.Save.Get()
@@ -1150,12 +1175,12 @@ spawn(function()
 			if _G[b.name] then
 				local chest = game:GetService("Workspace").MAP.Activations[b.name]
 				repeat
-					print("TP to Chest")
+					LogMe("TP to Chest")
 					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X + math.random(3,8), chest.Position.Y + 10, chest.Position.Z + math.random(3,8)))
 					wait(_G.TeleportDelay)
 					toTarget(GetPlayerRoot().Position,chest.Position,chest.CFrame)
 				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil
-				print("Grabbed " .. b.name .. "!!!")
+				LogMe("Grabbed " .. b.name .. "!!!")
 				wait(_G.TeleportDelay)
 			end
 			
@@ -1192,7 +1217,7 @@ spawn(function()
 		if NewItemWindow.Enabled then		
 			for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
 				connection:Fire()
-				print("Closing New Item Window")
+				LogMe("Closing New Item Window")
 			end
 		end
 	end
@@ -1276,7 +1301,7 @@ spawn(function()
 				for i,v in pairs(that) do
 			
 					--if v >= _G.AutoShinyNum then
-						print(i,v)
+						LogMe(i,v)
 					--end
 				
 					local petid = 0
@@ -1298,11 +1323,11 @@ spawn(function()
 							end
 						end
 						
-						print("Attempting Shiny " .. i)
-						print("Shiny Cost " .. library.Shared.ShinyCost(petid, _G.AutoShinyNum))
+						LogMe("Attempting Shiny " .. i)
+						LogMe("Shiny Cost " .. library.Shared.ShinyCost(petid, _G.AutoShinyNum))
 						
 						for c,d in pairs(ohTable1[1][1]) do
-							print(c,d)
+							LogMe(c,d)
 						end
 						
 						game:GetService("ReplicatedStorage").Remotes["make pets shiny"]:InvokeServer(ohTable1)
@@ -1331,13 +1356,13 @@ end
 
 
 function NoobSim()
-						print("BGClicker n00b Challenge SIMULATOR")
+						LogMe("BGClicker n00b Challenge SIMULATOR")
 						wait(1)
-						print("...")
+						LogMe("...")
 						wait(3)
-						print("Rdy?")
+						LogMe("Rdy?")
 						wait(10)
-						print("Get some coins you bugger!")
+						LogMe("Get some coins you bugger!")
 						wait(5)
 						changeSetting("Checkmark", "Collect Drops", true)
 						changeSetting("Checkmark", "Coins Bag", true)
@@ -1346,7 +1371,7 @@ function NoobSim()
 						changeSetting("Checkmark", "Small Coin", true)
 						changeSetting("Box", "Range", 50000)
 						wait(10)
-						print("Now get some more stupid pets!")
+						LogMe("Now get some more stupid pets!")
 						changeSetting("Checkmark", "Collect Drops", false)
 						changeSetting("Checkmark", "Coins Bag", false)
 						changeSetting("Checkmark", "Large Coin", false)
@@ -1355,21 +1380,21 @@ function NoobSim()
 						changeSetting("Box", "Range", 0)
 						switchEggs({"Void Egg", "Galaxy Egg"})
 						wait(15)
-						print("Colleca crap lo of Diamon")
+						LogMe("Colleca crap lo of Diamon")
 						switchEggs({"old"})
 						changeSetting("Checkmark", "Collect Drops", true)
 						changeSetting("Checkmark", "Large Diamonds", true)
 						changeSetting("Checkmark", "Small Diamond", true)
 						changeSetting("Box", "Range", 50000)
 						wait(10)
-						print("Hatch 100 Legendaries!")
+						LogMe("Hatch 100 Legendaries!")
 						changeSetting("Checkmark", "Collect Drops", false)
 						changeSetting("Checkmark", "Large Diamonds", false)
 						changeSetting("Checkmark", "Small Diamond", false)
 						changeSetting("Box", "Range", 0)
 						switchEggs({"Magma Egg"})
 						wait(10)
-						print("Blow 1 kagillion bubbles!!!")
+						LogMe("Blow 1 kagillion bubbles!!!")
 						switchEggs({"old"})
 end
 						
