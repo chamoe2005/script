@@ -1129,8 +1129,9 @@ spawn(function()
 					
 						
 					if closest ~= nil and (target == nil or target.Parent == nil) then
+					local objectname = ""
 						closest.Parent.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
-																if object.Name == "POS" then LogMe("Drop " .. object.Name .. " removed") end 
+																objectname = object.name
 															end)
 						local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
 						--if dis > 250 then
@@ -1141,6 +1142,9 @@ spawn(function()
 						end
 						toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
 						wait(.1)
+						if objectname ~= "" then
+							LogMe("Drop " .. objectname .. " removed")
+						end
 					end
 				end
 				LogMe("Ending Drops")
