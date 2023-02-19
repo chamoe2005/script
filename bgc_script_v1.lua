@@ -616,9 +616,9 @@ function doChallenge()
 						changeSetting("Checkmark", "Small Diamond", false)
 						changeSetting("Box", "Range", 0)
 					elseif b.challengeType == "LegendaryPets" then
-						switchEggs({"Magma Egg"})
+						switchEggs({"Magma Egg", "Common Egg"})
 					elseif b.challengeType == "GodlyPets" then
-						switchEggs({"Void Egg", "Galaxy Egg"})
+						switchEggs({"Void Egg", "Galaxy Egg", "Common Egg"})
 					else
 						wait(5)
 					end
