@@ -473,7 +473,7 @@ function doFreeLoot()
 					repeat
 						LogMe("TP to Lootbag " .. v.Name)
 						game:GetService("Workspace").Stuff.Lootbags.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
-																	objectname = object.name
+																	objectname = object.Name
 																end)
 						_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
 						local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
