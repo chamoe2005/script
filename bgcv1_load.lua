@@ -1,3 +1,12 @@
+COREGUI = game:GetService("CoreGui")
+if not game:IsLoaded() then
+	local notLoaded = Instance.new("Message")
+	notLoaded.Parent = COREGUI
+	notLoaded.Text = 'Waiting for the game to load'
+	game.Loaded:Wait()
+	notLoaded:Destroy()
+end
+
 if game.placeId == 11746859781 then
 
 	_G.startscript = true

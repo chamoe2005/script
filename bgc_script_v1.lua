@@ -18,6 +18,7 @@ if not game:IsLoaded() then
 	game.Loaded:Wait()
 	notLoaded:Destroy()
 end
+
 Players = game:GetService("Players")
 
 function GetLocalPlayer()
