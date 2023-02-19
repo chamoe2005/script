@@ -5,6 +5,7 @@ _G.DisabledEggs = {"Valentine's 2023 Egg"}
 _G.LastSell = 0
 _G.LastDrop = 0
 _G.TeleportDelay = 1
+_G.LastEgg = 0
 _G.EggDelay = 5
 _G.oldeggs = {}
 _G.DropTimeOut = 30
