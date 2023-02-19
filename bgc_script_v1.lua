@@ -1,4 +1,4 @@
-print("Version 1.2.2")
+print("Version 1.2.4")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1075,8 +1075,9 @@ spawn(function()
 			--_G.CollectingDrops = true
 			--spawn(function()
 				_G.DropCoolOff = os.time() + _G.DropTimeOut
-		
-				while _G.drops and (os.time() < _G.DropCoolOff) and wait() do
+				_G.LastDrop = os.time() + _G.DropCoolOff
+				
+				while _G.drops and (os.time() < _G.DropCoolOff) do
 				
 					local closest = nil
 					local dis = math.huge
@@ -1106,12 +1107,12 @@ spawn(function()
 						if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
 							GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y + 2,GetPlayerRoot().CFrame.Z)
 						end
-						wait(.1)
 						toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
+						wait(.1)
 					end
 				end
 				
-				_G.LastDrop = os.time()
+
 			--end)
 			--_G.CollectingDrops = false
 			--end
