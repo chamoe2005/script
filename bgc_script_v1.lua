@@ -596,6 +596,7 @@ local changeSetting = function(settingtype, settingname, value)
 			end
 			wait(.5)
 			local selectionname = b.Text
+			print(selectionname, settingname)
 			
 			if selectionname == settingname then
 				for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
@@ -603,6 +604,7 @@ local changeSetting = function(settingtype, settingname, value)
 						for x,y in pairs(getconnections(v.MouseButton1Click)) do
 							y:Fire()
 						end
+						print(selectionname, value)
 					end
 				end
 			else
@@ -611,6 +613,7 @@ local changeSetting = function(settingtype, settingname, value)
 						for x,y in pairs(getconnections(v.MouseButton1Click)) do
 							y:Fire()
 						end
+						print(selectionname, currentValue)
 					end
 				end
 			end	
