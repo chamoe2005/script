@@ -1,11 +1,11 @@
-print("Version 1.2.4")
+print("Version 1.2.5")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
 _G.LastSell = 0
 _G.LastDrop = 0
 _G.TeleportDelay = 1
-_G.LastEgg = 0
+_G.LastEgg = os.time()
 _G.EggDelay = 5
 _G.oldeggs = {}
 _G.DropTimeOut = 30
@@ -1029,7 +1029,7 @@ spawn(function()
 						}
 		local playerLibrary = library.Save.Get()
 		
-		while os.time < (_G.LastEgg + _G.EggDelay) do
+		while os.time() < (_G.LastEgg + _G.EggDelay) do
 			if _G.BuyEggMode == "Best" then
 				for i,v in pairs(Eggs) do
 					if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] then
