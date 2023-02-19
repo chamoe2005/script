@@ -440,12 +440,12 @@ function doFreeLoot()
 				closest = v:FindFirstChildWhichIsA("MeshPart")
 				dis = (GetPlayerRoot().Position-v:FindFirstChildWhichIsA("MeshPart").Position).magnitude
 				if closest ~= nil then
-					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X - 25, closest.Position.Y, closest.Position.Z - 25))
+					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X, closest.Position.Y + 25, closest.Position.Z))
 					local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
 					if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
-						GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y + 2,GetPlayerRoot().CFrame.Z)
+						GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y,GetPlayerRoot().CFrame.Z)
 					end
-					toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,0,2),closest.CFrame + Vector3.new(0,0,2))
+					toTarget(GetPlayerRoot().Position,closest.Position,closest.CFrame)
 					print("TP to Lootbag " .. v.Name)
 					wait(1)
 				end
@@ -620,12 +620,12 @@ end
 
 local switchEggs = function (args)
 	print("Switching Eggs")
-
+	--print(args[2])
 	if args[2] == {"old"} then
 		args = _G.oldeggs
 	end
 	
-	_G.oldeggs = {}
+	_G.oldeggs = {[1] = "None", [2] = {}}
 	_G.oldeggs[1] = _G.BuyEggMode
 	
 	changeSetting("Dropdown", "Buy Mode", args[1])
@@ -641,9 +641,10 @@ local switchEggs = function (args)
 		for c,d in pairs(args[2]) do
 			if a == d then
 				enabled = true
-				print(d)
+				print(a, enabled)
 			end
 		end
+		
 		
 		changeSetting("Checkmark", a, enabled)
 			
@@ -696,7 +697,7 @@ function doChallenge()
 						changeSetting("Box", "Range", 0)
 					elseif b.challengeType == "LegendaryPets" or b.challengeType == "GodlyPets" then
 						print("Switch Back Eggs")
-						switchEggs({[1] = false, [2] = {"old"}})
+						switchEggs({[1] = false, [2] = "old"})
 					else
 						wait(5)
 					end
