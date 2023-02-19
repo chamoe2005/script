@@ -469,7 +469,7 @@ function doFreeLoot()
 				dis = (GetPlayerRoot().Position-v:FindFirstChildWhichIsA("MeshPart").Position).magnitude
 				if closest ~= nil then
 					LogMe("TP to Lootbag " .. v.Name)
-					closest.Parent.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
+					closest.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
 																objectname = object.name
 															end)
 					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
