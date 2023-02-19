@@ -1,4 +1,4 @@
-print("Version 1.2.6")
+print("Version 1.2.7")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1146,7 +1146,7 @@ spawn(function()
 			if _G[b.name] then
 				local chest = game:GetService("Workspace").MAP.Activations[b.name]
 				repeat
-					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X, chest.Position.Y + 10, chest.Position.Z))
+					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X+math.random(3,8), chest.Position.Y + 10, chest.Position.Z+math.random(3,8))
 					wait(_G.TeleportDelay)
 					toTarget(GetPlayerRoot().Position,chest.Position,chest.CFrame)
 				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil
