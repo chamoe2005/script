@@ -1,4 +1,4 @@
-print("Version 1.2.9")
+print("Version 1.3")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -473,7 +473,9 @@ function doFreeLoot()
 					repeat
 						LogMe("TP to Lootbag " .. v.Name)
 						game:GetService("Workspace").Stuff.Lootbags.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
-																	objectname = v.Name
+																	if v.Name ~= "" and v.Name ~= nil then
+																		LogMe("Drop " .. v.Name .. " removed")
+																	end
 																end)
 						_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
 						local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
