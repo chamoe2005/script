@@ -1048,10 +1048,12 @@ spawn(function ()
 				local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
 				local playerLibrary = library.Save.Get()
 				repeat
-					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X + 25, sellarea.Position.Y, sellarea.Position.Z - 25))
-					wait()
+				_G.player.Character:SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X + 25, sellarea.Position.Y, sellarea.Position.Z - 25))
+				
 					toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,0,0),sellarea.CFrame + Vector3.new(0,0,0))
+					wait(.5)
 					playerLibrary = library.Save.Get()
+					
 				until playerLibrary["Bubbles"] == 0
 				_G.LastSell = os.time()
 			end
