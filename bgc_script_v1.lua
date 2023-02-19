@@ -1,4 +1,4 @@
-print("Version 1.3")
+print("Version 1.3.1")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -440,7 +440,7 @@ for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetCh
 	end
 end
 
-game:GetService("Workspace").Stuff.Lootbags.DescendantRemoving:Connect(function(desc) LogMe("Drop " .. desc .. " removed") end)
+game:GetService("Workspace").Stuff.Lootbags.DescendantRemoving:Connect(function(desc) LogMe("Drop " .. desc.name .. " removed") end)
 
 function doFreeLoot()
 
