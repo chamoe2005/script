@@ -1,11 +1,14 @@
-print("Version 1.2.1")
+print("Version 1.2.2")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
 _G.LastSell = 0
-_G.TeleportDelay = 5
-_G.EggDelay = 5
+_G.TeleportDelay = 1
+_G.EggDelay = .3
 _G.oldeggs = {}
+_G.DropTimeOut = 30
+_G.DropDelay = 60
+_G.DropCoolOff = os.time() + _G.DropDelay
 
 --local dropdowns = {}
 --dropdowns.Bubblesell = {"No Sell", "Sell 1", "Sell 2"}
@@ -420,17 +423,15 @@ function doFreeLoot()
 					end
 				end
 				if playerLibrary.FreeGiftsTime > b.waitTime and not found then
-					repeat
-						_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position))
+					--repeat
+						--_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position))
 						--toTarget(root.Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").CFrame)
 						wait()
 						game:GetService("ReplicatedStorage").Remotes["redeem free gift"]:InvokeServer({[1] = {[1] = a},[2] = {[1] = false}})
 						wait()
-					until game:GetService("Workspace").Stuff.Lootbags:FindFirstChildWhichIsA("MeshPart", true) ~= nil
+					--until game:GetService("Workspace").Stuff.Lootbags:FindFirstChildWhichIsA("MeshPart", true) ~= nil
 					print("Claiming Loot Bag " .. a)
-					wait(1)
 				end
-				wait(1)
 			end
 		
 		
@@ -440,14 +441,14 @@ function doFreeLoot()
 				closest = v:FindFirstChildWhichIsA("MeshPart")
 				dis = (GetPlayerRoot().Position-v:FindFirstChildWhichIsA("MeshPart").Position).magnitude
 				if closest ~= nil then
-					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X, closest.Position.Y + 25, closest.Position.Z))
+					--_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X, closest.Position.Y - 25, closest.Position.Z))
 					local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
 					if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
 						GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y,GetPlayerRoot().CFrame.Z)
 					end
 					toTarget(GetPlayerRoot().Position,closest.Position,closest.CFrame)
 					print("TP to Lootbag " .. v.Name)
-					wait(1)
+					wait(_G.TeleportDelay)
 				end
 			end
 		
@@ -596,7 +597,7 @@ local changeSetting = function(settingtype, settingname, value)
 			end
 			wait(.5)
 			local selectionname = b.Text
-			print(selectionname, settingname)
+			--print(selectionname, settingname)
 			
 			if selectionname == settingname then
 				for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
@@ -621,29 +622,48 @@ local changeSetting = function(settingtype, settingname, value)
 	end
 end
 
-local switchEggs = function (args)
+function switchEggs(args, old, switch)
 	if _G.settingsloaded then
 		print("Switching Eggs")
 		--print(args[2])
-		if args[2] == {"old"} then
-			args = _G.oldeggs
+		if old["Buy Mode"] == nil then
+			print("New Settings")
+			old = {["Buy Mode"] = _G.BuyEggMode}
+		elseif switch then
+			args = old
+			old = {}
 		end
 		
-		_G.oldeggs = {[1] = "None", [2] = {}}
-		_G.oldeggs[1] = _G.BuyEggMode
+		if old["Buy Mode"] == nil then
+			old = {["Buy Mode"] = _G.BuyEggMode}
+		else
+			print("old",old["Buy Mode"])
+		end
+		if old["Eggs"] == nil then
+			print("New Settings")
+		else
+			for a,b in pairs(old["Eggs"]) do
+				print("old",b)
+			end
+		end
+		print("new",args["Buy Mode"])
+		for a,b in pairs(args["Eggs"]) do
+			print("new",b)
+		end
 		
-		print(args[1])
-		changeSetting("Selection", "Buy Mode", args[1])
-		
-		for a,b in pairs(Eggs) do
-		
+		local oldeggs = {}
 
-			if _G[a] then
-				table.insert(_G.oldeggs[2], a)
+		for a,b in pairs(Eggs) do
+	
+			if old["Eggs"] == nil then
+				if _G[a] then
+					print("Insert Egg")
+					table.insert(oldeggs, a)
+				end
 			end
 			
 			enabled = false
-			for c,d in pairs(args[2]) do
+			for c,d in pairs(args["Eggs"]) do
 				if a == d then
 					enabled = true
 					print(a, enabled)
@@ -654,13 +674,35 @@ local switchEggs = function (args)
 			changeSetting("Checkmark", a, enabled)
 				
 		end
+		
+
+		changeSetting("Selection", "Buy Mode", args["Buy Mode"])
+		
+		print("Old Eggs")
+		print(old["Buy Mode"])
+		--old["Eggs"] = {}
+		if old["Eggs"] == nil then
+			old["Eggs"] = {}
+			for a,b in pairs(oldeggs) do
+				table.insert(old["Eggs"], b)
+			end
+			for a,b in pairs(old["Eggs"]) do
+				print(b)
+			end
+		else
+			print("Old Settings")
+		end	
+		
+		return old
+		
 	else
 		print("Settings not loaded")
 	end
 end
 
+
 		
-function doChallenge()
+local doChallenge = function()
 
 		local playerLibrary = library.Save.Get()
 
@@ -705,7 +747,8 @@ function doChallenge()
 						changeSetting("Box", "Range", 0)
 					elseif b.challengeType == "LegendaryPets" or b.challengeType == "GodlyPets" then
 						print("Switch Back Eggs")
-						switchEggs({[1] = false, [2] = "old"})
+						switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
+						_G.oldeggs = {}
 					else
 						wait(5)
 					end
@@ -730,10 +773,34 @@ function doChallenge()
 						changeSetting("Box", "Range", 50000)
 					elseif b.challengeType == "LegendaryPets" then
 						print("Switch to Legendary Challenege")
-						switchEggs({[1] = "Best", [2] = {"Magma Egg", "Common Egg"}})
+						if _G.oldeggs["Buy Mode"] == nil then
+							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}}, {}, true)
+							print("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+							_G.oldeggs = oldeggs
+						else
+							print("Chal" .. _G.oldeggs["Buy Mode"])
+							for a,b in pairs(_G.oldeggs["Eggs"]) do
+								print(b)
+							end
+							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}}, _G.oldeggs, false)
+							--_G.oldeggs = oldeggs
+						end
+						--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}})
 					elseif b.challengeType == "GodlyPets" then
 						print("Switch to Godly Challenege")
-						switchEggs({[1] = "Best", [2] = {"Safe Egg", "Galaxy Egg", "Common Egg"}})					
+						if _G.oldeggs["Buy Mode"] == nil then
+							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Safe Egg", "Galaxy Egg", "Common Egg"}}, {}, true)
+							print("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+							_G.oldeggs = oldeggs
+						else
+							print("Chal" .. _G.oldeggs["Buy Mode"])
+							for a,b in pairs(_G.oldeggs["Eggs"]) do
+								print(b)
+							end
+							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Safe Egg", "Galaxy Egg", "Common Egg"}}, _G.oldeggs, false)
+							--_G.oldeggs = oldeggs
+						end
+						--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Safe Egg", "Galaxy Egg", "Common Egg"}}, )					
 					end
 				end
 			end
@@ -773,17 +840,16 @@ function openEgg(egg)
 
 	if playerLibrary[Eggs[egg].Currency] > (Eggs[egg].Cost * multiplier) then
 		_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position))
-		wait(.5)
+		wait(.1)
 		--library.Variables.OpeningEgg = false
 		game:GetService("ReplicatedStorage").Remotes["buy egg"]:InvokeServer(ohTable2)
-		wait(_G.EggDelay)
 	end
 end
 
 
 local egg = wally:CreateWindow('Eggs')
 	egg:Section('Select Eggs')
-	egg:Toggle('Fast Hatch', {flag = "FastHatch"}, function(fasthatch) if fasthatch then _G.EggDelay = 3 else _G.EggDelay = 5 end end)
+	--egg:Toggle('Fast Hatch', {flag = "FastHatch"}, function(fasthatch) if fasthatch then _G.EggDelay = 3 else _G.EggDelay = 5 end end)
 	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = {"None", "Best", "Any"} })
 	
  
@@ -808,7 +874,7 @@ local drop = wally:CreateWindow('Drops')
 
 function toTarget(pos, targetPos, targetCFrame)
     local tween_s = game:service"TweenService"
-    local info = TweenInfo.new((targetPos - pos).Magnitude/80, Enum.EasingStyle.Quad)
+    local info = TweenInfo.new((targetPos - pos).Magnitude/150, Enum.EasingStyle.Quad)
     -- local tic_k = tick()
     local tween, err = pcall(function()
         local tween = tween_s:Create(GetPlayerRoot(), info, {CFrame = targetCFrame})
@@ -952,8 +1018,11 @@ settingsGUI:Button('Load Settings', function() loadSettings() end)
 settingsGUI:Button('Save Settings', function() saveSettings() end)
 	
 
-spawn(function()
-	while wait(.5) do
+spawn(function()	
+	while wait(.1) do
+			--if not _G.collectingchests and not _G.sell and farm.flags.Drops == true and (_G.canafford ~= true or _G.eggSkip == true) then
+	if _G.settingsloaded then
+	
 		local bestEgg = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
 						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0}
 						}
@@ -981,6 +1050,7 @@ spawn(function()
 			elseif bestEgg["Coins"].Name then
 				openEgg(bestEgg["Coins"].Name)
 			end
+			wait(_G.EggDelay)
 		elseif _G.BuyEggMode == "Any" then
 			for i,v in pairs(Eggs) do
 				if _G[i] then
@@ -988,111 +1058,101 @@ spawn(function()
 					openEgg(i)
 				end
 			end
+			wait(_G.EggDelay)
 		end
-		
-		
-		
-	end
-end)
-
-spawn(function()	
-	while wait(.1) do
-			--if not _G.collectingchests and not _G.sell and farm.flags.Drops == true and (_G.canafford ~= true or _G.eggSkip == true) then
-	if _G.settingsloaded then
+			
+	
 		if farm.flags.FreeLoot then
 		
 			doFreeLoot()
 			
 		end
-			
-		if _G.drops then		
-			local DropTimeout = os.time() + 30
+		
+
+		if _G.drops and os.time() > _G.DropCoolOff  then		
+			--_G.DropCoolOff = os.time() + _G.DropDelay			
 			--_G.CollectingDrops = true
-			
-			while _G.drops and (DropTimeout > os.time()) and wait() do
-			
-				local closest = nil
-				local dis = math.huge
+			--spawn(function()
+				_G.DropCoolOff = os.time() + _G.DropDelay
+		
+				while _G.drops and (os.time() < _G.DropCoolOff) and wait() do
 				
-				local pickupsLib = library.Network.Invoke("Get Pickups")
-				
-				for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
-					if (pickupsLib[v.Name].a == "VIP" and VIP) or pickupsLib[v.Name].a ~= "VIP" then
-						for x,y in pairs(pickups) do
-							if _G[y] and tonumber(_G.droprange) ~= nil then
-								if v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (GetPlayerRoot().Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (GetPlayerRoot().Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
-									--root.CFrame = CFrame.new(root.CFrame.X,v.CFrame.Y,root.CFrame.Z)
-									closest = v.POS
-									dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
+					local closest = nil
+					local dis = math.huge
+					
+					local pickupsLib = library.Network.Invoke("Get Pickups")
+					
+					for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
+						if (pickupsLib[v.Name].a == "VIP" and VIP) or pickupsLib[v.Name].a ~= "VIP" then
+							for x,y in pairs(pickups) do
+								if _G[y] and tonumber(_G.droprange) ~= nil then
+									if v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (GetPlayerRoot().Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (GetPlayerRoot().Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
+										--root.CFrame = CFrame.new(root.CFrame.X,v.CFrame.Y,root.CFrame.Z)
+										closest = v.POS
+										dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
+									end
 								end
 							end
 						end
 					end
-				end
-				
 					
-				if closest ~= nil and (target == nil or target.Parent == nil) then
-					local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
-					if dis > 250 then
-						_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X + 25, closest.Position.Y, closest.Position.Z + 25))
+						
+					if closest ~= nil and (target == nil or target.Parent == nil) then
+						local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
+						--if dis > 250 then
+							--G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+1, closest.Position.Y+3, closest.Position.Z+1))
+						--end
+						if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
+							GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y + 2,GetPlayerRoot().CFrame.Z)
+						end
+						wait(.1)
+						toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
 					end
-					if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
-						GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y + 2,GetPlayerRoot().CFrame.Z)
-					end
-					toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
 				end
-			end
+			--end)
 			--_G.CollectingDrops = false
 			--end
 		end
+		
+		if _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay) then
+			if _G.SellBubbleArea ~= "No Sell" then
+				local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
+				--local playerLibrary = library.Save.Get()
+				--for i = 1, 5 do
+				_G.player.Character:SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
+				wait(_G.TeleportDelay)
+				toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
+					
+					--playerLibrary = library.Save.Get()
+					
+				_G.LastSell = os.time()
+			end
+		end	
+		
+		for a,b in pairs(game:GetService("Workspace").MAP.Chests:GetChildren()) do
+			if _G[b.name] then
+				local chest = game:GetService("Workspace").MAP.Activations[b.name]
+				repeat
+					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X, chest.Position.Y + 10, chest.Position.Z))
+					wait(_G.TeleportDelay)
+					toTarget(GetPlayerRoot().Position,chest.Position,chest.CFrame)
+				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil
+				print("Grabbed " .. b.name .. "!!!")
+			end
+		end
+			
+
 	end	
 		
 	end
 end)
 	
-spawn(function ()
-	while(wait(.5)) do
-		if _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay) then
-			if _G.SellBubbleArea ~= "No Sell" then
-				local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
-				--local playerLibrary = library.Save.Get()
-				for i = 1, 5 do
-				_G.player.Character:SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X + 25, sellarea.Position.Y, sellarea.Position.Z - 25))
-				
-					toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,0,0),sellarea.CFrame + Vector3.new(0,0,0))
-					wait(.5)
-					--playerLibrary = library.Save.Get()
-					
-				end
-				_G.LastSell = os.time()
-			end
-		end	
-	end
-end)
-
 spawn(function()
 	while wait(180) do
 		doTierRewards()
 		doBubblePass()
 		doChallenge()
 		SpinPrizeWheel()
-	end
-end)
-
-spawn(function()
-	while(wait(.5)) do	
-		for a,b in pairs(game:GetService("Workspace").MAP.Chests:GetChildren()) do
-			if _G[b.name] then
-				local chest = game:GetService("Workspace").MAP.Activations[b.name]
-				repeat
-					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X, chest.Position.Y + 25, chest.Position.Z))
-					wait()
-					toTarget(GetPlayerRoot().Position,chest.Position,chest.CFrame)
-				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil
-				print("Grabbed " .. b.name .. "!!!")
-				wait(_G.TeleportDelay)
-			end
-		end
 	end
 end)
 
