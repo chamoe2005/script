@@ -467,6 +467,7 @@ function doFreeLoot()
 			for i , v in ipairs(game:GetService("Workspace").Stuff.Lootbags:GetChildren()) do
 				closest = v:FindFirstChildWhichIsA("MeshPart")
 				dis = (GetPlayerRoot().Position-v:FindFirstChildWhichIsA("MeshPart").Position).magnitude
+				local objectname = ""
 				if closest ~= nil then
 					LogMe("TP to Lootbag " .. v.Name)
 					closest.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
@@ -478,7 +479,7 @@ function doFreeLoot()
 						GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y,GetPlayerRoot().CFrame.Z)
 					end
 					toTarget(GetPlayerRoot().Position,closest.Position,closest.CFrame)
-					if objectname ~= "" then
+					if objectname ~= "" and objectname ~= nil then
 							LogMe("Drop " .. objectname .. " removed")
 						end
 					wait(_G.TeleportDelay)
