@@ -8,7 +8,7 @@ _G.TeleportDelay = 1
 _G.LastEgg = os.time()
 _G.EggDelay = 5
 _G.oldeggs = {}
-_G.DropTimeOut = 15
+_G.DropTimeOut = 10
 _G.DropDelay = 60
 _G.DropCoolOff = os.time() + _G.DropDelay
 
@@ -122,6 +122,9 @@ end
 local workspace = GetWorkspace()
 local map = GetMap()
 local chests = GetChests()
+
+TeleportService = game:GetService("TeleportService")
+
 
 local Dir = COREGUI:FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOverlay")
 	Dir.DescendantAdded:Connect(function(Err)
@@ -470,21 +473,25 @@ function doFreeLoot()
 				closest = v:FindFirstChildWhichIsA("MeshPart")
 				dis = (GetPlayerRoot().Position-v:FindFirstChildWhichIsA("MeshPart").Position).magnitude
 				local objectname = ""
-				if closest ~= nil then
+				
 					--closest.Destroying:connect(function() 
 					local startTime = os.time()
 					repeat
-						LogMe("TP to Lootbag " .. v.Name)
-						_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
-						local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
-						if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
-							GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y,GetPlayerRoot().CFrame.Z)
-						end
-						toTarget(GetPlayerRoot().Position,closest.Position,closest.CFrame)
-						wait(_G.TeleportDelay)
 						closest = v:FindFirstChildWhichIsA("MeshPart")
+						if closest ~= nil then
+							LogMe("TP to Lootbag " .. v.Name)
+							_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
+							local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
+							if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
+								GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y,GetPlayerRoot().CFrame.Z)
+							end
+							toTarget(GetPlayerRoot().Position,closest.Position,closest.CFrame)
+							wait(_G.TeleportDelay)
+						
+						end
+						
 					until closest == nil
-				end
+				
 			end
 		
 
@@ -583,7 +590,7 @@ function doTierRewards()
 		end
 
 			for a,b in pairs(Rewards) do
-				if library.Directory.Rewards[a].price(b + 1) <= playerLibrary["Diamonds"] then
+				if library.Directory.Rewards[a].price(b + 1) <= playerLibrary["Diamonds"] and b < 100 then
 					LogMe("Redeeming " .. a .. " Reward Slot #" .. b + 1 .. " for " .. library.Directory.Rewards[a].price(b + 1) .. " Diamonds")
 					
 					local ohTable1 = {
@@ -597,8 +604,10 @@ function doTierRewards()
 
 					game:GetService("ReplicatedStorage").Remotes["buy rewards"]:FireServer(ohTable1)
 					wait(.5)
-				else
+				elseif b < 100
 					LogMe((library.Directory.Rewards[a].price(b + 1) - playerLibrary["Diamonds"]) .. " Diamonds until " .. a .. " Reward Slot #" .. b + 1 .. " can be redeemed")
+				elseif b >= 100 then
+					LogMe(a .. " Reward Slot #" .. b .. " is the last slot and has been redeemed")
 				end
 			end
 		--elseif library.Directory.Rewards[a].price(1) <= playerLibrary["Diamonds"] then
@@ -1317,7 +1326,7 @@ spawn(function()
 				for i,v in pairs(that) do
 			
 					--if v >= _G.AutoShinyNum then
-						LogMe(i,v)
+						LogMe(i .. " " .. v)
 					--end
 				
 					local petid = 0
@@ -1343,7 +1352,7 @@ spawn(function()
 						LogMe("Shiny Cost " .. library.Shared.ShinyCost(petid, _G.AutoShinyNum))
 						
 						for c,d in pairs(ohTable1[1][1]) do
-							LogMe(c,d)
+							LogMe(c .. " " .. d)
 						end
 						
 						game:GetService("ReplicatedStorage").Remotes["make pets shiny"]:InvokeServer(ohTable1)
