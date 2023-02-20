@@ -604,7 +604,7 @@ function doTierRewards()
 
 					game:GetService("ReplicatedStorage").Remotes["buy rewards"]:FireServer(ohTable1)
 					wait(.5)
-				elseif b < 100
+				elseif b < 100 then
 					LogMe((library.Directory.Rewards[a].price(b + 1) - playerLibrary["Diamonds"]) .. " Diamonds until " .. a .. " Reward Slot #" .. b + 1 .. " can be redeemed")
 				elseif b >= 100 then
 					LogMe(a .. " Reward Slot #" .. b .. " is the last slot and has been redeemed")
