@@ -12,8 +12,8 @@ if game.placeId == 11746859781 then
 	_G.startscript = true
 	_G.canceltimeout = 10
 	_G.autoloadsettings = true
-	_G.ChallengeName = "Valentines"
-	_G.ChallengeRemote = "claim valentines prize"
+	--_G.ChallengeName = "Valentines"
+	--_G.ChallengeRemote = "claim valentines prize"
 
 	print("BGS Script Loader Started")
 
