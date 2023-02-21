@@ -574,7 +574,7 @@ function doBubblePass()
 		end
 
 end
-		farm:Toggle('Claim Bubble Pass', {flag = 'ClaimPass'}, function() spawn(function() doBubblePass() end) end)
+		--farm:Toggle('Claim Bubble Pass', {flag = 'ClaimPass'}, function() spawn(function() doBubblePass() end) end)
 		
 function doTierRewards()
 
