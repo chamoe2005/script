@@ -27,6 +27,7 @@ if not game:IsLoaded() then
 end
 
 Players = game:GetService("Players")
+PlaceId, JobId = game.PlaceId, game.JobId
 
 function GetLocalPlayer()
 	local player = Players.LocalPlayer
@@ -132,11 +133,11 @@ local Dir = COREGUI:FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOver
 			Err:GetPropertyChangedSignal("Text"):Connect(function()
 				if Err.Text:sub(0, 12) == "Disconnected" then
 					--if #Players:GetPlayers() <= 1 then
-						Players.LocalPlayer:Kick("\nRejoining...")
-						wait()
-						TeleportService:Teleport(PlaceId, Players.LocalPlayer)
+						--Players.LocalPlayer:Kick("\nRejoining...")
+						--wait()
+						--TeleportService:Teleport(PlaceId, Players.LocalPlayer)
 					--else
-						--TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Players.LocalPlayer)
+						TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Players.LocalPlayer)
 					--end
 				end
 			end)
