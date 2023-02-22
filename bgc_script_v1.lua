@@ -131,13 +131,13 @@ local Dir = COREGUI:FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOver
 		if Err.Name == "ErrorTitle" then
 			Err:GetPropertyChangedSignal("Text"):Connect(function()
 				if Err.Text:sub(0, 12) == "Disconnected" then
-					if #Players:GetPlayers() <= 1 then
+					--if #Players:GetPlayers() <= 1 then
 						Players.LocalPlayer:Kick("\nRejoining...")
 						wait()
 						TeleportService:Teleport(PlaceId, Players.LocalPlayer)
-					else
-						TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Players.LocalPlayer)
-					end
+					--else
+						--TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Players.LocalPlayer)
+					--end
 				end
 			end)
 		end
