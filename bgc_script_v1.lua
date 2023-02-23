@@ -1,4 +1,4 @@
-print("Version 1.3.2")
+print("Version 1.3.3")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1059,12 +1059,12 @@ _G.eggopened = false
 library.Signal.Fired("Stat Changed"):Connect(function(p1)
 	--local coins = library.Save.Get()["Coins"]
 	if p1 == "EggsOpened" then
-		if library.Variables.AutoHatchEggId then
+		if _G.BuyEggMode == "None" then
+			library.Variables.AutoHatchEggId = nil
+		elseif library.Variables.AutoHatchEggId then
 			LogMe(library.Variables.AutoHatchEggId .. " Opened")
 			_G.eggopened = true
 			_G.LastEgg = os.time()
-		elseif _G.BuyEggMode == "None" then
-			library.Variables.AutoHatchEggId = nil
 		end
 	--elseif p1 == "Coins" and coins > _G.playerCoins then
 		--LogMe(coins - _G.playerCoins .. " added!")
