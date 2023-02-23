@@ -1413,7 +1413,7 @@ spawn(function()
 					
 					--_G.eggopened = false
 				
-					while _G[i] and library.Variables.AutoHatchEggId ~= nil and i == library.Variables.AutoHatchEggId not _G.eggopened do
+					while _G[i] and library.Variables.AutoHatchEggId ~= nil and i == library.Variables.AutoHatchEggId and not _G.eggopened do
 						--print("Opening " .. i)
 						_G.eggopened = false
 						openEgg(i)
