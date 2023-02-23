@@ -197,25 +197,26 @@ library.Signal.Fired("Merchant Active"):Connect(function()
 													for a,b in pairs(merch) do
 														for c,d in pairs(b) do
 														
-															print(a)
+															--print(a)
 																											
 															if d then
 																print("Merchant Items")												
 																															
 																for e,f in pairs(d) do
-																		print(e,f)
-																														
+																		print(e, g.reward, g.name, g.cost, g.currency)
+																																															
 																end
 																											
 															else
 																											
-																print(d)
+																--print(d)
 																									
 															end
 														end
 													end
 													
 												end)
+
 
 local multiplier = 1
 local VIP = false
