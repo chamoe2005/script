@@ -1,4 +1,4 @@
-print("Version 1.2.4")
+print("Version 1.2.5")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1395,11 +1395,11 @@ spawn(function()
 				end
 				
 			elseif _G.BuyEggMode == "Any" then --and (not _G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
-				LogMe("Buy Mode " .. _G.BuyEggMode)
-				LogMe("Last Egg " .. os.time() - _G.LastEgg)
-				LogMe("Egg Opened " .. tostring(_G.eggopened))
 				--_G.eggopened = true
 				for i,v in orderedPairs(Eggs) do
+					LogMe("Buy Mode " .. _G.BuyEggMode)
+					LogMe("Last Egg " .. os.time() - _G.LastEgg)
+					LogMe("Egg Opened " .. tostring(_G.eggopened))
 				
 					--while not _G.eggopened do
 						--wait()
@@ -1407,7 +1407,7 @@ spawn(function()
 					
 					--_G.eggopened = false
 				
-					while _G[i] and _G.eggopened then
+					while _G[i] and _G.eggopened do
 						--print("Opening " .. i)
 						openEgg(i)
 						wait(.1)
