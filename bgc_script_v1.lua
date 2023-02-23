@@ -568,7 +568,7 @@ function doBubblePass()
 
 			game:GetService("ReplicatedStorage").Remotes["buy bubble pass"]:FireServer(ohTable1)
 		
-		else
+		elseif farm.flags.ClaimPass then
 			LogMe("Bubble Pass not Owned")
 			
 			
@@ -619,6 +619,28 @@ end
 		
 		farm:Toggle('Tier Rewards', {flag = 'Tier Rewards'}, function() spawn(function() doTierRewards() end) end)
 		
+local doFairyExchange = function()
+	local playerLibrary = library.Save.Get()
+	
+	if farm.flags["Fairy Exchange"] and (playerLibrary.FairyExchange - os.time()) <= 0 then
+
+		local ohTable1 = {
+			[1] = {
+				[1] = false
+			},
+			[2] = {
+				[1] = 2
+			}
+		}
+
+		game:GetService("ReplicatedStorage").Remotes["fairy exchange"]:InvokeServer(ohTable1)
+	elseif farm.flags["Fairy Exchange"] then
+		LogMe((playerLibrary.FairyExchange - os.time()) / 60 / 60 .. " hours until Fairy Exchange")
+	end
+
+end
+		
+	farm:Toggle('Fairy Exchange', {flag = 'Fairy Exchange'}, function() spawn(function() doFairyExchange() end) end)
 		
 local changeSetting = function(settingtype, settingname, value)
 
@@ -903,8 +925,48 @@ local egg = wally:CreateWindow('Eggs')
 		_G[a] = false
 	end
 
-local pickups = {"Coins Present", "Coins Bag", "Large Coin", "Medium Coin", "Small Coin", "Large Diamonds", "Small Diamond", "Orb"}
+--local pickups = {"Coins Present", "Coins Bag", "Large Coin", "Medium Coin", "Small Coin", "Large Diamonds", "Small Diamond", "Orb"}
+local library = require(game:GetService("ReplicatedStorage").Nevermore.Library)
+local pickupsLib = library.Network.Invoke("Get Pickups")
+local currency = {["XP"] = 
+					{["Small Orb"] = "Orb",
+					 ["Medium Orb"] = "Orb", 
+					 ["Large Orb"] = "Orb"}}
 
+
+for a,b in pairs(library.Shared.Currency) do
+	currency[a] = {}
+end
+
+for i,world in pairs(library.Game.Pickups:GetChildren()) do
+
+	--print(world)
+	for c,area in pairs(world:GetChildren()) do
+	
+	--print(world,area)
+		for e,drop in pairs(area:GetChildren()) do
+			for g,h in pairs(drop:GetChildren()) do
+			
+				local this = require(h)
+				local found = false
+				for x,y in pairs(currency[this.currencyType]) do
+					--print(x,y)
+					--for j,k in pairs(y) do
+						if x == drop.Name then
+							found = true
+						end
+					--end
+				end
+					
+					
+				if not found then
+					currency[this.currencyType][drop.Name] = this.model.Name
+				end
+			
+			end
+		end
+	end
+end
 
 local drop = wally:CreateWindow('Drops')
 	drop:Toggle('Collect Drops', {location = _G, flag = 'drops'})
@@ -912,9 +974,9 @@ local drop = wally:CreateWindow('Drops')
         flag = "droprange",
         type = 'number'
     })
-    for a,b in pairs(pickups) do
-		drop:Toggle(b, {location = _G, flag = b})
-		_G[b] = false
+    for a,b in pairs(currency) do
+		drop:Toggle(a, {location = _G, flag = a})
+		_G[a] = false
 	end
 
 function toTarget(pos, targetPos, targetCFrame)
@@ -1135,12 +1197,15 @@ spawn(function()
 					
 					for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
 						if (pickupsLib[v.Name].a == "VIP" and VIP) or pickupsLib[v.Name].a ~= "VIP" then
-							for x,y in pairs(pickups) do
-								if _G[y] and tonumber(_G.droprange) ~= nil then
-									if v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (GetPlayerRoot().Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (GetPlayerRoot().Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
-										--root.CFrame = CFrame.new(root.CFrame.X,v.CFrame.Y,root.CFrame.Z)
-										closest = v.POS
-										dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
+							for a,b in pairs(currency) do
+								if _G[a] and tonumber(_G.droprange) ~= nil then
+									for x,y in pairs(b) do
+										if v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (GetPlayerRoot().Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (GetPlayerRoot().Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
+											--root.CFrame = CFrame.new(root.CFrame.X,v.CFrame.Y,root.CFrame.Z)
+											closest = v.POS
+											dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
+											--print("closest " .. v.Name .. " " .. y)
+										end
 									end
 								end
 							end
@@ -1220,6 +1285,7 @@ end)
 	
 spawn(function()
 	while wait(180) do
+		doFairyExchange()
 		doTierRewards()
 		doBubblePass()
 		doChallenge()
