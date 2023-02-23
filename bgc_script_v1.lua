@@ -1,4 +1,4 @@
-print("Version 2.3.1")
+print("Version 2.3.2")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1111,7 +1111,7 @@ end
 
 local egg = wally:CreateWindow('Eggs')
 	egg:Section('Select Eggs')
-	egg:Toggle('Faster Hatch', {flag = "EggFastHatch"}, function(fasthatch) if fasthatch then _G.EggDelay = 3 else _G.EggDelay = 5 end end)
+	--egg:Toggle('Faster Hatch', {flag = "EggFastHatch"}, function(fasthatch) if fasthatch then _G.EggDelay = 3 else _G.EggDelay = 5 end end)
 	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = {"None", "Best", "Any"} })
 	
  
