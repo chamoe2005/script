@@ -1427,6 +1427,7 @@ spawn(function()
 				end
 			elseif _G.BuyEggMode == "None" then
 				library.Variables.AutoHatchEggId = nil
+				library.Variables.AutoHatchEnabled = false
 			end
 			--wait(_G.TeleportDelay)
 		--end
