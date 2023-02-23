@@ -1435,15 +1435,17 @@ spawn(function()
 					local pickupsLib = library.Network.Invoke("Get Pickups")
 					
 					for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
-						if (pickupsLib[v.Name].a == "VIP" and VIP) or pickupsLib[v.Name].a ~= "VIP" then
-							for a,b in pairs(currency) do
-								if _G[a] and tonumber(_G.droprange) ~= nil then
-									for x,y in pairs(b) do
-										if v.Name ~= objectname and v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (GetPlayerRoot().Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (GetPlayerRoot().Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
-											--root.CFrame = CFrame.new(root.CFrame.X,v.CFrame.Y,root.CFrame.Z)
-											closest = v.POS
-											dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
-											--print("closest " .. v.Name .. " " .. y)
+						if v ~= nil then
+							if (pickupsLib[v.Name].a == "VIP" and VIP) or pickupsLib[v.Name].a ~= "VIP" then
+								for a,b in pairs(currency) do
+									if _G[a] and tonumber(_G.droprange) ~= nil then
+										for x,y in pairs(b) do
+											if v.Name ~= objectname and v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (GetPlayerRoot().Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (GetPlayerRoot().Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
+												--root.CFrame = CFrame.new(root.CFrame.X,v.CFrame.Y,root.CFrame.Z)
+												closest = v.POS
+												dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
+												--print("closest " .. v.Name .. " " .. y)
+											end
 										end
 									end
 								end
