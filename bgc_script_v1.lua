@@ -1,4 +1,4 @@
-print("Version 1.5")
+print("Version 2.1")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -813,16 +813,16 @@ local function doMerchant()
 	for a,b in pairs(merch) do
 		for c,d in pairs(b) do																							
 			if d then
-				LogMe("Merchant Items")												
+				--LogMe("Merchant Items")												
 				wait(1)																												
 				for e,f in pairs(d) do
 					--for g,h in pairs(f)
 						for x = 1, f.amount do
 							LogMe(f.amount .. " " .. e .. " " .. f.reward .. " " .. f.name .. " " .. f.cost .. " " .. f.currency)
 							local buy = false
-							if f.reward == "Pet" and farm.flags["Pet "] and playerLibrary[f.currency] >= f.cost then
+							if f.reward == "Pet" and merchant.flags["Pet "] and playerLibrary[f.currency] >= f.cost then
 								buy = true
-							elseif farm.flags[f.name .. " "] and playerLibrary[f.currency] >= f.cost then
+							elseif merchant.flags[f.name .. " "] and playerLibrary[f.currency] >= f.cost then
 								buy = true
 							end
 							
@@ -840,14 +840,14 @@ local function doMerchant()
 		end
 	end
 end
-	
-	farm:Section("Merchant Auto Buy")
-	farm:Toggle("Pet ", {flag = "Pet "})
+	local merchant = wally:CreateWindow('Merchant')
+	merchant:Section("Merchant Auto Buy")
+	merchant:Toggle("Pet ", {flag = "Pet "})
 	for a,b in orderedPairs(library.Directory.Boosts) do
-		farm:Toggle(a .. " ", {flag = a .. " "})
+		merchant:Toggle(a .. " ", {flag = a .. " "})
 	end
 	for a,b in orderedPairs(library.Directory.Potions) do
-		farm:Toggle(a .. " ", {flag = a .. " "})
+		merchant:Toggle(a .. " ", {flag = a .. " "})
 	end
 	
 	spawn(function() doMerchant() end)
@@ -1050,13 +1050,14 @@ end
 			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doChallenge() end) end)
 		end
 		
---_G.eggopened = true
+_G.eggopened = true
 --_G.starthatch = os.time()
 				
 library.Signal.Fired("Stat Changed"):Connect(function(p1)
 	if p1 == "EggsOpened" then
 		if library.Variables.AutoHatchEggId then
 			LogMe(library.Variables.AutoHatchEggId .. " Opened")
+			_G.eggopened = true
 		end
 	end;
 end);
@@ -1085,11 +1086,13 @@ function openEgg(egg)
 
 	--if playerLibrary[Eggs[egg].Currency] > (Eggs[egg].Cost * multiplier) then
 		--_G.eggopened = false
-		if not library.Variables.AutoHatchEggId then
+		if not library.Variables.AutoHatchEggId or library.Variables.AutoHatchEggId ~= egg then
+			_G.eggopened = false
 			_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position))
 			wait(.1)
 			library.Variables.AutoHatchEnabled = true
 			library.Variables.AutoHatchEggId = egg
+			
 		end
 		
 		--library.Variables.OpeningEgg = false
@@ -1163,11 +1166,14 @@ local drop = wally:CreateWindow('Drops')
 	drop:Box('Drop Delay', {location = _G,
     flag = "Drop Delay",
     type = 'number'
-    })
+	})
+	changeSetting("Box", "Drop Delay", 60, true)
+    
 	drop:Box('Drop TimeOut', {location = _G,
         flag = "Drop TimeOut",
         type = 'number'
     })
+	changeSetting("Box", "Drop TimeOut", 10, true)
 
 	
 
@@ -1342,8 +1348,9 @@ spawn(function()
 			--if _G.BuyEggMode ~= "None" then
 				--LogMe("Hatching Eggs", _G.NextEgg)
 			--end
-
-			if _G.BuyEggMode == "Best" then
+			
+			
+			if _G.BuyEggMode == "Best" and _G.eggopened then
 				for i,v in pairs(Eggs) do
 					if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] then
 						bestEgg[v.Currency].Name = i
@@ -1370,6 +1377,15 @@ spawn(function()
 					if _G[i] then
 						--print("Opening " .. i)
 						openEgg(i)
+						wait(.1)
+					end
+					
+					while not _G.eggopened do
+						wait()
+					end
+					
+					if _G.BuyEggMode ~= "Any" then
+						break
 					end
 				end
 				
@@ -1384,11 +1400,28 @@ spawn(function()
 		end
 		
 
+		if tonumber(_G["Drop Delay"]) ~= nil then
+			if tonumber(_G["Drop Delay"]) < 5 then
+				changeSetting("Box", "Drop Delay", 5, true)
+			end
+		else
+			changeSetting("Box", "Drop Delay", 5, true)
+		end
+		
+		if tonumber(_G["Drop TimeOut"]) ~= nil then
+			if tonumber(_G["Drop TimeOut"]) < 5 then
+				changeSetting("Box", "Drop TimeOut", 5, true)
+			end
+		else
+			changeSetting("Box", "Drop TimeOut", 5, true)
+		end
+		
+		
 		if _G.drops and os.time() > (_G.LastDrop + tonumber(_G["Drop Delay"]))  then		
 			--_G.DropCoolOff = os.time() + _G.DropDelay			
 			--_G.CollectingDrops = true
 			--spawn(function()
-				_G.DropCoolOff = os.time() + _G["Drop TimeOut"]
+				_G.DropCoolOff = os.time() + tonumber(_G["Drop TimeOut"])
 				_G.LastDrop = os.time() + _G.DropCoolOff
 				LogMe("Starting Drops")
 				while _G.drops and (os.time() < _G.DropCoolOff) do
