@@ -1425,6 +1425,7 @@ spawn(function()
 				_G.DropCoolOff = os.time() + tonumber(_G["Drop TimeOut"] + _G.TeleportDelay)
 				_G.LastDrop = os.time() + _G.DropCoolOff
 				LogMe("Starting Drops")
+				local objectname = ""
 				while _G.drops and (os.time() < _G.DropCoolOff) do
 					
 				
@@ -1438,7 +1439,7 @@ spawn(function()
 							for a,b in pairs(currency) do
 								if _G[a] and tonumber(_G.droprange) ~= nil then
 									for x,y in pairs(b) do
-										if v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (GetPlayerRoot().Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (GetPlayerRoot().Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
+										if v.Name ~= objectname and v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (GetPlayerRoot().Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (GetPlayerRoot().Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
 											--root.CFrame = CFrame.new(root.CFrame.X,v.CFrame.Y,root.CFrame.Z)
 											closest = v.POS
 											dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
@@ -1452,7 +1453,7 @@ spawn(function()
 					
 						
 					if closest ~= nil and (target == nil or target.Parent == nil) then
-					local objectname = ""
+					
 						closest.Parent.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
 																objectname = object.name
 															end)
@@ -1467,6 +1468,7 @@ spawn(function()
 						wait(.1)
 						if objectname ~= "" then
 							LogMe("Drop " .. objectname .. " removed")
+							objectname = ""
 						end
 					end
 				end
