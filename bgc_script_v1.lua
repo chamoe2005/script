@@ -182,7 +182,40 @@ while not library.Save do
 	LogMe("Waiting on Game Library")
 	wait(1)
 end
-	
+
+library.Signal.Fired("Merchant Active"):Connect(function()
+													
+													local ohTable1 = {
+																		[1] = {
+																			[1] = false
+																		},
+																		[2] = {
+																			[1] = 2
+																		}
+																	}
+													local merch = game:GetService("ReplicatedStorage").Remotes["get merchant items"]:InvokeServer(ohTable1)
+													for a,b in pairs(merch) do
+														for c,d in pairs(b) do
+														
+															print(a)
+																											
+															if d then
+																print("Merchant Items")												
+																															
+																for e,f in pairs(d) do
+																		print(e,f)
+																														
+																end
+																											
+															else
+																											
+																print(d)
+																									
+															end
+														end
+													end
+													
+												end)
 
 local multiplier = 1
 local VIP = false
