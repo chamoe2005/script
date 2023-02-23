@@ -1222,7 +1222,7 @@ local saveSettings = function()
 
 			elseif b.Name == "Box" and b.Text ~= nil and b.Text ~= "" and b.Text ~= 0 and not library.Directory.Boosts[b.Parent.Name] then
 			
-				--update[plr.Name][b.Parent.name] = b.Text
+				update[plr.Name][b.Parent.name] = b.Text
 				
 			elseif b.Name == "Box" and (b.Text == nil or b.Text == "" or b.Text == 0) and not library.Directory.Boosts[b.Parent.Name] then
 				
@@ -1484,6 +1484,7 @@ spawn(function()
 				end
 				LogMe("Ending Drops")
 				_G.LastDrop = os.time()
+				objectname = ""
 				
 			wait(_G.TeleportDelay)
 			--end)
