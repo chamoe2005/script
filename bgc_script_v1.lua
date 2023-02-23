@@ -1,4 +1,4 @@
-print("Version 2.1.1.2")
+print("Version 2.1.2.2")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1391,7 +1391,8 @@ spawn(function()
 						break
 					end
 				end
-				
+			elseif _G.BuyEggMode == "None"
+				library.Variables.AutoHatchEggId = nil
 			end
 			--wait(_G.TeleportDelay)
 		--end
