@@ -569,7 +569,7 @@ local closest = nil
 						
 						end
 						
-					until closest == ni
+					until closest == nil
 				
 			end
 
