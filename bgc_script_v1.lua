@@ -1,4 +1,4 @@
-print("Version 2.2.2.3")
+print("Version 2.3")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -11,6 +11,7 @@ _G.oldeggs = {}
 _G["Drop TimeOut"] = 10
 _G["Drop Delay"] = 60
 _G.DropCoolOff = os.time() + _G["Drop Delay"]
+_G.playerCoins = 0
 
 --local dropdowns = {}
 --dropdowns.Bubblesell = {"No Sell", "Sell 1", "Sell 2"}
@@ -1056,12 +1057,16 @@ _G.eggopened = true
 --_G.starthatch = os.time()
 				
 library.Signal.Fired("Stat Changed"):Connect(function(p1)
+	--local coins = library.Save.Get()["Coins"]
 	if p1 == "EggsOpened" then
 		if library.Variables.AutoHatchEggId then
 			LogMe(library.Variables.AutoHatchEggId .. " Opened")
 			_G.eggopened = true
 			_G.LastEgg = os.time()
 		end
+	--elseif p1 == "Coins" and coins > _G.playerCoins then
+		--LogMe(coins - _G.playerCoins .. " added!")
+		--_G.playerCoins = coins
 	end;
 end);
 
@@ -1430,6 +1435,8 @@ spawn(function()
 				LogMe("Starting Drops")
 				local objectname = ""
 				while _G.drops and (os.time() < _G.DropCoolOff) do
+					--local playerLibrary = library.Save.Get()
+					--_G.playerCoins = playerLibrary["Coins"]
 					
 				
 					local closest = nil
@@ -1476,7 +1483,7 @@ spawn(function()
 						toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
 						wait(.1)
 						if objectname ~= "" then
-							LogMe("Drop " .. objectname .. " removed")
+							--LogMe("Drop " .. objectname .. " removed")
 							objectname = ""
 						end
 					end
