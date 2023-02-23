@@ -1374,7 +1374,7 @@ spawn(function()
 				end
 				
 			elseif _G.BuyEggMode == "Any" and (_G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
-				for i,v in pairs(Eggs) do
+				for i,v in orderedPairs(Eggs) do
 					if _G[i] then
 						--print("Opening " .. i)
 						openEgg(i)
