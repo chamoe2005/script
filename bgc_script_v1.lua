@@ -197,6 +197,62 @@ for a,b in pairs(playerLibrary.Gamepasses) do
 end
 
 
+local changeSetting = function(settingtype, settingname, value, fire)
+
+	for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
+	
+		if settingtype == "Checkmark" and b.Name == "Checkmark" and b.Parent.name == settingname and ((value and b.Text ~= utf8.char(10003)) or (not value and b.Text == utf8.char(10003))) then
+			if fire then
+				for a,b in pairs(getconnections(b.MouseButton1Click)) do
+					b:Fire()
+				end
+			end
+		elseif settingtype == "Box" and b.Name == "Box" and b.Parent.name == settingname and settingname ~= "" and settingname ~= 0 then
+			b.Text = value
+			if fire then
+				for i,v in pairs(getconnections(b.FocusLost)) do
+					v:Fire()
+				end
+			end
+		elseif settingtype == "Selection" and b.Name == "Selection" then
+		
+			local currentValue = b.Text			
+			
+			if fire then
+				for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
+					v:Fire()
+				end
+			end
+			wait(.5)
+			local selectionname = b.Text
+			--print(selectionname, settingname)
+			
+			if selectionname == settingname then
+				for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
+					if v.Name == "TextButton" and v.Text == value then
+						if fire then
+							for x,y in pairs(getconnections(v.MouseButton1Click)) do
+								y:Fire()
+							end
+						end
+						--print(selectionname, value)
+					end
+				end
+			else
+				for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
+					if v.Name == "TextButton" and v.Text == currentValue then
+						if fire then
+							for x,y in pairs(getconnections(v.MouseButton1Click)) do
+								y:Fire()
+							end
+						end
+						--print(selectionname, currentValue)
+					end
+				end
+			end	
+		end
+	end
+end
 
 
 local fartsound = Instance.new("Sound")
@@ -641,53 +697,61 @@ local doFairyExchange = function()
 end
 		
 	farm:Toggle('Fairy Exchange', {flag = 'Fairy Exchange'}, function() spawn(function() doFairyExchange() end) end)
-		
-local changeSetting = function(settingtype, settingname, value)
 
-	for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
-	
-		if settingtype == "Checkmark" and b.Name == "Checkmark" and b.Parent.name == settingname and ((value and b.Text ~= utf8.char(10003)) or (not value and b.Text == utf8.char(10003))) then
-			for a,b in pairs(getconnections(b.MouseButton1Click)) do
-				b:Fire()
-			end
-		elseif settingtype == "Box" and b.Name == "Box" and b.Parent.name == settingname and settingname ~= "" and settingname ~= 0 then
-			b.Text = value
-			for i,v in pairs(getconnections(b.FocusLost)) do
-				v:Fire()
-			end
-		elseif settingtype == "Selection" and b.Name == "Selection" then
-		
-			local currentValue = b.Text			
-						
-			for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
-				v:Fire()
-			end
+local function doBoost(boostType)
+	--print(boostType)
+
+	if farm.flags[boostType] ~= nil and farm.flags[boostType] ~= "" and tonumber(farm.flags[boostType]) ~= nil and tonumber(farm.flags[boostType]) > 0 and library.Save.Get().BoostsInventory[boostType] and farm.flags[boostType] <= library.Save.Get().BoostsInventory[boostType] then
+		for i = 1, farm.flags[boostType] do
+			LogMe("Using " .. boostType .. " boost")
+			local ohTable1 = {
+				[1] = {
+					[1] = boostType
+				},
+				[2] = {
+					[1] = false
+				}
+			}
+
+			game:GetService("ReplicatedStorage").Remotes["activate boost"]:FireServer(ohTable1)
 			wait(.5)
-			local selectionname = b.Text
-			--print(selectionname, settingname)
-			
-			if selectionname == settingname then
-				for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
-					if v.Name == "TextButton" and v.Text == value then
-						for x,y in pairs(getconnections(v.MouseButton1Click)) do
-							y:Fire()
-						end
-						--print(selectionname, value)
-					end
-				end
-			else
-				for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
-					if v.Name == "TextButton" and v.Text == currentValue then
-						for x,y in pairs(getconnections(v.MouseButton1Click)) do
-							y:Fire()
-						end
-						--print(selectionname, currentValue)
-					end
-				end
-			end	
+		end
+	else
+		LogMe("Unable to use " .. boostType .. " boost")
+	end
+	
+	changeSetting("Box", boostType, library.Save.Get().BoostsInventory[boostType], false)
+
+end
+
+local function updateBoosts()
+	for a,b in pairs(library.Directory.Boosts) do
+		print(library.Save.Get().BoostsInventory[a])
+		local value = library.Save.Get().BoostsInventory[a]
+		if value and tonumber(value) > 0 then
+			changeSetting("Box", a, tonumber(value), false)
+		else
+			changeSetting("Box", a, 0, false)
 		end
 	end
 end
+
+	farm:Section("Boosts")
+
+	for a,b in pairs(library.Directory.Boosts) do
+		print(a)
+		farm:Box(a, {flag = a,
+        type = 'number'},
+		function() doBoost(a) end)
+		
+	end
+	
+	updateBoosts()
+	
+	--for a,b in pairs(library.Save.Get().BoostsInventory) do
+		--
+	--end
+		
 
 function switchEggs(args, old, switch)
 	if _G.settingsloaded then
@@ -738,12 +802,12 @@ function switchEggs(args, old, switch)
 			end
 			
 			
-			changeSetting("Checkmark", a, enabled)
+			changeSetting("Checkmark", a, enabled, true)
 				
 		end
 		
 
-		changeSetting("Selection", "Buy Mode", args["Buy Mode"])
+		changeSetting("Selection", "Buy Mode", args["Buy Mode"], true)
 		
 		LogMe("Old Eggs")
 		LogMe(old["Buy Mode"])
@@ -800,18 +864,14 @@ local doChallenge = function()
 					
 					if b.challengeType == "CoinPickups" then
 						LogMe("Switching OFF Coin Pickups")
-						changeSetting("Checkmark", "Collect Drops", false)
-						changeSetting("Checkmark", "Coins Bag", false)
-						changeSetting("Checkmark", "Large Coin", false)
-						changeSetting("Checkmark", "Medium Coin", false)
-						changeSetting("Checkmark", "Small Coin", false)
-						changeSetting("Box", "Range", 0)
+						changeSetting("Checkmark", "Collect Drops", false, true)
+						changeSetting("Checkmark", "Coins", false, true)
+						changeSetting("Box", "Range", 0, true)
 					elseif b.challengeType == "DiamondPickups" then
 						LogMe("Switching OFF Diamond Pickups")
-						changeSetting("Checkmark", "Collect Drops", false)
-						changeSetting("Checkmark", "Large Diamonds", false)
-						changeSetting("Checkmark", "Small Diamond", false)
-						changeSetting("Box", "Range", 0)
+						changeSetting("Checkmark", "Collect Drops", false, true)
+						changeSetting("Checkmark", "Diamonds", false, true)
+						changeSetting("Box", "Range", 0, true)
 					elseif b.challengeType == "LegendaryPets" or b.challengeType == "GodlyPets" then
 						LogMe("Switch Back Eggs")
 						switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
@@ -826,18 +886,14 @@ local doChallenge = function()
 				
 					if b.challengeType == "CoinPickups" then
 						LogMe("Switching ON Coin Pickups")
-						changeSetting("Checkmark", "Collect Drops", true)
-						changeSetting("Checkmark", "Coins Bag", true)
-						changeSetting("Checkmark", "Large Coin", true)
-						changeSetting("Checkmark", "Medium Coin", true)
-						changeSetting("Checkmark", "Small Coin", true)
-						changeSetting("Box", "Range", 50000)
+						changeSetting("Checkmark", "Collect Drops", true, true)
+						changeSetting("Checkmark", "Coins", true, true)
+						changeSetting("Box", "Range", 50000, true)
 					elseif b.challengeType == "DiamondPickups" then
 						LogMe("Switching ON Diamond Pickups")
-						changeSetting("Checkmark", "Collect Drops", true)
-						changeSetting("Checkmark", "Large Diamonds", true)
-						changeSetting("Checkmark", "Small Diamond", true)
-						changeSetting("Box", "Range", 50000)
+						changeSetting("Checkmark", "Collect Drops", true, true)
+						changeSetting("Checkmark", "Diamonds", true, true)
+						changeSetting("Box", "Range", 50000, true)
 					elseif b.challengeType == "LegendaryPets" then
 						LogMe("Switch to Legendary Challenege")
 						if _G.oldeggs["Buy Mode"] == nil then
@@ -916,7 +972,7 @@ end
 
 local egg = wally:CreateWindow('Eggs')
 	egg:Section('Select Eggs')
-	egg:Toggle('Fast Hatch', {flag = "FastHatch"}, function(fasthatch) if fasthatch then _G.EggDelay = 3 else _G.EggDelay = 5 end end)
+	egg:Toggle('Faster Hatch', {flag = "EggFastHatch"}, function(fasthatch) if fasthatch then _G.EggDelay = 3 else _G.EggDelay = 5 end end)
 	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = {"None", "Best", "Any"} })
 	
  
@@ -1446,47 +1502,3 @@ else
 end
 
 
-
-function NoobSim()
-						LogMe("BGClicker n00b Challenge SIMULATOR")
-						wait(1)
-						LogMe("...")
-						wait(3)
-						LogMe("Rdy?")
-						wait(10)
-						LogMe("Get some coins you bugger!")
-						wait(5)
-						changeSetting("Checkmark", "Collect Drops", true)
-						changeSetting("Checkmark", "Coins Bag", true)
-						changeSetting("Checkmark", "Large Coin", true)
-						changeSetting("Checkmark", "Medium Coin", true)
-						changeSetting("Checkmark", "Small Coin", true)
-						changeSetting("Box", "Range", 50000)
-						wait(10)
-						LogMe("Now get some more stupid pets!")
-						changeSetting("Checkmark", "Collect Drops", false)
-						changeSetting("Checkmark", "Coins Bag", false)
-						changeSetting("Checkmark", "Large Coin", false)
-						changeSetting("Checkmark", "Medium Coin", false)
-						changeSetting("Checkmark", "Small Coin", false)
-						changeSetting("Box", "Range", 0)
-						switchEggs({"Void Egg", "Galaxy Egg"})
-						wait(15)
-						LogMe("Colleca crap lo of Diamon")
-						switchEggs({"old"})
-						changeSetting("Checkmark", "Collect Drops", true)
-						changeSetting("Checkmark", "Large Diamonds", true)
-						changeSetting("Checkmark", "Small Diamond", true)
-						changeSetting("Box", "Range", 50000)
-						wait(10)
-						LogMe("Hatch 100 Legendaries!")
-						changeSetting("Checkmark", "Collect Drops", false)
-						changeSetting("Checkmark", "Large Diamonds", false)
-						changeSetting("Checkmark", "Small Diamond", false)
-						changeSetting("Box", "Range", 0)
-						switchEggs({"Magma Egg"})
-						wait(10)
-						LogMe("Blow 1 kagillion bubbles!!!")
-						switchEggs({"old"})
-end
-						
