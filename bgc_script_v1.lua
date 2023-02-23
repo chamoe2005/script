@@ -1,4 +1,4 @@
-print("Version 1.3.4.1")
+print("Version 1.4")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -716,12 +716,16 @@ local function doBoost(boostType)
 			game:GetService("ReplicatedStorage").Remotes["activate boost"]:FireServer(ohTable1)
 			wait(.5)
 		end
+			
 	else
 		LogMe("Unable to use " .. boostType .. " boost")
 	end
 	
-	changeSetting("Box", boostType, library.Save.Get().BoostsInventory[boostType], false)
-
+	if library.Save.Get().BoostsInventory[boostType] then
+		changeSetting("Box", boostType, library.Save.Get().BoostsInventory[boostType], false)
+	else
+		changeSetting("Box", boostType, 0, false)
+	end
 end
 
 local function updateBoosts()
