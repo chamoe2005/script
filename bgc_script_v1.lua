@@ -1,4 +1,4 @@
-print("Version 1.2.6")
+print("Version 1.2.7")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1350,6 +1350,7 @@ spawn(function()
 			--if not _G.collectingchests and not _G.sell and farm.flags.Drops == true and (_G.canafford ~= true or _G.eggSkip == true) then
 	if _G.settingsloaded then
 	
+		local lastBest = ""
 		local bestEgg = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
 						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0}
 						}
@@ -1368,7 +1369,7 @@ spawn(function()
 			--LogMe("Auto Hatch Enabled" .. tostring(library.Variables.AutoHatchEnabled))
 			--LogMe("Auto Hatch Egg" .. tostring(library.Variables.AutoHatchEggId))
 			
-			if _G.BuyEggMode == "Best" and (not _G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
+			if _G.BuyEggMode == "Best" and library.Variables.AutoHatchEggId == nil or library.Variables.AutoHatchEggId ~= lastBest or (not _G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
 					LogMe("Buy Mode " .. _G.BuyEggMode)
 					LogMe("Last Egg " .. os.time() - _G.LastEgg)
 					LogMe("Egg Opened " .. tostring(_G.eggopened))
@@ -1382,15 +1383,20 @@ spawn(function()
 				if bestEgg["Diamonds"].Name and bestEgg["Coins"].Name then
 					--print("Opening " .. bestEgg.Name)
 					if bestEgg["Diamonds"].Name == "Safe Egg" and bestEgg["Coins"].Cost < 200000 then
+						lastBest = bestEgg["Diamonds"].Name
 						openEgg(bestEgg["Diamonds"].Name)
 					elseif bestEgg["Coins"].Cost > bestEgg["Diamonds"].Cost then
+						lastBest = bestEgg["Coins"].Name
 						openEgg(bestEgg["Coins"].Name)
 					else
+						lastBest = bestEgg["Diamonds"].Name
 						openEgg(bestEgg["Diamonds"].Name)
 					end
 				elseif bestEgg["Diamonds"].Name then
+					lastBest = bestEgg["Diamonds"].Name
 					openEgg(bestEgg["Diamonds"].Name)
 				elseif bestEgg["Coins"].Name then
+					lastBest = bestEgg["Coins"].Name
 					openEgg(bestEgg["Coins"].Name)
 				end
 				
