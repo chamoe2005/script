@@ -1,4 +1,4 @@
-print("Version 1.4")
+print("Version 1.5")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -161,7 +161,49 @@ local GC = getconnections or get_signal_cons
 		end)
 	end
 
+function __genOrderedIndex( t )
+    local orderedIndex = {}
+    for key in pairs(t) do
+        table.insert( orderedIndex, key )
+    end
+    table.sort( orderedIndex )
+    return orderedIndex
+end
 
+function orderedNext(t, state)
+    -- Equivalent of the next function, but returns the keys in the alphabetic
+    -- order. We use a temporary ordered key table that is stored in the
+    -- table being iterated.
+
+    local key = nil
+    --print("orderedNext: state = "..tostring(state) )
+    if state == nil then
+        -- the first time, generate the index
+        t.__orderedIndex = __genOrderedIndex( t )
+        key = t.__orderedIndex[1]
+    else
+        -- fetch the next value
+        for i = 1,table.getn(t.__orderedIndex) do
+            if t.__orderedIndex[i] == state then
+                key = t.__orderedIndex[i+1]
+            end
+        end
+    end
+
+    if key then
+        return key, t[key]
+    end
+
+    -- no more value to return, cleanup
+    t.__orderedIndex = nil
+    return
+end
+
+function orderedPairs(t)
+    -- Equivalent of the pairs() function on tables. Allows to iterate
+    -- in order
+    return orderedNext, t, nil
+end
 
 local nevermore = game.ReplicatedStorage:FindFirstChild("Nevermore")
 while not nevermore do
@@ -182,40 +224,6 @@ while not library.Save do
 	LogMe("Waiting on Game Library")
 	wait(1)
 end
-
-library.Signal.Fired("Merchant Active"):Connect(function()
-													
-													local ohTable1 = {
-																		[1] = {
-																			[1] = false
-																		},
-																		[2] = {
-																			[1] = 2
-																		}
-																	}
-													local merch = game:GetService("ReplicatedStorage").Remotes["get merchant items"]:InvokeServer(ohTable1)
-													for a,b in pairs(merch) do
-														for c,d in pairs(b) do
-														
-															--print(a)
-																											
-															if d then
-																print("Merchant Items")												
-																															
-																for e,f in pairs(d) do
-																		print(e, g.reward, g.name, g.cost, g.currency)
-																																															
-																end
-																											
-															else
-																											
-																--print(d)
-																									
-															end
-														end
-													end
-													
-												end)
 
 
 local multiplier = 1
@@ -327,7 +335,7 @@ local farm = wally:CreateWindow('Auto Farm')
 	end) end)
 	
 	farm:Section("Chests")
-	for a,b in pairs(library.Directory.Chests) do
+	for a,b in orderedPairs(library.Directory.Chests) do
 		if b.name == "VIP Chest" and not VIP then
 		else
 			farm:Toggle(b.name, {location = _G, flag = b.name})
@@ -776,7 +784,7 @@ end
 
 	farm:Section("Boosts")
 
-	for a,b in pairs(library.Directory.Boosts) do
+	for a,b in orderedPairs(library.Directory.Boosts) do
 		--print(a)
 		farm:Box(a, {flag = a,
         type = 'number'},
@@ -785,6 +793,66 @@ end
 	end
 	
 	updateBoosts()
+	
+local function doMerchant()
+	local ohTable1 = {
+					  [1] = {
+					  [1] = false
+					  },
+					  [2] = {
+					  [1] = 2
+					  }
+					}
+	local merch = game:GetService("ReplicatedStorage").Remotes["get merchant items"]:InvokeServer(ohTable1)
+	local playerLibrary = library.Save.Get()
+	for a,b in pairs(merch) do
+		for c,d in pairs(b) do																							
+			if d then
+				LogMe("Merchant Items")												
+																																
+				for e,f in pairs(d) do
+					--for g,h in pairs(f)
+						for x = 1, f.amount do
+							LogMe(f.amount, e, f.reward, f.name, f.cost, f.currency)
+							local buy = false
+							if f.reward == "Pet" and farm.flags["Pet "] and playerLibrary[f.currency] >= f.cost then
+								buy = true
+							elseif farm.flags[f.name .. " "] and playerLibrary[f.currency] >= f.cost then
+								buy = true
+							end
+							
+							if buy then
+								for x, connection in pairs(getconnections(GetLocalPlayer().PlayerGui.Merchant.Frame["Item" .. e].Buy.Activated)) do
+									connection:Fire()
+									LogMe("Buying Item " .. e)
+									wait(1)
+								end
+							end
+						end
+					--end
+				end
+			end
+		end
+	end
+end
+	
+	farm:Section("Merchant Auto Buy")
+	farm:Toggle("Pet ", {flag = "Pet "})
+	for a,b in orderedPairs(library.Directory.Boosts) do
+		farm:Toggle(a .. " ", {flag = a .. " "})
+	end
+	for a,b in orderedPairs(library.Directory.Potions) do
+		farm:Toggle(a .. " ", {flag = a .. " "})
+	end
+	
+	spawn(function() doMerchant() end)
+	
+library.Signal.Fired("Merchant Active"):Connect(function()
+													
+													doMerchant()
+													
+												end)
+
 	
 	--for a,b in pairs(library.Save.Get().BoostsInventory) do
 		--
@@ -1014,7 +1082,7 @@ local egg = wally:CreateWindow('Eggs')
 	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = {"None", "Best", "Any"} })
 	
  
-	for a,b in pairs(Eggs) do
+	for a,b in orderedPairs(Eggs) do
 		egg:Toggle(a, {location = _G, flag = a})
 		_G[a] = false
 	end
@@ -1022,15 +1090,16 @@ local egg = wally:CreateWindow('Eggs')
 --local pickups = {"Coins Present", "Coins Bag", "Large Coin", "Medium Coin", "Small Coin", "Large Diamonds", "Small Diamond", "Orb"}
 local library = require(game:GetService("ReplicatedStorage").Nevermore.Library)
 local pickupsLib = library.Network.Invoke("Get Pickups")
-local currency = {["XP"] = 
-					{["Small Orb"] = "Orb",
-					 ["Medium Orb"] = "Orb", 
-					 ["Large Orb"] = "Orb"}}
-
+local currency = {}
 
 for a,b in pairs(library.Shared.Currency) do
 	currency[a] = {}
 end
+
+currency["XP"] = {["Small Orb"] = "Orb",
+				  ["Medium Orb"] = "Orb", 
+				  ["Large Orb"] = "Orb"}
+
 
 for i,world in pairs(library.Game.Pickups:GetChildren()) do
 
@@ -1068,7 +1137,7 @@ local drop = wally:CreateWindow('Drops')
         flag = "droprange",
         type = 'number'
     })
-    for a,b in pairs(currency) do
+    for a,b in orderedPairs(currency) do
 		drop:Toggle(a, {location = _G, flag = a})
 		_G[a] = false
 	end
@@ -1109,9 +1178,9 @@ local saveSettings = function()
 			
 				update[plr.Name][b.Parent.name] = false
 
-			elseif b.Name == "Box" and b.Text ~= nil and b.Text ~= "" and b.Text ~= 0 then
+			elseif b.Name == "Box" and b.Text ~= nil and b.Text ~= "" and b.Text ~= 0 and not library.Directory.Boosts[b.Parent.Name] then
 			
-				update[plr.Name][b.Parent.name] = b.Text
+				--update[plr.Name][b.Parent.name] = b.Text
 				
 			elseif b.Name == "Box" and (b.Text == nil or b.Text == "" or b.Text == 0) and not library.Directory.Boosts[b.Parent.Name] then
 				
@@ -1386,6 +1455,7 @@ spawn(function()
 		doBubblePass()
 		doChallenge()
 		SpinPrizeWheel()
+		doMerchant()
 	end
 end)
 
