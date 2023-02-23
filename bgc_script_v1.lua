@@ -809,11 +809,11 @@ local function doMerchant()
 		for c,d in pairs(b) do																							
 			if d then
 				LogMe("Merchant Items")												
-																																
+				wait(1)																												
 				for e,f in pairs(d) do
 					--for g,h in pairs(f)
 						for x = 1, f.amount do
-							LogMe(f.amount, e, f.reward, f.name, f.cost, f.currency)
+							LogMe(f.amount .. " " .. e .. " " .. f.reward .. " " .. f.name .. " " .. f.cost .. " " .. f.currency)
 							local buy = false
 							if f.reward == "Pet" and farm.flags["Pet "] and playerLibrary[f.currency] >= f.cost then
 								buy = true
