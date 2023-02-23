@@ -1481,8 +1481,8 @@ spawn(function()
 		
 		
 		
-		if _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay) then
-			if _G.SellBubbleArea ~= "No Sell" then
+		if _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay + _G.TeleportDelay) then
+			if _G.SellBubbleArea ~= "No Sell" and library.Save.Get().Settings.SellBubbles == 1 then
 				LogMe("Sell Bubble")
 				_G.LastSell = os.time()
 				local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
@@ -1496,6 +1496,8 @@ spawn(function()
 					
 				
 				wait(_G.TeleportDelay)
+			elseif _G.SellBubbleArea ~= "No Sell" and library.Save.Get().Settings.SellBubbles == 2 then
+				LogMe("Sell Bubbles Disabled in Settings")
 			end
 		end	
 		
