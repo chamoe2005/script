@@ -1,4 +1,4 @@
-print("Version 1.2.9")
+print("Version 1.3.2")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1063,6 +1063,8 @@ library.Signal.Fired("Stat Changed"):Connect(function(p1)
 			LogMe(library.Variables.AutoHatchEggId .. " Opened")
 			_G.eggopened = true
 			_G.LastEgg = os.time()
+		elseif _G.BuyEggMode == "None" then
+			library.Variables.AutoHatchEggId = nil
 		end
 	--elseif p1 == "Coins" and coins > _G.playerCoins then
 		--LogMe(coins - _G.playerCoins .. " added!")
@@ -1369,7 +1371,7 @@ spawn(function()
 			--LogMe("Auto Hatch Enabled" .. tostring(library.Variables.AutoHatchEnabled))
 			--LogMe("Auto Hatch Egg" .. tostring(library.Variables.AutoHatchEggId))
 			
-			if _G.BuyEggMode == "Best" and library.Variables.AutoHatchEggId == nil or library.Variables.AutoHatchEggId ~= lastBest or (not _G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
+			if _G.BuyEggMode == "Best" and (library.Variables.AutoHatchEggId == nil or library.Variables.AutoHatchEggId ~= lastBest or not _G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
 					LogMe("Buy Mode " .. _G.BuyEggMode)
 					LogMe("Last Egg " .. os.time() - _G.LastEgg)
 					LogMe("Egg Opened " .. tostring(_G.eggopened))
@@ -1427,7 +1429,7 @@ spawn(function()
 				end
 			elseif _G.BuyEggMode == "None" then
 				library.Variables.AutoHatchEggId = nil
-				library.Variables.AutoHatchEnabled = false
+				--library.Variables.AutoHatchEnabled = false
 			end
 			--wait(_G.TeleportDelay)
 		--end
