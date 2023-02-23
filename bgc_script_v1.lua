@@ -1,4 +1,4 @@
-print("Version 2.3.2")
+print("Version 1.2.3.4")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -6,7 +6,7 @@ _G.LastSell = os.time()
 _G.LastDrop = os.time()
 _G.TeleportDelay = 2
 _G.LastEgg = os.time()
-_G.EggTimeout = 5
+_G.EggTimeout = 10
 _G.oldeggs = {}
 _G["Drop TimeOut"] = 10
 _G["Drop Delay"] = 60
@@ -1101,7 +1101,13 @@ function openEgg(egg)
 			library.Variables.AutoHatchEggId = egg
 			_G.LastEgg = os.time()
 		end
-		
+		wait(_G.EggTimeout)
+		if not _G.eggopened then
+			print("Did not recieve egg open flag")
+			_G.eggopened = true
+			_G.LastEgg = os.time()
+		end
+			
 		--library.Variables.OpeningEgg = false
 		--game:GetService("ReplicatedStorage").Remotes["buy egg"]:InvokeServer(ohTable2)
 		--_G.LastEgg = os.time()
@@ -1356,6 +1362,11 @@ spawn(function()
 				--LogMe("Hatching Eggs", _G.NextEgg)
 			--end
 			
+			LogMe("Buy Mode " .. _G.BuyEggMode)
+			LogMe("Last Egg " .. os.time() - _G.LastEgg)
+			LogMe("Egg Opened " .. tostring(_G.eggopened))
+			--LogMe("Auto Hatch Enabled" .. tostring(library.Variables.AutoHatchEnabled))
+			--LogMe("Auto Hatch Egg" .. tostring(library.Variables.AutoHatchEggId))
 			
 			if _G.BuyEggMode == "Best" and (_G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
 				--print(_G.eggopened, os.time() - _G.LastEgg)
