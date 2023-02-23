@@ -1,4 +1,4 @@
-print("Version 1.2.3.4")
+print("Version 1.2.4")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1053,7 +1053,7 @@ end
 			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doChallenge() end) end)
 		end
 		
-_G.eggopened = true
+_G.eggopened = false
 --_G.starthatch = os.time()
 				
 library.Signal.Fired("Stat Changed"):Connect(function(p1)
@@ -1093,17 +1093,19 @@ function openEgg(egg)
 	--local playerLibrary = library.Save.Get()
 
 	--if playerLibrary[Eggs[egg].Currency] > (Eggs[egg].Cost * multiplier) then
-		_G.eggopened = false
 		if not library.Variables.AutoHatchEggId or library.Variables.AutoHatchEggId ~= egg then
 			_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position))
 			wait(.1)
 			library.Variables.AutoHatchEnabled = true
 			library.Variables.AutoHatchEggId = egg
+			wait(1)
+			
 		end
+		
 		wait(_G.EggTimeout)
 		if not _G.eggopened then
 			print("Did not recieve egg open flag")
-			_G.eggopened = true
+			_G.eggopened = false
 			_G.LastEgg = 0
 			--_G.LastEgg = os.time()
 		end
@@ -1362,13 +1364,14 @@ spawn(function()
 				--LogMe("Hatching Eggs", _G.NextEgg)
 			--end
 			
-			LogMe("Buy Mode " .. _G.BuyEggMode)
-			LogMe("Last Egg " .. os.time() - _G.LastEgg)
-			LogMe("Egg Opened " .. tostring(_G.eggopened))
+
 			--LogMe("Auto Hatch Enabled" .. tostring(library.Variables.AutoHatchEnabled))
 			--LogMe("Auto Hatch Egg" .. tostring(library.Variables.AutoHatchEggId))
 			
-			if _G.BuyEggMode == "Best" and (_G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
+			if _G.BuyEggMode == "Best" and (not _G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
+					LogMe("Buy Mode " .. _G.BuyEggMode)
+					LogMe("Last Egg " .. os.time() - _G.LastEgg)
+					LogMe("Egg Opened " .. tostring(_G.eggopened))
 				--print(_G.eggopened, os.time() - _G.LastEgg)
 				for i,v in pairs(Eggs) do
 					if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] then
@@ -1391,17 +1394,26 @@ spawn(function()
 					openEgg(bestEgg["Coins"].Name)
 				end
 				
-			elseif _G.BuyEggMode == "Any" and (_G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
+			elseif _G.BuyEggMode == "Any" then --and (not _G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
+				LogMe("Buy Mode " .. _G.BuyEggMode)
+				LogMe("Last Egg " .. os.time() - _G.LastEgg)
+				LogMe("Egg Opened " .. tostring(_G.eggopened))
+				--_G.eggopened = true
 				for i,v in orderedPairs(Eggs) do
-					if _G[i] then
+				
+					--while not _G.eggopened do
+						--wait()
+					--end
+					
+					--_G.eggopened = false
+				
+					while _G[i] and _G.eggopened then
 						--print("Opening " .. i)
 						openEgg(i)
 						wait(.1)
 					end
 					
-					while not _G.eggopened do
-						wait()
-					end
+
 					
 					if _G.BuyEggMode ~= "Any" then
 						break
