@@ -1370,6 +1370,7 @@ spawn(function()
 			for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
 				connection:Fire()
 				LogMe("Closing New Item Window")
+				updateBoosts()
 			end
 		end
 	end
