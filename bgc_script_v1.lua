@@ -1351,7 +1351,7 @@ spawn(function()
 			
 			
 			if _G.BuyEggMode == "Best" and (_G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
-				print(_G.eggopened, os.time() - _G.LastEgg)
+				--print(_G.eggopened, os.time() - _G.LastEgg)
 				for i,v in pairs(Eggs) do
 					if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] then
 						bestEgg[v.Currency].Name = i
