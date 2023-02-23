@@ -4,13 +4,13 @@ _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
 _G.LastSell = os.time()
 _G.LastDrop = os.time()
-_G.TeleportDelay = 5
+_G.TeleportDelay = 2
 _G.LastEgg = os.time()
 _G.EggDelay = 5
 _G.oldeggs = {}
-_G.DropTimeOut = 10
-_G.DropDelay = 60
-_G.DropCoolOff = os.time() + _G.DropDelay
+_G["Drop TimeOut"] = 10
+_G["Drop Delay"] = 60
+_G.DropCoolOff = os.time() + _G["Drop Delay"]
 
 --local dropdowns = {}
 --dropdowns.Bubblesell = {"No Sell", "Sell 1", "Sell 2"}
@@ -1050,23 +1050,25 @@ end
 			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doChallenge() end) end)
 		end
 		
-_G.eggopened = true
-_G.starthatch = os.time()
+--_G.eggopened = true
+--_G.starthatch = os.time()
 				
 library.Signal.Fired("Stat Changed"):Connect(function(p1)
 	if p1 == "EggsOpened" then
-		_G.eggopened = true
+		if library.Variables.AutoHatchEggId then
+			LogMe(library.Variables.AutoHatchEggId .. " Opened")
+		end
 	end;
 end);
 
 
 function openEgg(egg)
 
-	local tripleEgg = false
+	--local tripleEgg = false
 
-	if multiplier == 3 then 
-		tripleEgg = true
-	end
+	--if multiplier == 3 then 
+		--tripleEgg = true
+	--end
 
 	local ohTable2 = {
 		[1] = {
@@ -1079,21 +1081,21 @@ function openEgg(egg)
 		}
 	}
 	
-	local playerLibrary = library.Save.Get()
+	--local playerLibrary = library.Save.Get()
 
-	if playerLibrary[Eggs[egg].Currency] > (Eggs[egg].Cost * multiplier) then
-		_G.eggopened = false
+	--if playerLibrary[Eggs[egg].Currency] > (Eggs[egg].Cost * multiplier) then
+		--_G.eggopened = false
+		if not library.Variables.AutoHatchEggId then
+			_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position))
+			wait(.1)
+			library.Variables.AutoHatchEnabled = true
+			library.Variables.AutoHatchEggId = egg
+		end
 		
-			_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position + Vector3.new(3,-5,3)))
-			wait()
-		repeat
-			--library.Variables.OpeningEgg = false
-			game:GetService("ReplicatedStorage").Remotes["buy egg"]:InvokeServer(ohTable2)
-			wait(.5)
-		until _G.eggopened == true or os.time() > _G.starthatch + 10
-		_G.eggopened = true
-		_G.LastEgg = os.time()
-	end
+		--library.Variables.OpeningEgg = false
+		--game:GetService("ReplicatedStorage").Remotes["buy egg"]:InvokeServer(ohTable2)
+		--_G.LastEgg = os.time()
+	--end
 end
 
 
@@ -1158,6 +1160,17 @@ local drop = wally:CreateWindow('Drops')
         flag = "droprange",
         type = 'number'
     })
+	drop:Box('Drop Delay', {location = _G,
+    flag = "Drop Delay",
+    type = 'number'
+    })
+	drop:Box('Drop TimeOut', {location = _G,
+        flag = "Drop TimeOut",
+        type = 'number'
+    })
+
+	
+
     for a,b in orderedPairs(currency) do
 		drop:Toggle(a, {location = _G, flag = a})
 		_G[a] = false
@@ -1320,13 +1333,16 @@ spawn(function()
 						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0}
 						}
 		local playerLibrary = library.Save.Get()
-		if (os.time() > _G.LastEgg) and _G.eggopened then
-			_G.starthatch = os.time()
-		
-			if _G.BuyEggMode ~= "None" then
-				LogMe("Hatching Eggs")
-			end
-		
+		--if playerLibrary.Boosts["Fast Hatch"] then 
+			--_G.NextEgg = _G.LastEgg + 3
+		--else 
+			--_G.NextEgg = _G.LastEgg +  5
+		--end
+		--if os.time() > _G.NextEgg and _G.eggopened then
+			--if _G.BuyEggMode ~= "None" then
+				--LogMe("Hatching Eggs", _G.NextEgg)
+			--end
+
 			if _G.BuyEggMode == "Best" then
 				for i,v in pairs(Eggs) do
 					if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] then
@@ -1358,8 +1374,8 @@ spawn(function()
 				end
 				
 			end
-			wait()
-		end
+			--wait(_G.TeleportDelay)
+		--end
 		
 		if farm.flags.FreeLoot then
 			--print("Do Free Loot")
@@ -1368,11 +1384,11 @@ spawn(function()
 		end
 		
 
-		if _G.drops and os.time() > (_G.LastDrop + _G.DropDelay)  then		
+		if _G.drops and os.time() > (_G.LastDrop + tonumber(_G["Drop Delay"]))  then		
 			--_G.DropCoolOff = os.time() + _G.DropDelay			
 			--_G.CollectingDrops = true
 			--spawn(function()
-				_G.DropCoolOff = os.time() + _G.DropTimeOut
+				_G.DropCoolOff = os.time() + _G["Drop TimeOut"]
 				_G.LastDrop = os.time() + _G.DropCoolOff
 				LogMe("Starting Drops")
 				while _G.drops and (os.time() < _G.DropCoolOff) do
@@ -1458,9 +1474,10 @@ spawn(function()
 					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X + math.random(8,20), chest.Position.Y + 10, chest.Position.Z + math.random(8,20)))
 					wait(_G.TeleportDelay)
 					toTarget(GetPlayerRoot().Position,chest.Position + Vector3.new(math.random(1,3), 0, math.random(1,3)),chest.CFrame)
+					wait(_G.TeleportDelay)
 				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil or os.time() > startTime + 10
 				LogMe("Grabbed " .. b.name .. "!!!")
-				wait(_G.TeleportDelay)
+				--wait(_G.TeleportDelay)
 			end
 			
 		end
