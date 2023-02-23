@@ -763,7 +763,7 @@ end
 
 local function updateBoosts()
 	for a,b in pairs(library.Directory.Boosts) do
-		print(library.Save.Get().BoostsInventory[a])
+		--print(library.Save.Get().BoostsInventory[a])
 		local value = library.Save.Get().BoostsInventory[a]
 		if value and tonumber(value) > 0 then
 			changeSetting("Box", a, tonumber(value), false)
@@ -776,7 +776,7 @@ end
 	farm:Section("Boosts")
 
 	for a,b in pairs(library.Directory.Boosts) do
-		print(a)
+		--print(a)
 		farm:Box(a, {flag = a,
         type = 'number'},
 		function() doBoost(a) end)
@@ -1096,7 +1096,8 @@ local saveSettings = function()
 	if update[plr.Name] == nil then
 		update[plr.Name] = {}
 	end
-		
+	
+	
 	for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
 	
 			if b.Name == "Checkmark" and b.Text == utf8.char(10003) then
@@ -1111,9 +1112,10 @@ local saveSettings = function()
 			
 				update[plr.Name][b.Parent.name] = b.Text
 				
-			elseif b.Name == "Box" and (b.Text == nil or b.Text == "" or b.Text == 0) then
-			
+			elseif b.Name == "Box" and (b.Text == nil or b.Text == "" or b.Text == 0) and not library.Directory.Boosts[b.Parent.Name] then
+				
 				update[plr.Name][b.Parent.name] = 0
+				--print(b.Parent.Name)
 
 			elseif b.Name == "Selection" then
 			
