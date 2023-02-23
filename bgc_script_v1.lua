@@ -1099,13 +1099,13 @@ function openEgg(egg)
 			wait(.1)
 			library.Variables.AutoHatchEnabled = true
 			library.Variables.AutoHatchEggId = egg
-			_G.LastEgg = os.time()
 		end
+		_G.LastEgg = os.time()
 		wait(_G.EggTimeout)
 		if not _G.eggopened then
 			print("Did not recieve egg open flag")
 			_G.eggopened = true
-			_G.LastEgg = os.time()
+			--_G.LastEgg = os.time()
 		end
 			
 		--library.Variables.OpeningEgg = false
