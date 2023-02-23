@@ -1,4 +1,4 @@
-print("Version 1.2.8")
+print("Version 1.2.9")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1407,20 +1407,19 @@ spawn(function()
 					LogMe("Last Egg " .. os.time() - _G.LastEgg)
 					LogMe("Egg Opened " .. tostring(_G.eggopened))
 				
-					--while not _G.eggopened do
-						--wait()
-					--end
+					
 					
 					--_G.eggopened = false
 				
-					while _G[i] and library.Variables.AutoHatchEggId ~= nil and i == library.Variables.AutoHatchEggId and not _G.eggopened do
+					while _G[i] and library.Variables.AutoHatchEggId ~= nil and i == library.Variables.AutoHatchEggId do
 						--print("Opening " .. i)
 						_G.eggopened = false
 						openEgg(i)
-						wait(.1)
 					end
 					
-
+					while not _G.eggopened do
+						wait()
+					end
 					
 					if _G.BuyEggMode ~= "Any" then
 						break
