@@ -799,6 +799,17 @@ end
 	
 	updateBoosts()
 	
+	local merchant = wally:CreateWindow('Merchant')
+	merchant:Section("Merchant Auto Buy")
+	merchant:Toggle("Pet ", {flag = "Pet "})
+	for a,b in orderedPairs(library.Directory.Boosts) do
+		merchant:Toggle(a .. " ", {flag = a .. " "})
+	end
+	for a,b in orderedPairs(library.Directory.Potions) do
+		merchant:Toggle(a .. " ", {flag = a .. " "})
+	end
+
+	
 local function doMerchant()
 	local ohTable1 = {
 					  [1] = {
@@ -840,15 +851,6 @@ local function doMerchant()
 		end
 	end
 end
-	local merchant = wally:CreateWindow('Merchant')
-	merchant:Section("Merchant Auto Buy")
-	merchant:Toggle("Pet ", {flag = "Pet "})
-	for a,b in orderedPairs(library.Directory.Boosts) do
-		merchant:Toggle(a .. " ", {flag = a .. " "})
-	end
-	for a,b in orderedPairs(library.Directory.Potions) do
-		merchant:Toggle(a .. " ", {flag = a .. " "})
-	end
 	
 	spawn(function() doMerchant() end)
 	
