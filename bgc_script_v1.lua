@@ -1,4 +1,4 @@
-print("Version 2.1")
+print("Version 2.1.1")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -6,7 +6,7 @@ _G.LastSell = os.time()
 _G.LastDrop = os.time()
 _G.TeleportDelay = 2
 _G.LastEgg = os.time()
-_G.EggDelay = 5
+_G.EggTimeout = 5
 _G.oldeggs = {}
 _G["Drop TimeOut"] = 10
 _G["Drop Delay"] = 60
@@ -1058,6 +1058,7 @@ library.Signal.Fired("Stat Changed"):Connect(function(p1)
 		if library.Variables.AutoHatchEggId then
 			LogMe(library.Variables.AutoHatchEggId .. " Opened")
 			_G.eggopened = true
+			_G.LastEgg = os.time()
 		end
 	end;
 end);
@@ -1085,14 +1086,13 @@ function openEgg(egg)
 	--local playerLibrary = library.Save.Get()
 
 	--if playerLibrary[Eggs[egg].Currency] > (Eggs[egg].Cost * multiplier) then
-		--_G.eggopened = false
+		_G.eggopened = false
 		if not library.Variables.AutoHatchEggId or library.Variables.AutoHatchEggId ~= egg then
-			_G.eggopened = false
 			_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position))
 			wait(.1)
 			library.Variables.AutoHatchEnabled = true
 			library.Variables.AutoHatchEggId = egg
-			
+			_G.LastEgg = os.time()
 		end
 		
 		--library.Variables.OpeningEgg = false
@@ -1350,7 +1350,8 @@ spawn(function()
 			--end
 			
 			
-			if _G.BuyEggMode == "Best" and _G.eggopened then
+			if _G.BuyEggMode == "Best" and (_G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
+				print(_G.eggopened, os.time() - _G.LastEgg)
 				for i,v in pairs(Eggs) do
 					if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] then
 						bestEgg[v.Currency].Name = i
@@ -1372,7 +1373,7 @@ spawn(function()
 					openEgg(bestEgg["Coins"].Name)
 				end
 				
-			elseif _G.BuyEggMode == "Any" then
+			elseif _G.BuyEggMode == "Any" and (_G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
 				for i,v in pairs(Eggs) do
 					if _G[i] then
 						--print("Opening " .. i)
@@ -1421,7 +1422,7 @@ spawn(function()
 			--_G.DropCoolOff = os.time() + _G.DropDelay			
 			--_G.CollectingDrops = true
 			--spawn(function()
-				_G.DropCoolOff = os.time() + tonumber(_G["Drop TimeOut"])
+				_G.DropCoolOff = os.time() + tonumber(_G["Drop TimeOut"] + _G.TeleportDelay)
 				_G.LastDrop = os.time() + _G.DropCoolOff
 				LogMe("Starting Drops")
 				while _G.drops and (os.time() < _G.DropCoolOff) do
