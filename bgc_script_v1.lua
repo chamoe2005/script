@@ -1,4 +1,4 @@
-print("Version 1.3.3")
+print("Version 1.3.4")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1096,7 +1096,7 @@ function openEgg(egg)
 
 	--if playerLibrary[Eggs[egg].Currency] > (Eggs[egg].Cost * multiplier) then
 		if not library.Variables.AutoHatchEggId or library.Variables.AutoHatchEggId ~= egg then
-			_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position))
+			_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position + Vector3.new(3,-5,-3))
 			wait(.1)
 			library.Variables.AutoHatchEnabled = true
 			library.Variables.AutoHatchEggId = egg
