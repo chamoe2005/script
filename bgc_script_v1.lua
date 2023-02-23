@@ -4,7 +4,7 @@ _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
 _G.LastSell = os.time()
 _G.LastDrop = os.time()
-_G.TeleportDelay = 1
+_G.TeleportDelay = 3
 _G.LastEgg = os.time()
 _G.EggDelay = 5
 _G.oldeggs = {}
@@ -1044,6 +1044,15 @@ end
 		if _G.ChallengeName ~= nil then
 			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doChallenge() end) end)
 		end
+		
+_G.eggopened = true
+_G.starthatch = os.time()
+				
+library.Signal.Fired("Stat Changed"):Connect(function(p1)
+	if p1 == "EggsOpened" then
+		_G.eggopened = true
+	end;
+end);
 
 
 function openEgg(egg)
@@ -1068,10 +1077,17 @@ function openEgg(egg)
 	local playerLibrary = library.Save.Get()
 
 	if playerLibrary[Eggs[egg].Currency] > (Eggs[egg].Cost * multiplier) then
-		_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position))
-		wait(.1)
-		--library.Variables.OpeningEgg = false
-		game:GetService("ReplicatedStorage").Remotes["buy egg"]:InvokeServer(ohTable2)
+		_G.eggopened = false
+		
+			_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position + Vector3.new(5,-5,5)))
+			wait()
+		repeat
+			--library.Variables.OpeningEgg = false
+			game:GetService("ReplicatedStorage").Remotes["buy egg"]:InvokeServer(ohTable2)
+			wait(.5)
+		until _G.eggopened == true or os.time() > _G.starthatch + 10
+		_G.eggopened = true
+		_G.LastEgg = os.time()
 	end
 end
 
@@ -1299,10 +1315,13 @@ spawn(function()
 						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0}
 						}
 		local playerLibrary = library.Save.Get()
-		if _G.BuyEggMode ~= "None" then
-			LogMe("Hatching Eggs")
-		end
-		while os.time() < (_G.LastEgg + _G.EggDelay) do
+		if (os.time() > _G.LastEgg) and _G.eggopened then
+			_G.starthatch = os.time()
+		
+			if _G.BuyEggMode ~= "None" then
+				LogMe("Hatching Eggs")
+			end
+		
 			if _G.BuyEggMode == "Best" then
 				for i,v in pairs(Eggs) do
 					if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] then
@@ -1334,10 +1353,9 @@ spawn(function()
 				end
 				
 			end
-			wait(_G.TeleportDelay)
+			wait()
 		end
 		
-		_G.LastEgg = os.time()
 		if farm.flags.FreeLoot then
 			--print("Do Free Loot")
 			doFreeLoot()
