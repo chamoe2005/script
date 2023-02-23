@@ -1079,7 +1079,7 @@ function openEgg(egg)
 	if playerLibrary[Eggs[egg].Currency] > (Eggs[egg].Cost * multiplier) then
 		_G.eggopened = false
 		
-			_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position + Vector3.new(5,-5,5)))
+			_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position + Vector3.new(3,-5,3)))
 			wait()
 		repeat
 			--library.Variables.OpeningEgg = false
