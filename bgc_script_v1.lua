@@ -544,29 +544,9 @@ end
 
 game:GetService("Workspace").Stuff.Lootbags.DescendantRemoving:Connect(function(desc) if desc:IsA("Model") then LogMe("Drop " .. desc.name .. " removed") end end)
 
-function doFreeLoot()
+game:GetService("Workspace").Stuff.Lootbags.ChildAdded:connect(function()
 
-			local playerLibrary = library.Save.Get()
-			for a,b in pairs(library.Directory.FreeGifts) do
-				local found = false
-				for c,d in pairs(playerLibrary.FreeGiftsRedeemed) do
-					if a == d then
-						found = true
-					end
-				end
-				if playerLibrary.FreeGiftsTime > b.waitTime and not found then
-					--repeat
-						_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position))
-						toTarget(root.Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").CFrame)
-						wait(_G.TeleportDelay)
-						game:GetService("ReplicatedStorage").Remotes["redeem free gift"]:InvokeServer({[1] = {[1] = a},[2] = {[1] = false}})
-					--until game:GetService("Workspace").Stuff.Lootbags:FindFirstChildWhichIsA("MeshPart", true) ~= nil
-					LogMe("Claiming Loot Bag " .. a)
-				end
-			end
-		
-		
-			local closest = nil
+local closest = nil
 			local dis = math.huge
 			for i , v in ipairs(game:GetService("Workspace").Stuff.Lootbags:GetChildren()) do
 				closest = v:FindFirstChildWhichIsA("MeshPart")
@@ -589,9 +569,34 @@ function doFreeLoot()
 						
 						end
 						
-					until closest == nil
+					until closest == ni
 				
 			end
+
+																end)
+
+function doFreeLoot()
+
+			local playerLibrary = library.Save.Get()
+			for a,b in pairs(library.Directory.FreeGifts) do
+				local found = false
+				for c,d in pairs(playerLibrary.FreeGiftsRedeemed) do
+					if a == d then
+						found = true
+					end
+				end
+				if playerLibrary.FreeGiftsTime > b.waitTime and not found then
+					--repeat
+						_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position))
+						toTarget(root.Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").CFrame)
+						wait(_G.TeleportDelay)
+						game:GetService("ReplicatedStorage").Remotes["redeem free gift"]:InvokeServer({[1] = {[1] = a},[2] = {[1] = false}})
+					--until game:GetService("Workspace").Stuff.Lootbags:FindFirstChildWhichIsA("MeshPart", true) ~= nil
+					LogMe("Claiming Loot Bag " .. a)
+				end
+			end
+		
+			
 		
 
 end
