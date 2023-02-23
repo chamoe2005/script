@@ -1,4 +1,4 @@
-print("Version 2.2.2.2")
+print("Version 2.2.2.3")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1453,10 +1453,10 @@ spawn(function()
 									end
 								end
 							else
-								break
+								--break
 							end
 						else
-							break
+							--break
 						end
 					end
 					
