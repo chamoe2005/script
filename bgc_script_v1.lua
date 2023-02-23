@@ -1447,8 +1447,6 @@ spawn(function()
 												closest = v.POS
 												dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
 												--print("closest " .. v.Name .. " " .. y)
-											else
-												break
 											end
 										end
 									end
