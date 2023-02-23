@@ -1,4 +1,4 @@
-print("Version 1.2.7")
+print("Version 1.2.8")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1413,11 +1413,11 @@ spawn(function()
 					
 					--_G.eggopened = false
 				
-					while _G[i] and _G.eggopened do
+					while _G[i] and library.Variables.AutoHatchEggId ~= nil and i == library.Variables.AutoHatchEggId not _G.eggopened do
 						--print("Opening " .. i)
+						_G.eggopened = false
 						openEgg(i)
 						wait(.1)
-						_G.eggopened = false
 					end
 					
 
