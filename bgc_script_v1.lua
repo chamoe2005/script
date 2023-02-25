@@ -6,6 +6,7 @@ _G.LastSell = os.time()
 _G.LastDrop = os.time()
 _G.TeleportDelay = 2
 _G.LastEgg = os.time()
+_G.lastBest = ""
 _G.EggTimeout = 10
 _G.oldeggs = {}
 _G["Drop TimeOut"] = 10
@@ -726,7 +727,7 @@ end
 local doFairyExchange = function()
 	local playerLibrary = library.Save.Get()
 	
-	if farm.flags["Fairy Exchange"] and (playerLibrary.FairyExchange - os.time()) <= 0 then
+	if farm.flags["Fairy Exchange"] and (not playerLibrary.FairyExchange or (playerLibrary.FairyExchange - os.time()) <= 0) then
 
 		local ohTable1 = {
 			[1] = {
@@ -1126,7 +1127,7 @@ local egg = wally:CreateWindow('Eggs')
 	
  
 	for a,b in orderedPairs(Eggs) do
-		egg:Toggle(a, {location = _G, flag = a})
+		egg:Toggle(a, {location = _G, flag = a}, function() _G.lastBest = "" end)
 		_G[a] = false
 	end
 
@@ -1347,12 +1348,12 @@ settingsGUI:Button('Load Settings', function() loadSettings() end)
 settingsGUI:Button('Save Settings', function() saveSettings() end)
 	
 
-spawn(function()	
+spawn(function()
+			
 	while wait(.1) do
 			--if not _G.collectingchests and not _G.sell and farm.flags.Drops == true and (_G.canafford ~= true or _G.eggSkip == true) then
 	if _G.settingsloaded then
 	
-		local lastBest = ""
 		local bestEgg = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
 						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0}
 						}
@@ -1371,10 +1372,11 @@ spawn(function()
 			--LogMe("Auto Hatch Enabled" .. tostring(library.Variables.AutoHatchEnabled))
 			--LogMe("Auto Hatch Egg" .. tostring(library.Variables.AutoHatchEggId))
 			
-			if _G.BuyEggMode == "Best" and (library.Variables.AutoHatchEggId == nil or library.Variables.AutoHatchEggId ~= lastBest or not _G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
+			if _G.BuyEggMode == "Best" and (library.Variables.AutoHatchEggId == nil or library.Variables.AutoHatchEggId ~= _G.lastBest or not _G[_G.lastBest] or not _G.eggopened or (os.time() > (_G.LastEgg + _G.EggTimeout))) then
 					LogMe("Buy Mode " .. _G.BuyEggMode)
 					LogMe("Last Egg " .. os.time() - _G.LastEgg)
 					LogMe("Egg Opened " .. tostring(_G.eggopened))
+				_G.eggopened = false
 				--print(_G.eggopened, os.time() - _G.LastEgg)
 				for i,v in pairs(Eggs) do
 					if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] then
@@ -1385,20 +1387,20 @@ spawn(function()
 				if bestEgg["Diamonds"].Name and bestEgg["Coins"].Name then
 					--print("Opening " .. bestEgg.Name)
 					if bestEgg["Diamonds"].Name == "Safe Egg" and bestEgg["Coins"].Cost < 200000 then
-						lastBest = bestEgg["Diamonds"].Name
+						_G.lastBest = bestEgg["Diamonds"].Name
 						openEgg(bestEgg["Diamonds"].Name)
 					elseif bestEgg["Coins"].Cost > bestEgg["Diamonds"].Cost then
-						lastBest = bestEgg["Coins"].Name
+						_G.lastBest = bestEgg["Coins"].Name
 						openEgg(bestEgg["Coins"].Name)
 					else
-						lastBest = bestEgg["Diamonds"].Name
+						_G.lastBest = bestEgg["Diamonds"].Name
 						openEgg(bestEgg["Diamonds"].Name)
 					end
 				elseif bestEgg["Diamonds"].Name then
-					lastBest = bestEgg["Diamonds"].Name
+					_G.lastBest = bestEgg["Diamonds"].Name
 					openEgg(bestEgg["Diamonds"].Name)
 				elseif bestEgg["Coins"].Name then
-					lastBest = bestEgg["Coins"].Name
+					_G.lastBest = bestEgg["Coins"].Name
 					openEgg(bestEgg["Coins"].Name)
 				end
 				
@@ -1595,7 +1597,8 @@ end)
 spawn(function()
 	while wait(1) do
 		local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
-				
+		local MessageWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Message")
+		
 		--while wait(1) and not NewItemWindow.Enabled do
 			--print(NewItemWindow.Enabled)
 		--end
@@ -1604,6 +1607,11 @@ spawn(function()
 				connection:Fire()
 				LogMe("Closing New Item Window")
 				updateBoosts()
+			end
+		elseif MessageWindow.Enabled then
+			for i, connection in pairs(getconnections(MessageWindow.Frame.Ok.MouseButton1Click)) do
+				connection:Fire()
+				LogMe("Closing Message Window")
 			end
 		end
 	end
