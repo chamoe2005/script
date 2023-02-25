@@ -1408,7 +1408,7 @@ spawn(function()
 				openEgg(newBest)
 				_G.lastBest = newBest
 				
-			elseif _G.BuyEggMode == "Best" and newBest = "" then
+			elseif _G.BuyEggMode == "Best" and newBest == "" then
 				library.Variables.AutoHatchEggId = nil
 				_G.lastBest = ""
 				--print(_G.eggopened, os.time() - _G.LastEgg)
