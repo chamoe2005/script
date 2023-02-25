@@ -1,4 +1,4 @@
-print("Version 1.3.4")
+print("Version 1.35")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -1368,41 +1368,52 @@ spawn(function()
 				--LogMe("Hatching Eggs", _G.NextEgg)
 			--end
 			
-
-			--LogMe("Auto Hatch Enabled" .. tostring(library.Variables.AutoHatchEnabled))
-			--LogMe("Auto Hatch Egg" .. tostring(library.Variables.AutoHatchEggId))
-			
-			if _G.BuyEggMode == "Best" and (library.Variables.AutoHatchEggId == nil or library.Variables.AutoHatchEggId ~= _G.lastBest or not _G[_G.lastBest] or not _G.eggopened or (os.time() > (_G.LastEgg + _G.EggTimeout))) then
-					LogMe("Buy Mode " .. _G.BuyEggMode)
-					LogMe("Last Egg " .. os.time() - _G.LastEgg)
-					LogMe("Egg Opened " .. tostring(_G.eggopened))
-				_G.eggopened = false
-				--print(_G.eggopened, os.time() - _G.LastEgg)
 				for i,v in pairs(Eggs) do
 					if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] then
 						bestEgg[v.Currency].Name = i
 						bestEgg[v.Currency].Cost = v.Cost
 					end
 				end
+				
+				local newBest = ""
+				
 				if bestEgg["Diamonds"].Name and bestEgg["Coins"].Name then
 					--print("Opening " .. bestEgg.Name)
 					if bestEgg["Diamonds"].Name == "Safe Egg" and bestEgg["Coins"].Cost < 200000 then
-						_G.lastBest = bestEgg["Diamonds"].Name
-						openEgg(bestEgg["Diamonds"].Name)
+						newBest = bestEgg["Diamonds"].Name
+						--openEgg(bestEgg["Diamonds"].Name)
 					elseif bestEgg["Coins"].Cost > bestEgg["Diamonds"].Cost then
-						_G.lastBest = bestEgg["Coins"].Name
-						openEgg(bestEgg["Coins"].Name)
+						newBest = bestEgg["Coins"].Name
+						--openEgg(bestEgg["Coins"].Name)
 					else
-						_G.lastBest = bestEgg["Diamonds"].Name
-						openEgg(bestEgg["Diamonds"].Name)
+						newBest = bestEgg["Diamonds"].Name
+						--openEgg(bestEgg["Diamonds"].Name)
 					end
 				elseif bestEgg["Diamonds"].Name then
-					_G.lastBest = bestEgg["Diamonds"].Name
-					openEgg(bestEgg["Diamonds"].Name)
+					newBest = bestEgg["Diamonds"].Name
+					--openEgg(bestEgg["Diamonds"].Name)
 				elseif bestEgg["Coins"].Name then
-					_G.lastBest = bestEgg["Coins"].Name
-					openEgg(bestEgg["Coins"].Name)
+					newBest = bestEgg["Coins"].Name
+					--openEgg(bestEgg["Coins"].Name)
 				end
+
+			--LogMe("Auto Hatch Enabled" .. tostring(library.Variables.AutoHatchEnabled))
+			--LogMe("Auto Hatch Egg" .. tostring(library.Variables.AutoHatchEggId))
+			
+			if _G.BuyEggMode == "Best" and newBest ~= "" and (newBest ~= _G.lastBest or not _G.eggopened or (os.time() > (_G.LastEgg + _G.EggTimeout))) then
+					LogMe("Buy Mode " .. _G.BuyEggMode)
+					LogMe("Last Egg " .. os.time() - _G.LastEgg)
+					LogMe("Egg Opened " .. tostring(_G.eggopened))
+				_G.eggopened = false
+				openEgg(newBest)
+				_G.lastBest = newBest
+				
+			elseif _G.BuyEggMode == "Best" and newBest = "" then
+				library.Variables.AutoHatchEggId = nil
+				_G.lastBest = ""
+				--print(_G.eggopened, os.time() - _G.LastEgg)
+
+
 				
 			elseif _G.BuyEggMode == "Any" then --and (not _G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
 				--_G.eggopened = true
