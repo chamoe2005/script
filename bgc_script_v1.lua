@@ -1,4 +1,4 @@
-print("Version 1.4.3")
+print("Version 1.4.8")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -636,7 +636,7 @@ function doBubblePass()
 
 		local playerLibrary = library.Save.Get()
 
-		if playerLibrary.BubblePass and playerLibrary.BubblePass.Owned and farm.flags.ClaimPass then
+		if game.ReplicatedStorage.SeasonActive.Value and playerLibrary.BubblePass and playerLibrary.BubblePass.Owned and farm.flags.ClaimPass then
 		
 			local allClaimed = true
 			local highestEggPrize = 0
@@ -685,7 +685,7 @@ function doBubblePass()
 				LogMe((highestEggPrize - playerLibrary.BubblePass.CurrentEggs) .. " eggs left before Bubble Pass is complete")
 			end
 			
-		elseif not playerLibrary.BubblePass and farm.flags.ClaimPass and playerLibrary["Diamonds"] >= 1000000000 then
+		elseif game.ReplicatedStorage.SeasonActive.Value and not playerLibrary.BubblePass and farm.flags.ClaimPass and playerLibrary["Diamonds"] >= 1000000000 then
 		
 			LogMe("Purchasing Bubble Pass")
 		
@@ -700,14 +700,14 @@ function doBubblePass()
 
 			game:GetService("ReplicatedStorage").Remotes["buy bubble pass"]:FireServer(ohTable1)
 		
-		elseif farm.flags.ClaimPass then
+		elseif game.ReplicatedStorage.SeasonActive.Value and farm.flags.ClaimPass then
 			LogMe("Bubble Pass not Owned")
-			
-			
+		elseif not game.ReplicatedStorage.SeasonActive.Value then
+			LogMe("Bubble Pass Season not Active")			
 		end
 
 end
-		--farm:Toggle('Claim Bubble Pass', {flag = 'ClaimPass'}, function() spawn(function() doBubblePass() end) end)
+		farm:Toggle('Claim Bubble Pass', {flag = 'ClaimPass'}, function() spawn(function() doBubblePass() end) end)
 		
 function doTierRewards()
 
@@ -1164,6 +1164,7 @@ local egg = wally:CreateWindow('Eggs')
 local library = require(game:GetService("ReplicatedStorage").Nevermore.Library)
 local pickupsLib = library.Network.Invoke("Get Pickups")
 local currency = {}
+local areas = {}
 
 for a,b in pairs(library.Shared.Currency) do
 	currency[a] = {}
@@ -1176,8 +1177,28 @@ currency["XP"] = {["Small Orb"] = "Orb",
 
 for i,world in pairs(library.Game.Pickups:GetChildren()) do
 
+	local worldfound = false
+	for m,n in pairs(areas) do
+		if n == world.name then
+			worldfound = true
+		end
+	end
+	if not worldfound then
+		areas[world.name] = {}
+	end
+
 	--print(world)
 	for c,area in pairs(world:GetChildren()) do
+	
+	local areafound = false
+	for m,n in pairs(areas[world.name]) do
+		if n == area.name then
+			areafound = true
+		end
+	end
+	if not areafound then
+		table.insert(areas[world.name], area.name)
+	end
 	
 	--print(world,area)
 		for e,drop in pairs(area:GetChildren()) do
@@ -1227,6 +1248,17 @@ local drop = wally:CreateWindow('Drops')
     for a,b in orderedPairs(currency) do
 		drop:Toggle(a, {location = _G, flag = a})
 		_G[a] = false
+	end
+	
+	for a,b in pairs(areas) do
+		drop:Section(a)
+		for c,d in pairs(b) do
+			if d == "VIP" and VIP then
+				drop:Toggle(d, {location = _G, flag = d})
+			elseif d ~= "VIP" then
+				drop:Toggle(d, {location = _G, flag = d})
+			end			
+		end
 	end
 
 function toTarget(pos, targetPos, targetCFrame)
@@ -1527,7 +1559,7 @@ spawn(function()
 					
 					for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
 						if v ~= nil then
-							if pickupsLib[v.Name] and ((pickupsLib[v.Name].a == "VIP" and VIP) or pickupsLib[v.Name].a ~= "VIP") then
+							if pickupsLib[v.Name] and _G[pickupsLib[v.Name].a] then
 								for a,b in pairs(currency) do
 									if _G[a] and tonumber(_G.droprange) ~= nil then
 										for x,y in pairs(b) do
