@@ -725,7 +725,7 @@ function doTierRewards()
 			for a,b in pairs(library.Directory.Worlds) do
 				if library.Directory.Rewards[a] ~= nil then
 					if playerLibrary.Rewards[a] and playerLibrary.Rewards[a] < library.Directory.Rewards[a].slots and library.Directory.Rewards[a].price(playerLibrary.Rewards[a] + 1) <= playerLibrary["Diamonds"] then
-						LogMe("Redeeming " .. a .. " Reward Slot #" .. playerLibrary.Rewards[a] + 1 .. " for " .. library.Directory.Rewards[a].price(playerLibrary.Rewards[a] + 1) .. " Diamonds")
+						LogMe("Redeeming " .. a .. " Reward Slot #" .. playerLibrary.Rewards[a] + 1 .. " for " .. library.Functions.NumberShorten(library.Directory.Rewards[a].price(playerLibrary.Rewards[a] + 1)) .. " Diamonds")
 						
 						local ohTable1 = {
 							[1] = {
@@ -739,7 +739,7 @@ function doTierRewards()
 						game:GetService("ReplicatedStorage").Remotes["buy rewards"]:FireServer(ohTable1)
 						wait(.5)
 					elseif playerLibrary.Rewards[a] < library.Directory.Rewards[a].slots then
-						LogMe((library.Directory.Rewards[a].price(playerLibrary.Rewards[a] + 1) - playerLibrary["Diamonds"]) .. " Diamonds until " .. a .. " Reward Slot #" .. playerLibrary.Rewards[a] + 1 .. " can be redeemed")
+						LogMe(library.Functions.NumberShorten(((library.Directory.Rewards[a].price(playerLibrary.Rewards[a] + 1) - playerLibrary["Diamonds"]))) .. " Diamonds until " .. a .. " Reward Slot #" .. playerLibrary.Rewards[a] + 1 .. " can be redeemed")
 					elseif playerLibrary.Rewards[a] >= library.Directory.Rewards[a].slots then
 						LogMe(a .. " Reward Slot #" .. playerLibrary.Rewards[a] .. " is the last slot and has been redeemed")
 					end
@@ -1611,7 +1611,7 @@ spawn(function()
 					wait(_G.TeleportDelay)
 					toTarget(GetPlayerRoot().Position,chest.Position + Vector3.new(math.random(1,3), 0, math.random(1,3)),chest.CFrame)
 					wait(_G.TeleportDelay)
-				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil or os.time() > startTime + 10
+				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil or (os.time() > startTime + 10)
 				LogMe("Grabbed " .. b.name .. "!!!")
 				--wait(_G.TeleportDelay)
 			end
