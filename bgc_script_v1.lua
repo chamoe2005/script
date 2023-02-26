@@ -1,4 +1,4 @@
-print("Version 1.4.0")
+print("Version 1.4.1")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -349,7 +349,7 @@ local doGroupRewards = function()
 
 		if _G["Group Rewards"] then
 			local playerLibrary = library.Save.Get()
-			if GetLocalPlayer():IsInGroup(13004189) and (os.time() - (playerLibrary.GroupReward + (6 * 60 * 60)) > 0) then
+			if GetLocalPlayer():IsInGroup(13004189) and (not playerLibrary.GroupReward or (os.time() - (playerLibrary.GroupReward + (6 * 60 * 60)) > 0)) then
 				local grouprewards = game:GetService("Workspace").MAP.Activations["Group Rewards"]
 				local startTime = os.time()
 				repeat
@@ -714,33 +714,35 @@ function doTierRewards()
 	if farm.flags["Tier Rewards"] then
 
 		local playerLibrary = library.Save.Get()
-		local Rewards = {["Spawn World"] = 0}
+		--local Rewards = {["Spawn World"] = 0}
 		
-		for a,b in pairs(Rewards) do
-			if playerLibrary.Rewards[a] then
-				Rewards[a] = playerLibrary.Rewards[a]
-			end
-		end
+		--for a,b in pairs(Rewards) do
+			--if playerLibrary.Rewards[a] then
+				--Rewards[a] = playerLibrary.Rewards[a]
+			--end
+		--end
 
-			for a,b in pairs(Rewards) do
-				if library.Directory.Rewards[a].price(b + 1) <= playerLibrary["Diamonds"] and b < 100 then
-					LogMe("Redeeming " .. a .. " Reward Slot #" .. b + 1 .. " for " .. library.Directory.Rewards[a].price(b + 1) .. " Diamonds")
-					
-					local ohTable1 = {
-						[1] = {
-							[1] = "Spawn World"
-						},
-						[2] = {
-							[1] = false
+			for a,b in pairs(library.Directory.Worlds) do
+				if library.Directory.Rewards[a] ~= nil then
+					if playerLibrary.Rewards[a] and playerLibrary.Rewards[a] < library.Directory.Rewards[a].slots and library.Directory.Rewards[a].price(playerLibrary.Rewards[a] + 1) <= playerLibrary["Diamonds"] then
+						LogMe("Redeeming " .. a .. " Reward Slot #" .. playerLibrary.Rewards[a] + 1 .. " for " .. library.Directory.Rewards[a].price(playerLibrary.Rewards[a] + 1) .. " Diamonds")
+						
+						local ohTable1 = {
+							[1] = {
+								[1] = a
+							},
+							[2] = {
+								[1] = false
+							}
 						}
-					}
 
-					game:GetService("ReplicatedStorage").Remotes["buy rewards"]:FireServer(ohTable1)
-					wait(.5)
-				elseif b < 100 then
-					LogMe((library.Directory.Rewards[a].price(b + 1) - playerLibrary["Diamonds"]) .. " Diamonds until " .. a .. " Reward Slot #" .. b + 1 .. " can be redeemed")
-				elseif b >= 100 then
-					LogMe(a .. " Reward Slot #" .. b .. " is the last slot and has been redeemed")
+						game:GetService("ReplicatedStorage").Remotes["buy rewards"]:FireServer(ohTable1)
+						wait(.5)
+					elseif playerLibrary.Rewards[a] < library.Directory.Rewards[a].slots then
+						LogMe((library.Directory.Rewards[a].price(playerLibrary.Rewards[a] + 1) - playerLibrary["Diamonds"]) .. " Diamonds until " .. a .. " Reward Slot #" .. playerLibrary.Rewards[a] + 1 .. " can be redeemed")
+					elseif playerLibrary.Rewards[a] >= library.Directory.Rewards[a].slots then
+						LogMe(a .. " Reward Slot #" .. playerLibrary.Rewards[a] .. " is the last slot and has been redeemed")
+					end
 				end
 			end
 		--elseif library.Directory.Rewards[a].price(1) <= playerLibrary["Diamonds"] then
