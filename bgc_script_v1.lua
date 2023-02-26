@@ -1346,7 +1346,14 @@ end
 local settingsGUI = wally:CreateWindow('Settings')
 settingsGUI:Button('Load Settings', function() loadSettings() end)
 settingsGUI:Button('Save Settings', function() saveSettings() end)
-	
+
+local playernamewindow = wally:CreateWindow(GetLocalPlayer().name)
+game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].window_toggle:Destroy()
+game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].Position = UDim2.new(0, 90, 0, -55)
+game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].Size = UDim2.new(0, 400, 0, 55)
+game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.TextScaled = true
+game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.Position = UDim2.new(0, 0, 0, 0)
+game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.Size = UDim2.new(1, 1, 1, -10)
 
 spawn(function()
 			
