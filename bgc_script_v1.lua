@@ -1,4 +1,4 @@
-print("Version 1.35")
+print("Version 1.4.0")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -344,7 +344,34 @@ local farm = wally:CreateWindow('Auto Farm')
 		end
 		_G[b.name] = false
 	end
+	
+local doGroupRewards = function()
+
+		if _G["Group Rewards"] then
+			local playerLibrary = library.Save.Get()
+			if GetLocalPlayer():IsInGroup(13004189) and (os.time() - (playerLibrary.GroupReward + (6 * 60 * 60)) > 0) then
+				local grouprewards = game:GetService("Workspace").MAP.Activations["Group Rewards"]
+				local startTime = os.time()
+				repeat
+					LogMe("TP to Group Rewards")
+					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(grouprewards.Position.X + math.random(8,20), grouprewards.Position.Y + 10, grouprewards.Position.Z + math.random(8,20)))
+					wait(_G.TeleportDelay)
+					toTarget(GetPlayerRoot().Position,grouprewards.Position + Vector3.new(math.random(1,3), 0, math.random(1,3)),grouprewards.CFrame)
+					wait(_G.TeleportDelay)
+					playerLibrary = library.Save.Get()
+				until (os.time() - (playerLibrary.GroupReward + (6 * 60 * 60)) < 0) or (os.time() > startTime + 10)
+				LogMe("Grabbed Group Rewards!!!")
+			elseif not GetLocalPlayer():IsInGroup(13004189) then
+				LogMe("Cannot Collect Group Rewards if Player is not in Group")
+			elseif os.time() - (playerLibrary.GroupReward + (6 * 60 * 60)) < 0 then
+				LogMe(((6 * 60 * 60) - (os.time() - playerLibrary.GroupReward)) / 60 / 60 .. " hours until Group Rewards")
+			end
+		end
 		
+
+end	
+
+	farm:Toggle("Group Rewards", {location = _G, flag = "Group Rewards"}, function() spawn(function() doGroupRewards() end) end)	
 	farm:Section("Misc")
 	
 local RedeemTwitterCodes = function()
@@ -1587,8 +1614,7 @@ spawn(function()
 				--wait(_G.TeleportDelay)
 			end
 			
-		end
-			
+		end	
 
 	end	
 		
@@ -1597,6 +1623,7 @@ end)
 	
 spawn(function()
 	while wait(180) do
+		doGroupRewards()
 		doFairyExchange()
 		doTierRewards()
 		doBubblePass()
