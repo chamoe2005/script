@@ -1,8 +1,7 @@
-print("Version 1.5.2")
+print("Version 1.5.4")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
-_G.SellBubbleDelay = 0
 _G.LastSell = os.time()
 _G.LastDrop = os.time()
 _G.TeleportDelay = 2
@@ -345,7 +344,7 @@ local doSellBubbles = function()
 end	
 
 	--farm:Toggle("Sell Bubbles", {location = _G, flag = "Sell Bubbles"}, function() spawn(function() doSellBubbles() end) end)
-	_G.SellBubbleArea = "No Sell"
+	--_G.SellBubbleArea = "No Sell"
     
 	local sellareas = {"No Sell"}
 	
@@ -362,6 +361,9 @@ end
         flag = "SellBubbleDelay",
         type = 'number'
     })
+	
+	changeSetting("Box", "Sell Bubble Delay", 0, true)
+ 
 	
 	local autobubbleGUI = game:GetService("CoreGui").ScreenGui:FindFirstChild("Auto-Bubble Blow V2", true)
 	
