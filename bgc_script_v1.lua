@@ -314,8 +314,9 @@ local farm = wally:CreateWindow('Auto Farm')
 	
 	
 local doSellBubbles = function()
-
-			
+	local sellarea = GetMap().Activations:FindFirstChild(_G.SellBubbleArea)
+				
+	if sellarea ~= nil then
 		if tonumber(_G.SellBubbleDelay) > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay + _G.TeleportDelay) then
 			if _G.SellBubbleArea ~= "No Sell" and library.Save.Get().Settings.SellBubbles == 1 then
 				LogMe("Sell Bubble")
@@ -339,8 +340,7 @@ local doSellBubbles = function()
 			end
 			_G.LastSell = os.time()
 		end	
-	
-
+	end
 end	
 
 	--farm:Toggle("Sell Bubbles", {location = _G, flag = "Sell Bubbles"}, function() spawn(function() doSellBubbles() end) end)
@@ -348,7 +348,7 @@ end
     
 	local sellareas = {"No Sell"}
 	
-	for a,b in pairs(game:GetService("Workspace").MAP.Activations:GetChildren()) do
+	for a,b in pairs(GetMap().Activations:GetChildren()) do
 		if string.find(b.Name, "Sell") then
 			table.insert(sellareas, b.Name)
 		end
@@ -394,7 +394,7 @@ end
 	
 local doGroupRewards = function()
 
-		if _G["Group Rewards"] then
+		if _G["Group Rewards"] and GetMap().Activations:FindFirstChild("Group Rewards") ~= nil then
 			local playerLibrary = library.Save.Get()
 			if GetLocalPlayer():IsInGroup(13004189) and (not playerLibrary.GroupReward or (os.time() - (playerLibrary.GroupReward + (6 * 60 * 60)) > 0)) then
 				local grouprewards = game:GetService("Workspace").MAP.Activations["Group Rewards"]
@@ -1178,8 +1178,11 @@ function openEgg(egg)
 	--local playerLibrary = library.Save.Get()
 
 	--if playerLibrary[Eggs[egg].Currency] > (Eggs[egg].Cost * multiplier) then
+	local eggmap = GetMap().Eggs:FindFirstChild(egg)
+	
+	if eggmap ~= nil then
 		if not library.Variables.AutoHatchEggId or library.Variables.AutoHatchEggId ~= egg then
-			_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.Eggs[egg].EGG.Position + Vector3.new(3,-5,-3)))
+			_G.player.Character:SetPrimaryPartCFrame(CFrame.new(eggmap.EGG.Position + Vector3.new(3,-5,-3)))
 			wait(.1)
 			library.Variables.AutoHatchEnabled = true
 			library.Variables.AutoHatchEggId = egg
@@ -1194,6 +1197,7 @@ function openEgg(egg)
 			_G.LastEgg = 0
 			--_G.LastEgg = os.time()
 		end
+	end
 			
 		--library.Variables.OpeningEgg = false
 		--game:GetService("ReplicatedStorage").Remotes["buy egg"]:InvokeServer(ohTable2)
@@ -1476,7 +1480,8 @@ spawn(function()
 	if _G.settingsloaded then
 	
 		local bestEgg = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
-						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0}
+						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0},
+						 ["Pearls"] = {["Name"] = nil, ["Cost"] = 0}
 						}
 		local playerLibrary = library.Save.Get()
 		--if playerLibrary.Boosts["Fast Hatch"] then 
@@ -1515,7 +1520,8 @@ spawn(function()
 					--openEgg(bestEgg["Diamonds"].Name)
 				elseif bestEgg["Coins"].Name then
 					newBest = bestEgg["Coins"].Name
-					--openEgg(bestEgg["Coins"].Name)
+				elseif bestEgg["Pearls"].Name then
+					openEgg(bestEgg["Pearls"].Name)
 				end
 
 			--LogMe("Auto Hatch Enabled" .. tostring(library.Variables.AutoHatchEnabled))
@@ -1666,7 +1672,7 @@ spawn(function()
 		
 		doSellBubbles()
 	
-		for a,b in pairs(game:GetService("Workspace").MAP.Chests:GetChildren()) do
+		for a,b in pairs(GetMap().Chests:GetChildren()) do
 			if _G[b.name] then
 				local chest = game:GetService("Workspace").MAP.Activations[b.name]
 				local startTime = os.time()
