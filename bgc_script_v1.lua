@@ -1,7 +1,7 @@
 print("Version 1.5.7")
 
 _G.settingsloaded = false
-_G.DisabledEggs = {"Valentine's 2023 Egg"}
+_G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
 _G.LastSell = os.time()
 _G.LastDrop = os.time()
 _G.TeleportDelay = 2
@@ -230,9 +230,9 @@ end
 
 local multiplier = 1
 local VIP = false
-local playerLibrary = library.Save.Get()
+--local playerLibrary = library.Save.Get()
 
-for a,b in pairs(playerLibrary.Gamepasses) do
+for a,b in pairs(library.Save.Get().Gamepasses) do
 	if b == library.Directory.Gamepasses["Triple Eggs"].ID then
 		multiplier = 3
 	elseif b == library.Directory.Gamepasses["VIP"].ID then
@@ -385,11 +385,11 @@ end
 	
 	farm:Section("Chests")
 	for a,b in orderedPairs(library.Directory.Chests) do
-		if b.name == "VIP Chest" and not VIP then
+		if a == "VIP Chest" and not VIP then
 		else
-			farm:Toggle(b.name, {location = _G, flag = b.name})
+			farm:Toggle(a, {location = _G, flag = a})
 		end
-		_G[b.name] = false
+		_G[a] = false
 	end
 	
 local doGroupRewards = function()
@@ -626,26 +626,28 @@ local closest = nil
 			local dis = math.huge
 			for i , v in ipairs(game:GetService("Workspace").Stuff.Lootbags:GetChildren()) do
 				closest = v:FindFirstChildWhichIsA("MeshPart")
-				dis = (GetPlayerRoot().Position-v:FindFirstChildWhichIsA("MeshPart").Position).magnitude
-				local objectname = ""
-				
-					--closest.Destroying:connect(function() 
-					local startTime = os.time()
-					repeat
-						closest = v:FindFirstChildWhichIsA("MeshPart")
-						if closest ~= nil then
-							LogMe("TP to Lootbag " .. v.Name)
-							_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
-							local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
-							if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
-								GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y,GetPlayerRoot().CFrame.Z)
+				if closest ~= nil then
+					dis = (GetPlayerRoot().Position-v:FindFirstChildWhichIsA("MeshPart").Position).magnitude
+					local objectname = ""
+					
+						--closest.Destroying:connect(function() 
+						local startTime = os.time()
+						repeat
+							closest = v:FindFirstChildWhichIsA("MeshPart")
+							if closest ~= nil then
+								LogMe("TP to Lootbag " .. v.Name)
+								_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
+								local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
+								if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
+									GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y,GetPlayerRoot().CFrame.Z)
+								end
+								toTarget(GetPlayerRoot().Position,closest.Position,closest.CFrame)
+								wait(_G.TeleportDelay)
+							
 							end
-							toTarget(GetPlayerRoot().Position,closest.Position,closest.CFrame)
-							wait(_G.TeleportDelay)
-						
-						end
-						
-					until closest == nil
+							
+						until closest == nil
+				end
 				
 			end
 
@@ -1180,13 +1182,33 @@ end);
 
 
 function openEgg(egg)
-
+	local playerLibrary = library.Save.Get()
 	--local tripleEgg = false
 
 	--if multiplier == 3 then 
 		--tripleEgg = true
 	--end
+	if Eggs[egg]["World"] ~= playerLibrary.World and not library.Variables.LoadingWorld then
+	
+			if playerLibrary.World == "Spawn World" and Eggs[egg]["World"] == "Atlantis" then
+				game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
+				wait(1)
+				while library.Variables.LoadingWorld do
+					print("TPing to Atlantis")
+					wait(1)
+				end
 
+			elseif playerLibrary.World == "Atlantis" and Eggs[egg]["World"] == "Spawn World" then
+				game:GetService("Workspace").MAP.Portal.Interact.Activated:Fire()
+				wait(1)
+				while library.Variables.LoadingWorld do
+					print("TPing to Spawn World")
+					wait(1)
+				end
+			end
+
+	end
+	
 	local ohTable2 = {
 		[1] = {
 			[1] = egg,
@@ -1483,6 +1505,26 @@ local loadSettings = function()
 		_G.settingsloaded = true
 end
 
+local CollectChests = function()
+
+		for a,b in pairs(GetMap().Chests:GetChildren()) do
+			if _G[b.name] then
+				local chest = game:GetService("Workspace").MAP.Activations[b.name]
+				local startTime = os.time()
+				repeat
+					LogMe("TP to Chest")
+					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X + math.random(8,20), chest.Position.Y + 10, chest.Position.Z + math.random(8,20)))
+					wait(_G.TeleportDelay)
+					toTarget(GetPlayerRoot().Position,chest.Position + Vector3.new(math.random(1,3), 0, math.random(1,3)),chest.CFrame)
+					wait(_G.TeleportDelay)
+				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil or (os.time() > startTime + 10)
+				LogMe("Grabbed " .. b.name .. "!!!")
+				--wait(_G.TeleportDelay)
+			end
+			
+		end	
+
+end
 
 local settingsGUI = wally:CreateWindow('Settings')
 settingsGUI:Button('Load Settings', function() loadSettings() end)
@@ -1496,11 +1538,19 @@ game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.
 game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.Position = UDim2.new(0, 0, 0, 0)
 game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.Size = UDim2.new(1, 1, 1, -10)
 
+		_G.chesttimers = {}
+		library.Network.Fired("Update Chests"):Connect(function(p1) _G.chesttimers = p1 end)
+
 spawn(function()
 			
 	while wait(.1) do
 			--if not _G.collectingchests and not _G.sell and farm.flags.Drops == true and (_G.canafford ~= true or _G.eggSkip == true) then
 	if _G.settingsloaded then
+	
+		CollectChests()
+		
+		doGroupRewards()
+
 	
 		local bestEgg = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
 						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0},
@@ -1694,23 +1744,62 @@ spawn(function()
 		end
 		
 		doSellBubbles()
-	
-		for a,b in pairs(GetMap().Chests:GetChildren()) do
-			if _G[b.name] then
-				local chest = game:GetService("Workspace").MAP.Activations[b.name]
-				local startTime = os.time()
-				repeat
-					LogMe("TP to Chest")
-					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X + math.random(8,20), chest.Position.Y + 10, chest.Position.Z + math.random(8,20)))
-					wait(_G.TeleportDelay)
-					toTarget(GetPlayerRoot().Position,chest.Position + Vector3.new(math.random(1,3), 0, math.random(1,3)),chest.CFrame)
-					wait(_G.TeleportDelay)
-				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil or (os.time() > startTime + 10)
-				LogMe("Grabbed " .. b.name .. "!!!")
-				--wait(_G.TeleportDelay)
+		
+		
+		local otherworldchest = nil
+			
+		for a,b in pairs(library.Directory.Chests) do
+			if a == "VIP Chest" and not VIP then
+			
+			elseif _G[a] and b.world ~= playerLibrary.World and not _G.chesttimers[a] then
+				otherworldchest = b.world
+			end
+		end
+		
+		if otherworldchest ~= nil and playerLibrary.World == "Spawn World" and otherworldchest == "Atlantis" then
+			game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
+			
+			while library.Variables.LoadingWorld do
+				print("TPing to Atlantis")
+				wait(1)
 			end
 			
-		end	
+			print("Equip Pets")			
+			CollectChests()
+			wait(1)
+			
+			game:GetService("Workspace").MAP.Portal.Interact.Activated:Fire()
+			wait(1)
+			while library.Variables.LoadingWorld do
+				print("TPing to Spawn World")
+				wait(1)
+			end
+		elseif otherworldchest ~= nil and playerLibrary.World == "Atlantis" and otherworldchest == "Spawn World" then
+			game:GetService("Workspace").MAP.Portal.Interact.Activated:Fire()
+			wait(1)
+			while library.Variables.LoadingWorld do
+				print("TPing to Spawn World")
+				wait(1)
+			end
+			
+			print("Equip Pets")			
+			CollectChests()
+			wait(1)
+			doGroupRewards()
+			wait(1)
+			game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
+			
+			while library.Variables.LoadingWorld do
+				print("TPing to Atlantis")
+				wait(1)
+			end
+		end
+			
+			
+
+		
+
+
 
 	end	
 		
@@ -1719,7 +1808,6 @@ end)
 	
 spawn(function()
 	while wait(180) do
-		doGroupRewards()
 		doFairyExchange()
 		doReaperExchange()
 		doTierRewards()
@@ -1727,6 +1815,15 @@ spawn(function()
 		doChallenge()
 		SpinPrizeWheel()
 		doMerchant()
+		
+		local playerLibrary = library.Save.Get()
+
+		for a,b in pairs(library.Directory.Chests) do
+			if b.world ~= playerLibrary.World and _G.chesttimers[a] then
+				print(a .. " Timer: " .. _G.chesttimers[a])
+			end
+		end
+		
 	end
 end)
 
