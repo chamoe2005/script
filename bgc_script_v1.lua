@@ -1,4 +1,4 @@
-print("Version 1.5.6")
+print("Version 1.5.7")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
