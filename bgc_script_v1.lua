@@ -1,4 +1,4 @@
-print("Version 1.5.5")
+print("Version 1.5.6")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -770,9 +770,15 @@ function doTierRewards()
 		--end
 
 			for a,b in pairs(library.Directory.Worlds) do
+				local rewardslot = 0
+				
+				if playerLibrary.Rewards[a] ~= nil then
+					rewardslot = playerLibrary.Rewards[a]
+				end
+				
 				if library.Directory.Rewards[a] ~= nil then
-					if playerLibrary.Rewards[a] == nil and library.Directory.Rewards[a].price(1) <= playerLibrary[library.Directory.Rewards[a].currency] then 
-						LogMe("Redeeming " .. a .. " Reward Slot #1 for " .. library.Functions.NumberShorten(library.Directory.Rewards[a].price(1)) .. " " .. library.Directory.Rewards[a].currency)
+					if rewardslot < library.Directory.Rewards[a].slots and library.Directory.Rewards[a].price(rewardslot + 1) <= playerLibrary[library.Directory.Rewards[a].currency] then
+						LogMe("Redeeming " .. a .. " Reward Slot #" .. rewardslot + 1 .. " for " .. library.Functions.NumberShorten(library.Directory.Rewards[a].price(rewardslot + 1)) .. " " .. library.Directory.Rewards[a].currency)
 						
 						local ohTable1 = {
 							[1] = {
@@ -785,24 +791,10 @@ function doTierRewards()
 
 						game:GetService("ReplicatedStorage").Remotes["buy rewards"]:FireServer(ohTable1)
 						wait(.5)
-					elseif playerLibrary.Rewards[a] and playerLibrary.Rewards[a] < library.Directory.Rewards[a].slots and library.Directory.Rewards[a].price(playerLibrary.Rewards[a] + 1) <= playerLibrary[library.Directory.Rewards[a].currency] then
-						LogMe("Redeeming " .. a .. " Reward Slot #" .. playerLibrary.Rewards[a] + 1 .. " for " .. library.Functions.NumberShorten(library.Directory.Rewards[a].price(playerLibrary.Rewards[a] + 1)) .. " " .. library.Directory.Rewards[a].currency)
-						
-						local ohTable1 = {
-							[1] = {
-								[1] = a
-							},
-							[2] = {
-								[1] = false
-							}
-						}
-
-						game:GetService("ReplicatedStorage").Remotes["buy rewards"]:FireServer(ohTable1)
-						wait(.5)
-					elseif playerLibrary.Rewards[a] and playerLibrary.Rewards[a] < library.Directory.Rewards[a].slots then
-						LogMe(library.Functions.NumberShorten(((library.Directory.Rewards[a].price(playerLibrary.Rewards[a] + 1) - playerLibrary[library.Directory.Rewards[a].currency]))) .. " " .. library.Directory.Rewards[a].currency .. " until " .. a .. " Reward Slot #" .. playerLibrary.Rewards[a] + 1 .. " can be redeemed")
-					elseif playerLibrary.Rewards[a] and playerLibrary.Rewards[a] >= library.Directory.Rewards[a].slots then
-						LogMe(a .. " Reward Slot #" .. playerLibrary.Rewards[a] .. " is the last slot and has been redeemed")
+					elseif rewardslot < library.Directory.Rewards[a].slots then
+						LogMe(library.Functions.NumberShorten(((library.Directory.Rewards[a].price(rewardslot + 1) - playerLibrary[library.Directory.Rewards[a].currency]))) .. " " .. library.Directory.Rewards[a].currency .. " until " .. a .. " Reward Slot #" .. rewardslot + 1 .. " can be redeemed")
+					elseif rewardslot >= library.Directory.Rewards[a].slots then
+						LogMe(a .. " Reward Slot #" .. rewardslot .. " is the last slot and has been redeemed")
 					end
 				end
 			end
