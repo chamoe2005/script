@@ -1,4 +1,4 @@
-print("Version 1.5.7")
+print("Version 2.0")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -323,7 +323,7 @@ local doSellBubbles = function()
 				local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
 				--local playerLibrary = library.Save.Get()
 				--for i = 1, 5 do
-				_G.player.Character:SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
+				GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
 				wait(.5)
 				toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
 					
@@ -401,7 +401,7 @@ local doGroupRewards = function()
 				local startTime = os.time()
 				repeat
 					LogMe("TP to Group Rewards")
-					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(grouprewards.Position.X + math.random(8,20), grouprewards.Position.Y + 10, grouprewards.Position.Z + math.random(8,20)))
+					GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(grouprewards.Position.X + math.random(8,20), grouprewards.Position.Y + 10, grouprewards.Position.Z + math.random(8,20)))
 					wait(_G.TeleportDelay)
 					toTarget(GetPlayerRoot().Position,grouprewards.Position + Vector3.new(math.random(1,3), 0, math.random(1,3)),grouprewards.CFrame)
 					wait(_G.TeleportDelay)
@@ -636,7 +636,7 @@ local closest = nil
 							closest = v:FindFirstChildWhichIsA("MeshPart")
 							if closest ~= nil then
 								LogMe("TP to Lootbag " .. v.Name)
-								_G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
+								GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
 								local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
 								if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
 									GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y,GetPlayerRoot().CFrame.Z)
@@ -665,7 +665,7 @@ function doFreeLoot()
 				end
 				if playerLibrary.FreeGiftsTime > b.waitTime and not found then
 					--repeat
-						_G.player.Character:SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position))
+						GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position))
 						toTarget(root.Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").CFrame)
 						wait(_G.TeleportDelay)
 						game:GetService("ReplicatedStorage").Remotes["redeem free gift"]:InvokeServer({[1] = {[1] = a},[2] = {[1] = false}})
@@ -1227,7 +1227,7 @@ function openEgg(egg)
 	
 	if eggmap ~= nil then
 		if not library.Variables.AutoHatchEggId or library.Variables.AutoHatchEggId ~= egg then
-			_G.player.Character:SetPrimaryPartCFrame(CFrame.new(eggmap.EGG.Position + Vector3.new(3,-5,-3)))
+			GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(eggmap.EGG.Position + Vector3.new(3,-5,-3)))
 			wait(.1)
 			library.Variables.AutoHatchEnabled = true
 			library.Variables.AutoHatchEggId = egg
@@ -1506,14 +1506,36 @@ local loadSettings = function()
 end
 
 local CollectChests = function()
+		local playerLibrary = library.Save.Get()
+
 
 		for a,b in pairs(GetMap().Chests:GetChildren()) do
 			if _G[b.name] then
 				local chest = game:GetService("Workspace").MAP.Activations[b.name]
+				
+				for c,d in pairs(playerLibrary.Teams) do
+					if d.name == library.Directory.Chests[b.name].currencyType then
+					
+						print("Switching to " .. library.Directory.Chests[b.name].currencyType .. " Team")
+						
+						local ohTable1 = {
+							[1] = {
+								[1] = d.uid
+							},
+							[2] = {
+								[1] = false
+							}
+						}
+
+						game:GetService("ReplicatedStorage").Remotes["equip team"]:FireServer(ohTable1)
+					end
+				end
+				wait(1)
+				
 				local startTime = os.time()
 				repeat
 					LogMe("TP to Chest")
-					_G.player.Character:SetPrimaryPartCFrame(CFrame.new(chest.Position.X + math.random(8,20), chest.Position.Y + 10, chest.Position.Z + math.random(8,20)))
+					GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(chest.Position.X + math.random(8,20), chest.Position.Y + 10, chest.Position.Z + math.random(8,20)))
 					wait(_G.TeleportDelay)
 					toTarget(GetPlayerRoot().Position,chest.Position + Vector3.new(math.random(1,3), 0, math.random(1,3)),chest.CFrame)
 					wait(_G.TeleportDelay)
@@ -1523,6 +1545,21 @@ local CollectChests = function()
 			end
 			
 		end	
+		
+		for c,d in pairs(playerLibrary.Teams) do
+			if d.name == "Bubbles" then
+				print("Switching to Bubbles Team")	
+				local ohTable1 = {
+					[1] = {
+						[1] = d.uid
+					},
+					[2] = {
+						[1] = false
+					}
+				}
+				game:GetService("ReplicatedStorage").Remotes["equip team"]:FireServer(ohTable1)
+			end
+		end
 
 end
 
