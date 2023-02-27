@@ -828,6 +828,29 @@ local doFairyExchange = function()
 end
 		
 	farm:Toggle('Fairy Exchange', {flag = 'Fairy Exchange'}, function() spawn(function() doFairyExchange() end) end)
+	
+local doReaperExchange = function()
+	local playerLibrary = library.Save.Get()
+	
+	if farm.flags["Reaper Exchange"] and (not playerLibrary.ReaperExchange or (playerLibrary.ReaperExchange - os.time()) <= 0) then
+
+		local ohTable1 = {
+			[1] = {
+				[1] = false
+			},
+			[2] = {
+				[1] = 2
+			}
+		}
+
+		game:GetService("ReplicatedStorage").Remotes["reaper exchange"]:InvokeServer(ohTable1)
+	elseif farm.flags["Reaper Exchange"] then
+		LogMe((playerLibrary.ReaperExchange - os.time()) / 60 / 60 .. " hours until Reaper Exchange")
+	end
+
+end
+		
+	farm:Toggle('Reaper Exchange', {flag = 'Reaper Exchange'}, function() spawn(function() doReaperExchange() end) end)
 
 local function doBoost(boostType)
 	--print(boostType)
@@ -1698,6 +1721,7 @@ spawn(function()
 	while wait(180) do
 		doGroupRewards()
 		doFairyExchange()
+		doReaperExchange()
 		doTierRewards()
 		doBubblePass()
 		doChallenge()
