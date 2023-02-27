@@ -1,4 +1,4 @@
-print("Version 1.5.1")
+print("Version 1.5.2")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -317,22 +317,21 @@ local farm = wally:CreateWindow('Auto Farm')
 local doSellBubbles = function()
 
 			
-		if _G["Sell Bubbles"] and tonumber(_G.SellBubbleDelay) > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay + _G.TeleportDelay) then
-			--if _G.SellBubbleArea ~= "No Sell" and 
-			if library.Save.Get().Settings.SellBubbles == 1 then
+		if tonumber(_G.SellBubbleDelay) > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay + _G.TeleportDelay) then
+			if _G.SellBubbleArea ~= "No Sell" and library.Save.Get().Settings.SellBubbles == 1 then
 				LogMe("Sell Bubble")
-				--local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
+				local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
 				--local playerLibrary = library.Save.Get()
 				--for i = 1, 5 do
-				--_G.player.Character:SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
-				--wait(.5)
-				--toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
+				_G.player.Character:SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
+				wait(.5)
+				toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
 					
 					--playerLibrary = library.Save.Get()
 					
-				for a,b in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui["Main Buttons"].Sell.Activated)) do
-					b:Fire()
-				end
+				--for a,b in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui["Main Buttons"].Sell.Activated)) do
+					--b:Fire()
+				--end
 					
 				
 				wait(_G.TeleportDelay)
@@ -345,9 +344,20 @@ local doSellBubbles = function()
 
 end	
 
-	farm:Toggle("Sell Bubbles", {location = _G, flag = "Sell Bubbles"}, function() spawn(function() doSellBubbles() end) end)
-	--_G.SellBubbleArea = "No Sell"
+	--farm:Toggle("Sell Bubbles", {location = _G, flag = "Sell Bubbles"}, function() spawn(function() doSellBubbles() end) end)
+	_G.SellBubbleArea = "No Sell"
     
+	local sellareas = {"No Sell"}
+	
+	for a,b in pairs(game:GetService("Workspace").MAP.Activations:GetChildren()) do
+		if string.find(b.Name, "Sell") then
+			table.insert(sellareas, b.Name)
+		end
+	end
+	
+	farm:Dropdown("Sell Bubble Area", {location = _G, flag = "SellBubbleArea", list = sellareas})
+	
+	
     farm:Box('Sell Bubble Delay', {location = _G,
         flag = "SellBubbleDelay",
         type = 'number'
