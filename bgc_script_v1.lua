@@ -1,7 +1,8 @@
-print("Version 1.4.8")
+print("Version 1.5")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
+_G.SellBubbleDelay = 0
 _G.LastSell = os.time()
 _G.LastDrop = os.time()
 _G.TeleportDelay = 2
@@ -310,6 +311,43 @@ local farm = wally:CreateWindow('Auto Farm')
 	farm:Section("Farm")
     --farm:Toggle('Auto-Bubble Blow', {flag = 'Bubble'})
 	farm:Toggle('Auto-Bubble Blow V2', {flag = 'Bubble2'}, function() library.Variables.AutoClicker = farm.flags.Bubble2 end)
+	
+	
+	
+local doSellBubbles = function()
+
+			
+		if _G["Sell Bubbles"] and _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay + _G.TeleportDelay) then
+			--if _G.SellBubbleArea ~= "No Sell" and 
+			if library.Save.Get().Settings.SellBubbles == 1 then
+				LogMe("Sell Bubble")
+				--local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
+				--local playerLibrary = library.Save.Get()
+				--for i = 1, 5 do
+				--_G.player.Character:SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
+				--wait(.5)
+				--toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
+					
+					--playerLibrary = library.Save.Get()
+					
+				for a,b in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui["Main Buttons"].Activated)) do
+					b:Fire()
+				end
+					
+				
+				wait(_G.TeleportDelay)
+			elseif library.Save.Get().Settings.SellBubbles == 2 then
+				LogMe("Sell Bubbles Disabled in Settings")
+			end
+			_G.LastSell = os.time()
+		end	
+	
+
+end	
+
+	farm:Toggle("Sell Bubbles", {location = _G, flag = "Sell Bubbles"}, function() spawn(function() doSellBubbles() end) end)
+	--_G.SellBubbleArea = "No Sell"
+    
     farm:Box('Sell Bubble Delay', {location = _G,
         flag = "SellBubbleDelay",
         type = 'number'
@@ -323,10 +361,7 @@ local farm = wally:CreateWindow('Auto Farm')
 		end
 	end
 	
-	_G.SellBubbleDelay = 0
-	farm:Dropdown("Sell Bubble Area", {location = _G, flag = "SellBubbleArea", list = {"No Sell", "Sell 1", "Sell 2"} })
-	_G.SellBubbleArea = "No Sell"
-    
+
 	farm:Button('Unknown', function() 
 	spawn(function() 
 		local fartsound = Instance.new("Sound")
@@ -1611,28 +1646,8 @@ spawn(function()
 			--end
 		end
 		
-		
-		
-		if _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay + _G.TeleportDelay) then
-			if _G.SellBubbleArea ~= "No Sell" and library.Save.Get().Settings.SellBubbles == 1 then
-				LogMe("Sell Bubble")
-				local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
-				--local playerLibrary = library.Save.Get()
-				--for i = 1, 5 do
-				_G.player.Character:SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
-				wait(.5)
-				toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
-					
-					--playerLibrary = library.Save.Get()
-					
-				
-				wait(_G.TeleportDelay)
-			elseif _G.SellBubbleArea ~= "No Sell" and library.Save.Get().Settings.SellBubbles == 2 then
-				LogMe("Sell Bubbles Disabled in Settings")
-			end
-			_G.LastSell = os.time()
-		end	
-		
+		doSellBubbles()
+	
 		for a,b in pairs(game:GetService("Workspace").MAP.Chests:GetChildren()) do
 			if _G[b.name] then
 				local chest = game:GetService("Workspace").MAP.Activations[b.name]
