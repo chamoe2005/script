@@ -1,4 +1,4 @@
-print("Version 1.5")
+print("Version 1.5.1")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg"}
@@ -317,7 +317,7 @@ local farm = wally:CreateWindow('Auto Farm')
 local doSellBubbles = function()
 
 			
-		if _G["Sell Bubbles"] and _G.SellBubbleDelay > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay + _G.TeleportDelay) then
+		if _G["Sell Bubbles"] and tonumber(_G.SellBubbleDelay) > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay + _G.TeleportDelay) then
 			--if _G.SellBubbleArea ~= "No Sell" and 
 			if library.Save.Get().Settings.SellBubbles == 1 then
 				LogMe("Sell Bubble")
@@ -330,7 +330,7 @@ local doSellBubbles = function()
 					
 					--playerLibrary = library.Save.Get()
 					
-				for a,b in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui["Main Buttons"].Activated)) do
+				for a,b in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui["Main Buttons"].Sell.Activated)) do
 					b:Fire()
 				end
 					
