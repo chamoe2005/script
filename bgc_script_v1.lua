@@ -1,4 +1,4 @@
-print("Version 2.0.4")
+print("Version 2.0.5")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1730,7 +1730,7 @@ spawn(function()
 					local pickupsLib = library.Network.Invoke("Get Pickups")
 					
 					for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
-						if v ~= nil then
+						if v ~= nil and pickupsLib[v.Name] ~= nil then
 							local droparea = pickupsLib[v.Name].a
 							if pickupsLib[v.Name].a == "Main" then
 								droparea = pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a
