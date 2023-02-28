@@ -1315,7 +1315,7 @@ function openEgg(egg)
 	local eggmap = GetMap().Eggs:FindFirstChild(egg)
 	
 	if eggmap ~= nil then
-		if not library.Variables.AutoHatchEggId or library.Variables.AutoHatchEggId ~= egg then
+		if not library.Variables.AutoHatchEnabled or not library.Variables.AutoHatchEggId or library.Variables.AutoHatchEggId ~= egg or (GetPlayerRoot().Position-eggmap.EGG.Position).magnitude > 10 then
 			GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(eggmap.EGG.Position + Vector3.new(3,-5,-3)))
 			wait(.1)
 			library.Variables.AutoHatchEnabled = true
@@ -1764,6 +1764,9 @@ spawn(function()
 					LogMe("Buy Mode " .. _G.BuyEggMode)
 					LogMe("Last Egg " .. os.time() - _G.LastEgg)
 					LogMe("Egg Opened " .. tostring(_G.eggopened))
+					LogMe("New Best " .. tostring(newBest))
+					--LogMe("AutoHatchEgg" .. library.Variables.AutoHatchEggId)
+					--LogMe("AutoHatchEnabled" .. library.Variables.AutoHatchEnabled)
 				_G.eggopened = false
 				openEgg(newBest)
 				_G.lastBest = newBest
