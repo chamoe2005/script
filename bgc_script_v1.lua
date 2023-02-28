@@ -411,7 +411,7 @@ local doGroupRewards = function()
 			elseif not GetLocalPlayer():IsInGroup(13004189) then
 				LogMe("Cannot Collect Group Rewards if Player is not in Group")
 			elseif os.time() - (playerLibrary.GroupReward + (6 * 60 * 60)) < 0 then
-				LogMe(((6 * 60 * 60) - (os.time() - playerLibrary.GroupReward)) / 60 / 60 .. " hours until Group Rewards")
+				--LogMe(((6 * 60 * 60) - (os.time() - playerLibrary.GroupReward)) / 60 / 60 .. " hours until Group Rewards")
 			end
 		end
 		
