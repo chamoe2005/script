@@ -1,4 +1,4 @@
-print("Version 2.0.1")
+print("Version 2.0.3")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -418,7 +418,7 @@ local doGroupRewards = function()
 
 end	
 
-	farm:Toggle("Group Rewards", {location = _G, flag = "Group Rewards"}, function() spawn(function() doGroupRewards() end) end)	
+	farm:Toggle("Group Rewards", {location = _G, flag = "Group Rewards"})--, function() spawn(function() doGroupRewards() end) end)	
 	farm:Section("Misc")
 	
 local RedeemTwitterCodes = function()
@@ -1356,9 +1356,9 @@ local drop = wally:CreateWindow('Drops')
 		drop:Section(a)
 		for c,d in pairs(b) do
 			if d == "VIP" and VIP then
-				drop:Toggle(d, {location = _G, flag = d})
+				drop:Toggle(d, {location = _G, flag = a .. " " .. d})
 			elseif d ~= "VIP" then
-				drop:Toggle(d, {location = _G, flag = d})
+				drop:Toggle(d, {location = _G, flag = a .. " " .. d})
 			end			
 		end
 	end
@@ -1583,7 +1583,7 @@ spawn(function()
 			
 	while wait(.1) do
 			--if not _G.collectingchests and not _G.sell and farm.flags.Drops == true and (_G.canafford ~= true or _G.eggSkip == true) then
-	if _G.settingsloaded then
+	if _G.settingsloaded and not library.Variables.LoadingWorld then
 	
 		CollectChests()
 		
@@ -1729,7 +1729,7 @@ spawn(function()
 					
 					for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
 						if v ~= nil then
-							if pickupsLib[v.Name] and _G[pickupsLib[v.Name].a] then
+							if pickupsLib[v.Name] and _G[pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a] then
 								for a,b in pairs(currency) do
 									if _G[a] and tonumber(_G.droprange) ~= nil then
 										for x,y in pairs(b) do
@@ -1846,173 +1846,179 @@ end)
 	
 spawn(function()
 	while wait(180) do
-		doFairyExchange()
-		doReaperExchange()
-		doTierRewards()
-		doBubblePass()
-		doChallenge()
-		SpinPrizeWheel()
-		doMerchant()
-		
-		local playerLibrary = library.Save.Get()
+		if not library.Variables.LoadingWorld then
+			doFairyExchange()
+			doReaperExchange()
+			doTierRewards()
+			doBubblePass()
+			doChallenge()
+			SpinPrizeWheel()
+			doMerchant()
+			
+			local playerLibrary = library.Save.Get()
 
-		for a,b in pairs(library.Directory.Chests) do
-			if b.world ~= playerLibrary.World and _G.chesttimers[a] then
-				print(a .. " Timer: " .. _G.chesttimers[a])
+			for a,b in pairs(library.Directory.Chests) do
+				if b.world ~= playerLibrary.World and _G.chesttimers[a] then
+					print(a .. " Timer: " .. _G.chesttimers[a])
+				end
 			end
 		end
-		
 	end
 end)
 
 spawn(function()
 	while wait(5) do
-		EquipBestPets()
+		if not library.Variables.LoadingWorld then
+			EquipBestPets()
+		end
 	end
 end)
 
 spawn(function()
 	while wait(1) do
-		local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
-		local MessageWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Message")
-		
-		--while wait(1) and not NewItemWindow.Enabled do
-			--print(NewItemWindow.Enabled)
-		--end
-		if NewItemWindow.Enabled then		
-			for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
-				connection:Fire()
-				LogMe("Closing New Item Window")
-				updateBoosts()
-			end
-		elseif MessageWindow.Enabled then
-			for i, connection in pairs(getconnections(MessageWindow.Frame.Ok.MouseButton1Click)) do
-				connection:Fire()
-				LogMe("Closing Message Window")
+		if not library.Variables.LoadingWorld then
+			local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
+			local MessageWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Message")
+			
+			--while wait(1) and not NewItemWindow.Enabled do
+				--print(NewItemWindow.Enabled)
+			--end
+			if NewItemWindow.Enabled then		
+				for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
+					connection:Fire()
+					LogMe("Closing New Item Window")
+					updateBoosts()
+				end
+			elseif MessageWindow.Enabled then
+				for i, connection in pairs(getconnections(MessageWindow.Frame.Ok.MouseButton1Click)) do
+					connection:Fire()
+					LogMe("Closing Message Window")
+				end
 			end
 		end
 	end
 end)
 
 spawn(function()
-	while wait(15) do	
+	while wait(15) do
+		if not library.Variables.LoadingWorld then
 
-		DeletePets()
+			DeletePets()
 
-	
-		if _G.AutoShinyNum > 0 and _G.AutoShinyNum <= 6 then
-			local playerLibrary = library.Save.Get()
-			local Pets = {}
-			local ohTable1 = {
-				[1] = {
-					[1] = {}
-				},
-				[2] = {
-					[1] = false
+		
+			if _G.AutoShinyNum > 0 and _G.AutoShinyNum <= 6 then
+				local playerLibrary = library.Save.Get()
+				local Pets = {}
+				local ohTable1 = {
+					[1] = {
+						[1] = {}
+					},
+					[2] = {
+						[1] = false
+					}
 				}
-			}
-			for i,v in pairs(playerLibrary.Pets) do
-				if not v.s then
-					if Pets[v.nk] then
-						Pets[v.nk] ++
-					else
-						Pets[v.nk] = 1
-					end
-				end
-			end
-			
-			local sortedPets = {}
-			
-				--print("Unsorted Pets")
-				
-			
-			for j,k in pairs(Pets) do
-				
-				--print(j,k)
-			
-				local bestpetid = 0
-				local bestbubble = 0
-				local bestcoin = 0
-				local bestdiamond = 0
-				
-				for i,v in pairs(Pets) do
-				
-				local petFound = false
-				
-					for a,b in pairs(sortedPets) do
-						for this,that in pairs(b) do
-							if i == this then
-								petFound = true
-							end
+				for i,v in pairs(playerLibrary.Pets) do
+					if not v.s then
+						if Pets[v.nk] then
+							Pets[v.nk] ++
+						else
+							Pets[v.nk] = 1
 						end
 					end
-				local petid = 0
-				for x,y in pairs(library.Directory.Pets) do
-					if i == y.name then
-						petid = x
-					end
-				end
-				local petDir = library.Directory.Pets
-				
-					if petid ~= 0 and v >= _G.AutoShinyNum and not petFound and (petDir[petid].buffs.Bubbles > bestbubble or petDir[petid].buffs.Coins > bestcoin or petDir[petid].buffs.Diamonds > bestdiamond) then 
-						bestbubble = petDir[petid].buffs.Bubbles
-						bestcoin = petDir[petid].buffs.Coins
-						bestdiamond = petDir[petid].buffs.Diamonds
-						bestpetid = i
-					end
 				end
 				
-				table.insert(sortedPets, {[bestpetid] = Pets[bestpetid]})
-			end
-
-			--print("Pets to Shiny")					
-
-			for this,that in ipairs(sortedPets) do
-			
-				for i,v in pairs(that) do
-			
-					--if v >= _G.AutoShinyNum then
-						LogMe(i .. " " .. v)
-					--end
+				local sortedPets = {}
 				
+					--print("Unsorted Pets")
+					
+				
+				for j,k in pairs(Pets) do
+					
+					--print(j,k)
+				
+					local bestpetid = 0
+					local bestbubble = 0
+					local bestcoin = 0
+					local bestdiamond = 0
+					
+					for i,v in pairs(Pets) do
+					
+					local petFound = false
+					
+						for a,b in pairs(sortedPets) do
+							for this,that in pairs(b) do
+								if i == this then
+									petFound = true
+								end
+							end
+						end
 					local petid = 0
-				
 					for x,y in pairs(library.Directory.Pets) do
-						if i == y.name then 
+						if i == y.name then
 							petid = x
 						end
 					end
-				
-						
-					if petid ~= 0 and v >= _G.AutoShinyNum and (playerLibrary["Diamonds"] > library.Shared.ShinyCost(petid, _G.AutoShinyNum)) then
+					local petDir = library.Directory.Pets
 					
-						local counter = 1
-						for a,b in pairs(playerLibrary.Pets) do
-							if counter <= _G.AutoShinyNum and b.nk == i and not b.s and not b.lock then
-								ohTable1[1][1][counter] = b.uid
-								counter++
+						if petid ~= 0 and v >= _G.AutoShinyNum and not petFound and (petDir[petid].buffs.Bubbles > bestbubble or petDir[petid].buffs.Coins > bestcoin or petDir[petid].buffs.Diamonds > bestdiamond) then 
+							bestbubble = petDir[petid].buffs.Bubbles
+							bestcoin = petDir[petid].buffs.Coins
+							bestdiamond = petDir[petid].buffs.Diamonds
+							bestpetid = i
+						end
+					end
+					
+					table.insert(sortedPets, {[bestpetid] = Pets[bestpetid]})
+				end
+
+				--print("Pets to Shiny")					
+
+				for this,that in ipairs(sortedPets) do
+				
+					for i,v in pairs(that) do
+				
+						--if v >= _G.AutoShinyNum then
+							LogMe(i .. " " .. v)
+						--end
+					
+						local petid = 0
+					
+						for x,y in pairs(library.Directory.Pets) do
+							if i == y.name then 
+								petid = x
 							end
 						end
+					
+							
+						if petid ~= 0 and v >= _G.AutoShinyNum and (playerLibrary["Diamonds"] > library.Shared.ShinyCost(petid, _G.AutoShinyNum)) then
 						
-						LogMe("Attempting Shiny " .. i)
-						LogMe("Shiny Cost " .. library.Shared.ShinyCost(petid, _G.AutoShinyNum))
-						
-						for c,d in pairs(ohTable1[1][1]) do
-							LogMe(c .. " " .. d)
+							local counter = 1
+							for a,b in pairs(playerLibrary.Pets) do
+								if counter <= _G.AutoShinyNum and b.nk == i and not b.s and not b.lock then
+									ohTable1[1][1][counter] = b.uid
+									counter++
+								end
+							end
+							
+							LogMe("Attempting Shiny " .. i)
+							LogMe("Shiny Cost " .. library.Shared.ShinyCost(petid, _G.AutoShinyNum))
+							
+							for c,d in pairs(ohTable1[1][1]) do
+								LogMe(c .. " " .. d)
+							end
+							
+							game:GetService("ReplicatedStorage").Remotes["make pets shiny"]:InvokeServer(ohTable1)
+							wait(5)
+							
 						end
 						
-						game:GetService("ReplicatedStorage").Remotes["make pets shiny"]:InvokeServer(ohTable1)
-						wait(5)
-						
+						break
 					end
 					
 					break
+					
 				end
-				
-				break
-				
 			end
-
 		end
 	end
 end)
