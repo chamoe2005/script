@@ -1,4 +1,4 @@
-print("Version 2.5")
+print("Version 2.5.1")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1336,18 +1336,18 @@ function openEgg(egg)
 	--end
 	if Eggs[egg]["World"] ~= playerLibrary.World and not library.Variables.LoadingWorld then
 	
-		local newworldfound = false
+		--local newworldfound = false
 			
 			
-		for a,b in pairs(playerLibrary.Worlds) do
-			if b == Eggs[egg]["World"] then
-				newworldfound = true
-			end
-		end
+		--for a,b in pairs(playerLibrary.Worlds) do
+			--if b == Eggs[egg]["World"] then
+				--newworldfound = true
+			--end
+		--end
 	
-		if newworldfound then
+		--if newworldfound then
 			changeWorld(playerLibrary.World, Eggs[egg]["World"])
-		end
+		--end
 	
 			
 
