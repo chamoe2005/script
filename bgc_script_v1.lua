@@ -1,4 +1,4 @@
-print("Version 2.0.7")
+print("Version 2.0.8")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -315,7 +315,7 @@ local farm = wally:CreateWindow('Auto Farm')
 	
 local doSellBubbles = function()
 
-	while not library.Variables.LoadingWorld and wait(1) do
+	while library.Variables.LoadingWorld and wait(1) do
 		LogMe("Waiting on world to load")
 	end
 
@@ -399,7 +399,7 @@ end
 	
 local doGroupRewards = function()
 
-		while not library.Variables.LoadingWorld and wait(1) do
+		while library.Variables.LoadingWorld and wait(1) do
 			LogMe("Waiting on world to load")
 		end
 
@@ -1519,7 +1519,7 @@ end
 local CollectChests = function()
 		local playerLibrary = library.Save.Get()
 		
-		while not library.Variables.LoadingWorld and wait(1) do
+		while library.Variables.LoadingWorld and wait(1) do
 			LogMe("Waiting on world to load")
 		end
 
@@ -1600,7 +1600,7 @@ spawn(function()
 			--if not _G.collectingchests and not _G.sell and farm.flags.Drops == true and (_G.canafford ~= true or _G.eggSkip == true) then
 	if _G.settingsloaded then
 	
-		while not library.Variables.LoadingWorld and wait(1) do
+		while library.Variables.LoadingWorld and wait(1) do
 			LogMe("Waiting on world to load")
 		end
 	
@@ -1807,7 +1807,7 @@ spawn(function()
 		
 		doSellBubbles()
 		
-		while not library.Variables.LoadingWorld and wait(1) do
+		while library.Variables.LoadingWorld and wait(1) do
 			LogMe("Waiting on world to load")
 		end
 		
