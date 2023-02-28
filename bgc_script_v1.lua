@@ -1,4 +1,4 @@
-print("Version 2.1.1.2")
+print("Version 2.2")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1609,8 +1609,8 @@ local CollectChests = function()
 
 
 		for a,b in pairs(GetMap().Chests:GetChildren()) do
-			if _G[b.name] then
-				local chest = game:GetService("Workspace").MAP.Activations[b.name]
+			if _G[b.name] and GetMap().Activations:FindFirstChild(b.name) ~= nil then
+				local chest = GetMap().Activations[b.name]
 				
 				for c,d in pairs(playerLibrary.Teams) do
 					if d.name == library.Directory.Chests[b.name].currencyType then
