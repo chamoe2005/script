@@ -1,4 +1,4 @@
-print("Version 2.5.2")
+print("Version 2.5.3")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1921,6 +1921,7 @@ spawn(function()
 					--local playerLibrary = library.Save.Get()
 					--_G.playerCoins = playerLibrary["Coins"]
 					
+					local sendbreak = false
 				
 					local closest = nil
 					local dis = math.huge
@@ -1928,7 +1929,7 @@ spawn(function()
 					local pickupsLib = library.Network.Invoke("Get Pickups")
 					
 					for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
-						if v ~= nil and pickupsLib[v.Name] ~= nil then
+						if v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w == playerLibrary.World then
 							local droparea = pickupsLib[v.Name].a
 							if pickupsLib[v.Name].a == "Main" then
 								droparea = pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a
@@ -1950,9 +1951,16 @@ spawn(function()
 							else
 								--break
 							end
+						elseif v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w ~= playerLibrary.World then
+							sendbreak = true
+							break
 						else
-							--break
+							break
 						end
+					end
+					
+					if sendbreak then
+						break
 					end
 					
 						
