@@ -1,4 +1,4 @@
-print("Version 2.0.5")
+print("Version 2.0.6")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -314,6 +314,11 @@ local farm = wally:CreateWindow('Auto Farm')
 	
 	
 local doSellBubbles = function()
+
+	while not library.Variables.LoadingWorld do
+		LogMe("Waiting on world to load")
+	end
+
 	local sellarea = GetMap().Activations:FindFirstChild(_G.SellBubbleArea)
 				
 	if sellarea ~= nil then
@@ -393,6 +398,10 @@ end
 	end
 	
 local doGroupRewards = function()
+
+		while not library.Variables.LoadingWorld do
+			LogMe("Waiting on world to load")
+		end
 
 		if _G["Group Rewards"] and GetMap().Activations:FindFirstChild("Group Rewards") ~= nil then
 			local playerLibrary = library.Save.Get()
@@ -1509,6 +1518,10 @@ end
 
 local CollectChests = function()
 		local playerLibrary = library.Save.Get()
+		
+		while not library.Variables.LoadingWorld do
+			LogMe("Waiting on world to load")
+		end
 
 
 		for a,b in pairs(GetMap().Chests:GetChildren()) do
@@ -1585,7 +1598,11 @@ spawn(function()
 			
 	while wait(.1) do
 			--if not _G.collectingchests and not _G.sell and farm.flags.Drops == true and (_G.canafford ~= true or _G.eggSkip == true) then
-	if _G.settingsloaded and not library.Variables.LoadingWorld then
+	if _G.settingsloaded then
+	
+		while not library.Variables.LoadingWorld do
+			LogMe("Waiting on world to load")
+		end
 	
 		CollectChests()
 		
@@ -1711,7 +1728,7 @@ spawn(function()
 		end
 		
 		
-		if _G.drops and os.time() > (_G.LastDrop + tonumber(_G["Drop Delay"]))  then		
+		if _G.drops and os.time() > (_G.LastDrop + tonumber(_G["Drop Delay"])) and not library.Variables.LoadingWorld then		
 			--_G.DropCoolOff = os.time() + _G.DropDelay			
 			--_G.CollectingDrops = true
 			--spawn(function()
@@ -1789,6 +1806,10 @@ spawn(function()
 		end
 		
 		doSellBubbles()
+		
+		while not library.Variables.LoadingWorld do
+			LogMe("Waiting on world to load")
+		end
 		
 		
 		local otherworldchest = nil
