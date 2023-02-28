@@ -1,4 +1,4 @@
-print("Version 2.4")
+print("Version 2.4.1")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1288,6 +1288,7 @@ local changeWorld = function(old, new)
 					wait(1)
 				end
 			elseif new == "Atlantis" and playerLibrary.Worlds[new] == nil and playerLibrary[library.Directory.Worlds[new].cost.currency] >= library.Directory.Worlds[new].cost.amount then
+				LogMe("Purchasing " .. new .. " for " .. library.Functions.NumberShorten(library.Directory.Worlds[new].cost.amount) .. " " .. library.Directory.Worlds[new].cost.currency)
 				local ohTable1 = {
 									[1] = {
 										[1] = new
