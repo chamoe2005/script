@@ -1,4 +1,4 @@
-print("Version 2.3.4")
+print("Version 2.4")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1269,6 +1269,48 @@ library.Signal.Fired("Stat Changed"):Connect(function(p1)
 	end;
 end);
 
+local changeWorld = function(old, new)
+
+			local playerLibrary = library.Save.Get()
+
+			if old == "Spawn World" and new == "Atlantis" and playerLibrary.Worlds[new] ~= nil then
+				game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
+				wait(1)
+				while library.Variables.LoadingWorld do
+					print("TPing to Atlantis")
+					wait(1)
+				end
+			elseif old == "Atlantis" and new == "Spawn World" then
+				game:GetService("Workspace").MAP.Portal.Interact.Activated:Fire()
+				wait(1)
+				while library.Variables.LoadingWorld do
+					print("TPing to Spawn World")
+					wait(1)
+				end
+			elseif new == "Atlantis" and playerLibrary.Worlds[new] == nil and playerLibrary[library.Directory.Worlds[new].cost.currency] >= library.Directory.Worlds[new].cost.amount then
+				local ohTable1 = {
+									[1] = {
+										[1] = new
+									},
+									[2] = {
+										[1] = false
+									}
+								}
+
+				game:GetService("ReplicatedStorage").Remotes["buy world"]:FireServer(ohTable1)
+				wait(1)
+				game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
+				wait(1)
+				while library.Variables.LoadingWorld do
+					print("TPing to Atlantis")
+					wait(1)
+				end
+			else
+				LogMe(library.Functions.NumberShorten(library.Directory.Worlds[new].cost.amount - playerLibrary[library.Directory.Worlds[new].cost.currency]) .. " more " .. library.Directory.Worlds[new].cost.currency .. " needed to buy " .. new)
+			end
+
+end
+
 
 function openEgg(egg)
 	local playerLibrary = library.Save.Get()
@@ -1279,22 +1321,9 @@ function openEgg(egg)
 	--end
 	if Eggs[egg]["World"] ~= playerLibrary.World and not library.Variables.LoadingWorld then
 	
-			if playerLibrary.World == "Spawn World" and Eggs[egg]["World"] == "Atlantis" then
-				game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
-				wait(1)
-				while library.Variables.LoadingWorld do
-					print("TPing to Atlantis")
-					wait(1)
-				end
-
-			elseif playerLibrary.World == "Atlantis" and Eggs[egg]["World"] == "Spawn World" then
-				game:GetService("Workspace").MAP.Portal.Interact.Activated:Fire()
-				wait(1)
-				while library.Variables.LoadingWorld do
-					print("TPing to Spawn World")
-					wait(1)
-				end
-			end
+		changeWorld(playerLibrary.World, Eggs[egg]["World"])
+	
+			
 
 	end
 	
@@ -1928,42 +1957,20 @@ spawn(function()
 			end
 		end
 		
-		if otherworldchest ~= nil and playerLibrary.World == "Spawn World" and otherworldchest == "Atlantis" then
-			game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
+		if otherworldchest ~= nil then
 			
-			while library.Variables.LoadingWorld do
-				print("TPing to Atlantis")
-				wait(1)
-			end
+			changeWorld(playerLibrary.World, otherworldchest)
 					
 			CollectChests()
 			wait(1)
-			
-			game:GetService("Workspace").MAP.Portal.Interact.Activated:Fire()
-			wait(1)
-			while library.Variables.LoadingWorld do
-				print("TPing to Spawn World")
-				wait(1)
-			end
-		elseif otherworldchest ~= nil and playerLibrary.World == "Atlantis" and otherworldchest == "Spawn World" then
-			game:GetService("Workspace").MAP.Portal.Interact.Activated:Fire()
-			wait(1)
-			while library.Variables.LoadingWorld do
-				print("TPing to Spawn World")
+			if otherworldchest == "Spawn World" then
+				doGroupRewards()
 				wait(1)
 			end
 			
-			--wait(15)		
-			CollectChests()
-			wait(1)
-			doGroupRewards()
-			wait(1)
-			game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
 			
-			while library.Variables.LoadingWorld do
-				print("TPing to Atlantis")
-				wait(1)
-			end
+			changeWorld(otherworldchest, playerLibrary.World)
+
 		end
 			
 			
