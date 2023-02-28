@@ -1,4 +1,4 @@
-print("Version 2.6")
+print("Version 2.6.1")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -2067,7 +2067,27 @@ spawn(function()
 			doChallenge()
 			SpinPrizeWheel()
 			doMerchant()
-			changeWorld("Spawn World", "Atlantis")
+			
+			local newworld = nil
+					
+			for a,b in pairs(library.Directory.Worlds) do
+				if a ~= "Spawn World" then
+					local worldfound = false
+					for c,d in pairs(playerLibrary.Worlds) do
+						if d == a then
+							worldfound = true
+						end
+					end
+					
+					if not worldfound then
+						newworld = a
+					end
+				end
+			end
+			
+			if newworld ~= nil then
+				changeWorld("Spawn World", newworld)
+			end
 			
 			local playerLibrary = library.Save.Get()
 
