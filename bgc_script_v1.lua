@@ -1,4 +1,4 @@
-print("Version 2.4.3")
+print("Version 2.4.5")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1306,7 +1306,7 @@ local changeWorld = function(old, new)
 					print("TPing to Atlantis")
 					wait(1)
 				end
-			elseif new ~= "Spawn World" then
+			elseif playerLibrary.Worlds[new] == nil and new ~= "Spawn World" then
 				LogMe(library.Functions.NumberShorten(library.Directory.Worlds[new].cost.amount - playerLibrary[library.Directory.Worlds[new].cost.currency]) .. " more " .. library.Directory.Worlds[new].cost.currency .. " needed to buy " .. new)
 			end
 
