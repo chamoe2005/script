@@ -1957,7 +1957,7 @@ spawn(function()
 end)
 	
 spawn(function()
-	while wait(180) do
+	while wait(60) do
 		if not library.Variables.LoadingWorld then
 			doFairyExchange()
 			doReaperExchange()
