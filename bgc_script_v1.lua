@@ -1,4 +1,4 @@
-print("Version 2.2")
+print("Version 2.3.4")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1600,11 +1600,24 @@ local loadSettings = function()
 		_G.settingsloaded = true
 end
 
+_G.chesttimers = {}
+_G.chestwait = 10
+library.Network.Fired("Update Chests"):Connect(function(p1) _G.chesttimers = p1 end)
+
 local CollectChests = function()
 		local playerLibrary = library.Save.Get()
 		
 		while library.Variables.LoadingWorld and wait(1) do
 			LogMe("Waiting on world to load")
+		end
+		
+		for a,b in pairs(library.Directory.Chests) do
+			if _G[a] and b.world == playerLibrary.World and _G.chesttimers[a] and _G.chesttimers[a] < _G.chestwait then
+				while _G.chesttimers[a] do
+					LogMe("Waiting " .. _G.chesttimers[a] .. " seconds for " .. a)
+					wait(1)
+				end
+			end
 		end
 
 
@@ -1638,7 +1651,7 @@ local CollectChests = function()
 					wait(_G.TeleportDelay)
 					toTarget(GetPlayerRoot().Position,chest.Position + Vector3.new(math.random(1,3), 0, math.random(1,3)),chest.CFrame)
 					wait(_G.TeleportDelay)
-				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil or (os.time() > startTime + 10)
+				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil or (os.time() > startTime + 60)
 				LogMe("Grabbed " .. b.name .. "!!!")
 				--wait(_G.TeleportDelay)
 				
@@ -1675,8 +1688,7 @@ game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.
 game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.Position = UDim2.new(0, 0, 0, 0)
 game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.Size = UDim2.new(1, 1, 1, -10)
 
-		_G.chesttimers = {}
-		library.Network.Fired("Update Chests"):Connect(function(p1) _G.chesttimers = p1 end)
+		
 
 spawn(function()
 			
@@ -1717,25 +1729,32 @@ spawn(function()
 				
 				local newBest = ""
 				
-				if bestEgg["Diamonds"].Name and bestEgg["Coins"].Name then
+				if bestEgg["Diamonds"].Name and bestEgg["Coins"].Name and bestEgg["Pearls"].Name then
 					--print("Opening " .. bestEgg.Name)
-					if bestEgg["Diamonds"].Name == "Safe Egg" and bestEgg["Coins"].Cost < 200000 then
+					newBest = bestEgg["Pearls"].Name
+				elseif bestEgg["Diamonds"].Name and bestEgg["Coins"].Name then
+					if bestEgg["Diamonds"].Name == "Safe Egg" and bestEgg["Coins"].Cost <= 35000 then
 						newBest = bestEgg["Diamonds"].Name
-						--openEgg(bestEgg["Diamonds"].Name)
+							--openEgg(bestEgg["Diamonds"].Name)
+					elseif bestEgg["Diamonds"].Name == "Lantern Egg" and bestEgg["Coins"].Cost <= 250000 then
+						newBest = bestEgg["Diamonds"].Name
+					elseif bestEgg["Diamonds"].Name == "Banana Bandana on Nana Egg" and bestEgg["Coins"].Cost <= 500000 then
+						newBest = bestEgg["Diamonds"].Name
+							--openEgg(bestEgg["Diamonds"].Name)
 					elseif bestEgg["Coins"].Cost > bestEgg["Diamonds"].Cost then
 						newBest = bestEgg["Coins"].Name
-						--openEgg(bestEgg["Coins"].Name)
+							--openEgg(bestEgg["Coins"].Name)
 					else
 						newBest = bestEgg["Diamonds"].Name
-						--openEgg(bestEgg["Diamonds"].Name)
-					end
+							--openEgg(bestEgg["Diamonds"].Name)
+					end				
+				elseif bestEgg["Pearls"].Name then
+					newBest = bestEgg["Pearls"].Name
 				elseif bestEgg["Diamonds"].Name then
 					newBest = bestEgg["Diamonds"].Name
 					--openEgg(bestEgg["Diamonds"].Name)
 				elseif bestEgg["Coins"].Name then
 					newBest = bestEgg["Coins"].Name
-				elseif bestEgg["Pearls"].Name then
-					openEgg(bestEgg["Pearls"].Name)
 				end
 
 			--LogMe("Auto Hatch Enabled" .. tostring(library.Variables.AutoHatchEnabled))
@@ -1901,7 +1920,7 @@ spawn(function()
 		for a,b in pairs(library.Directory.Chests) do
 			if a == "VIP Chest" and not VIP then
 			
-			elseif _G[a] and b.world ~= playerLibrary.World and not _G.chesttimers[a] then
+			elseif _G[a] and b.world ~= playerLibrary.World and (not _G.chesttimers[a] or _G.chesttimers[a] < _G.chestwait) then
 				otherworldchest = b.world
 			end
 		end
@@ -1913,8 +1932,7 @@ spawn(function()
 				print("TPing to Atlantis")
 				wait(1)
 			end
-			
-			print("Equip Pets")			
+					
 			CollectChests()
 			wait(1)
 			
@@ -1932,7 +1950,7 @@ spawn(function()
 				wait(1)
 			end
 			
-			print("Equip Pets")			
+			--wait(15)		
 			CollectChests()
 			wait(1)
 			doGroupRewards()
@@ -1970,7 +1988,8 @@ spawn(function()
 			local playerLibrary = library.Save.Get()
 
 			for a,b in pairs(library.Directory.Chests) do
-				if b.world ~= playerLibrary.World and _G.chesttimers[a] then
+				--if b.world ~= playerLibrary.World and 
+				if _G.chesttimers[a] then
 					print(a .. " Timer: " .. _G.chesttimers[a])
 				end
 			end
