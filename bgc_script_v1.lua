@@ -1,4 +1,4 @@
-print("Version 2.0.8")
+print("Version 2.1.1")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -45,6 +45,11 @@ if not isfile("bgclog" .. GetLocalPlayer().Name .. ".txt") then
 	writefile("bgclog" .. GetLocalPlayer().Name .. ".txt", "Start of Log File\n")
 end
 
+if not isfile("bgcsettings.txt") then
+	writefile("bgcsettings.txt", game:GetService("HttpService"):JSONEncode({"newuser":{"Power 3 ":false,"Sky Chest":true,"Galaxy Egg":false,"Lantern Egg":true,"Spotted Egg":true,"Range":"50000","Coins":true,"Drop TimeOut":"30","2x Diamonds ":false,"Frosted Egg":false,"Clouds":false,"Pearls":false,"Heavenly Chest":true,"Delete Mode":"Custom Delete","Nightmare Egg":true,"Pineapple Egg":false,"Heaven":true,"Godly Luck ":false,"Power 2 ":false,"Auto Shiny Amount":"6","Lucky Landing":true,"1 Pet Level ":false,"XP":true,"Athena Chest":false,"Claim Bubble Pass":false,"Tier Rewards":true,"Event":false,"Num Pets to Delete":0,"Magma Egg":true,"3x Shiny Luck ":false,"Free Prize Wheel":true,"Atlantis Main":false,"Reaper's Hideout":false,"Spawn World Main":false,"XP Chest":true,"Free Loot":true,"Void Egg":false,"Max Pet Level ":false,"The Void":true,"Pet ":false,"Buy Mode":"Best","Main":false,"Super Lucky ":false,"Auto-Bubble Blow V2":true,"Coral Island":false,"Equip Best":true,"Shipwreck Cove":false,"Sell Bubble Delay":"30","Fairy World":true,"XP Island":true,"Sunken Chest":false,"Collect Drops":true,"Fairy Exchange":false,"Space":true,"Drop Delay":"60","Deep Ocean":false,"Snail Egg":false,"Void Chest":true,"2x Coins ":false,"Sell Bubble Area":"Sell 2","Common Egg":true,"Diamonds":true,"Power 1 ":false,"Safe Egg":true,"Reaper Exchange":false,"Group Rewards":true,"Banana Bandana on Nana Egg":true,"Coral Chest":false,"Fast Hatch ":false,"Season 1 Egg":false,"Delete at Pet #":"50","Sky Island":true,"Goldfish Egg":false}}))
+end
+
+
 function LogMe(message)
 
 	local TIME_ZONE = -5
@@ -53,9 +58,11 @@ function LogMe(message)
 	local ampm = hour < 12 and "AM" or "PM"
 	local timestamp = string.format("%02i:%02i:%02i %s", ((hour - 1) % 12) + 1, date.min, date.sec, ampm)
 
-	if message and message ~= "" then
-		print(message)
-		appendfile("bgclog" .. GetLocalPlayer().Name .. ".txt", timestamp .. "\t" .. message .. "\n")
+	if isfile("bgclog" .. GetLocalPlayer().Name .. ".txt") then
+		if message and message ~= "" then
+			print(message)
+			appendfile("bgclog" .. GetLocalPlayer().Name .. ".txt", timestamp .. "\t" .. message .. "\n")
+		end
 	end
 
 end
@@ -1458,26 +1465,30 @@ local loadSettings = function()
 		if isfile("bgcsettings.txt") then
 
 			local json = game:GetService("HttpService"):JSONDecode(readfile("bgcsettings.txt"))
+			local playername = plr.Name
 			
-			if json[plr.Name] ~= nil then
-
+			if json[playername] == nil then
+				playername = "newuser"
+			end
+			
+			if json[playername] ~= nil then
 				for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
 
-						if b.Name == "Checkmark" and json[plr.Name][b.Parent.name] and b.Text ~= utf8.char(10003) then
+						if b.Name == "Checkmark" and json[playername][b.Parent.name] and b.Text ~= utf8.char(10003) then
 					
 							for a,b in pairs(getconnections(b.MouseButton1Click)) do
 								b:Fire()
 							end
 					
-						elseif b.Name == "Checkmark" and not json[plr.Name][b.Parent.name] and b.Text == utf8.char(10003) then
+						elseif b.Name == "Checkmark" and not json[playername][b.Parent.name] and b.Text == utf8.char(10003) then
 						
 							for a,b in pairs(getconnections(b.MouseButton1Click)) do
 								b:Fire()
 							end
 							
-						elseif b.Name == "Box" and json[plr.Name][b.Parent.name] ~= nil and json[plr.Name][b.Parent.name]~= "" and json[plr.Name][b.Parent.name] ~= 0 then
+						elseif b.Name == "Box" and json[playername][b.Parent.name] ~= nil and json[playername][b.Parent.name]~= "" and json[playername][b.Parent.name] ~= 0 then
 						
-							b.Text = json[plr.Name][b.Parent.name]
+							b.Text = json[playername][b.Parent.name]
 							for i,v in pairs(getconnections(b.FocusLost)) do
 								v:Fire()
 							end
@@ -1492,9 +1503,9 @@ local loadSettings = function()
 							wait(.5)
 							local selectionname = b.Text
 						
-							if json[plr.Name][selectionname] ~= nil and json[plr.Name][selectionname] ~= "" and json[plr.Name][selectionname] ~= 0 then
+							if json[playername][selectionname] ~= nil and json[playername][selectionname] ~= "" and json[playername][selectionname] ~= 0 then
 								for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
-									if v.Name == "TextButton" and v.Text == json[plr.Name][selectionname] then
+									if v.Name == "TextButton" and v.Text == json[playername][selectionname] then
 										for x,y in pairs(getconnections(v.MouseButton1Click)) do
 											y:Fire()
 										end
