@@ -1,4 +1,4 @@
-print("Version 2.0.3")
+print("Version 2.0.4")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1356,9 +1356,11 @@ local drop = wally:CreateWindow('Drops')
 		drop:Section(a)
 		for c,d in pairs(b) do
 			if d == "VIP" and VIP then
-				drop:Toggle(d, {location = _G, flag = a .. " " .. d})
-			elseif d ~= "VIP" then
-				drop:Toggle(d, {location = _G, flag = a .. " " .. d})
+				drop:Toggle(d, {location = _G, flag = d})
+			elseif d ~= "VIP" and d == "Main" then
+				drop:Toggle(a .. " " .. d, {location = _G, flag = a .. " " .. d})
+			elseif d ~= "VIP" and d ~= "Main" then
+				drop:Toggle(d, {location = _G, flag = d})
 			end			
 		end
 	end
@@ -1729,7 +1731,12 @@ spawn(function()
 					
 					for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
 						if v ~= nil then
-							if pickupsLib[v.Name] and _G[pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a] then
+							local droparea = pickupsLib[v.Name].a
+							if pickupsLib[v.Name].a == "Main" then
+								droparea = pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a
+							end
+							
+							if pickupsLib[v.Name] and _G[droparea] then
 								for a,b in pairs(currency) do
 									if _G[a] and tonumber(_G.droprange) ~= nil then
 										for x,y in pairs(b) do
