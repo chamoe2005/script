@@ -1,4 +1,4 @@
-print("Version 2.4.9")
+print("Version 2.5")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1775,8 +1775,24 @@ spawn(function()
 				--LogMe("Hatching Eggs", _G.NextEgg)
 			--end
 			
+					
+	
+			
 				for i,v in pairs(Eggs) do
-					if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] then
+				
+				
+					local newworldfound = false
+			
+			
+					for a,b in pairs(playerLibrary.Worlds) do
+						if b == v.World then
+							newworldfound = true
+						end
+					end
+				
+				
+				
+					if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] and newworldfound then
 						bestEgg[v.Currency].Name = i
 						bestEgg[v.Currency].Cost = v.Cost
 					end
