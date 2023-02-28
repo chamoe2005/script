@@ -1,4 +1,4 @@
-print("Version 2.6.1")
+print("Version 2.6.2")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -2081,6 +2081,7 @@ spawn(function()
 					
 					if not worldfound then
 						newworld = a
+						LogMe("Found New World " .. a)
 					end
 				end
 			end
