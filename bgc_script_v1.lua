@@ -1,4 +1,4 @@
-print("Version 2.5.3")
+print("Version 2.6")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -2067,6 +2067,7 @@ spawn(function()
 			doChallenge()
 			SpinPrizeWheel()
 			doMerchant()
+			changeWorld("Spawn World", "Atlantis")
 			
 			local playerLibrary = library.Save.Get()
 
