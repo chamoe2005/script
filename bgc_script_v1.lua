@@ -1542,24 +1542,25 @@ local CollectChests = function()
 				until game:GetService("Workspace").MAP.Chests:FindFirstChild(b.name) == nil or (os.time() > startTime + 10)
 				LogMe("Grabbed " .. b.name .. "!!!")
 				--wait(_G.TeleportDelay)
+				
+				for c,d in pairs(playerLibrary.Teams) do
+					if d.name == "Bubbles" then
+						print("Switching to Bubbles Team")	
+						local ohTable1 = {
+							[1] = {
+								[1] = d.uid
+							},
+							[2] = {
+								[1] = false
+							}
+						}
+						game:GetService("ReplicatedStorage").Remotes["equip team"]:FireServer(ohTable1)
+					end
+				end
 			end
-			
 		end	
 		
-		for c,d in pairs(playerLibrary.Teams) do
-			if d.name == "Bubbles" then
-				print("Switching to Bubbles Team")	
-				local ohTable1 = {
-					[1] = {
-						[1] = d.uid
-					},
-					[2] = {
-						[1] = false
-					}
-				}
-				game:GetService("ReplicatedStorage").Remotes["equip team"]:FireServer(ohTable1)
-			end
-		end
+
 
 end
 
