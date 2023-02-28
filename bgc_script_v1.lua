@@ -1,4 +1,4 @@
-print("Version 2.5.1")
+print("Version 2.5.2")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1782,6 +1782,10 @@ spawn(function()
 				
 				
 					local newworldfound = false
+					
+					if v.World == "Spawn World" then
+						newworldfound = true
+					end
 			
 			
 					for a,b in pairs(playerLibrary.Worlds) do
