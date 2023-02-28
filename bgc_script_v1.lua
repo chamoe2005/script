@@ -1,4 +1,4 @@
-print("Version 2.4.7")
+print("Version 2.4.8")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1318,6 +1318,8 @@ local changeWorld = function(old, new)
 					print("TPing to Atlantis")
 					wait(1)
 				end
+			elseif new == old then
+				wait(1)
 			elseif not newworldfound and new ~= "Spawn World" then
 				LogMe(library.Functions.NumberShorten(library.Directory.Worlds[new].cost.amount - playerLibrary[library.Directory.Worlds[new].cost.currency]) .. " more " .. library.Directory.Worlds[new].cost.currency .. " needed to buy " .. new)
 			end
@@ -1970,21 +1972,38 @@ spawn(function()
 			end
 		end
 		
+
+		
 		if otherworldchest ~= nil then
+		
+			local otherworldfound = false
 			
-		--	if playerLibrary.World ~= otherworldchest then
-				changeWorld(playerLibrary.World, otherworldchest)
-					
-				CollectChests()
-				wait(1)
-				if otherworldchest == "Spawn World" then
-					doGroupRewards()
-					wait(1)
+			if otherworldchest == "Spawn World" then
+				otherworldfound = true
+			end
+			
+			
+			for a,b in pairs(playerLibrary.Worlds) do
+				if b == otherworldchest then
+					otherworldfound = true
 				end
-				
+			end
 			
-				changeWorld(otherworldchest, playerLibrary.World)
-		--	end
+			
+
+			if otherworldfound then
+					changeWorld(playerLibrary.World, otherworldchest)
+						
+					CollectChests()
+					wait(1)
+					if otherworldchest == "Spawn World" then
+						doGroupRewards()
+						wait(1)
+					end
+					
+				
+					changeWorld(otherworldchest, playerLibrary.World)
+			end
 
 		end
 			
