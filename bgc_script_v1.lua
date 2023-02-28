@@ -1,4 +1,4 @@
-print("Version 2.4.1")
+print("Version 2.4.2")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1280,7 +1280,7 @@ local changeWorld = function(old, new)
 					print("TPing to Atlantis")
 					wait(1)
 				end
-			elseif old == "Atlantis" and new == "Spawn World" then
+			elseif old == "Atlantis" and new == "Spawn World" and playerLibrary.Worlds[old] ~= nil then
 				game:GetService("Workspace").MAP.Portal.Interact.Activated:Fire()
 				wait(1)
 				while library.Variables.LoadingWorld do
