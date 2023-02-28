@@ -1,4 +1,4 @@
-print("Version 2.1.1.1")
+print("Version 2.1.1.2")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -119,7 +119,7 @@ if not isfile("bgcsettings.txt") then
 																				["Season 1 Egg"] = false,
 																				["Delete at Pet #"] = "50",
 																				["Sky Island"] = true,
-																				["Goldfish Egg"] = false}})
+																				["Goldfish Egg"] = false}}))
 end
 
 
