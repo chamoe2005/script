@@ -1,4 +1,4 @@
-print("Version 2.4.5")
+print("Version 2.4.6")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1960,17 +1960,19 @@ spawn(function()
 		
 		if otherworldchest ~= nil then
 			
-			changeWorld(playerLibrary.World, otherworldchest)
+			if playerLibrary.World ~= otherworldchest then
+				changeWorld(playerLibrary.World, otherworldchest)
 					
-			CollectChests()
-			wait(1)
-			if otherworldchest == "Spawn World" then
-				doGroupRewards()
+				CollectChests()
 				wait(1)
+				if otherworldchest == "Spawn World" then
+					doGroupRewards()
+					wait(1)
+				end
+				
+			
+				changeWorld(otherworldchest, playerLibrary.World)
 			end
-			
-			
-			changeWorld(otherworldchest, playerLibrary.World)
 
 		end
 			
