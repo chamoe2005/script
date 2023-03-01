@@ -1,4 +1,4 @@
-print("Version 2.6.6")
+print("Version 2.6.7")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1970,7 +1970,7 @@ spawn(function()
 						break
 					end
 					
-					print(pickupcount)	
+					--print(pickupcount)	
 					if closest ~= nil and (target == nil or target.Parent == nil) then
 					
 						closest.Parent.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
@@ -1990,6 +1990,7 @@ spawn(function()
 							objectname = ""
 						end
 					elseif pickupcount == 0 then
+						LogMe("No Valid Drops")
 						_G.DropCoolOff = os.time()
 						_G.LastDrop = os.time()
 						objectname = ""					
