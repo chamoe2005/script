@@ -1,4 +1,4 @@
-print("Version 2.6.5")
+print("Version 2.6.6")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1927,6 +1927,7 @@ spawn(function()
 					local dis = math.huge
 					
 					local pickupsLib = library.Network.Invoke("Get Pickups")
+					local pickupcount = 0
 					
 					for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
 						if v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w == playerLibrary.World then
@@ -1934,8 +1935,9 @@ spawn(function()
 							if pickupsLib[v.Name].a == "Main" then
 								droparea = pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a
 							end
-							print(pickupsLib[v.Name].w)
+							--print(pickupsLib[v.Name].w)
 							if pickupsLib[v.Name] and _G[droparea] then
+								pickupcount++
 								for a,b in pairs(currency) do
 									if _G[a] and tonumber(_G.droprange) ~= nil then
 										for x,y in pairs(b) do
@@ -1951,13 +1953,13 @@ spawn(function()
 							else
 								--break
 							end
-						elseif v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w ~= playerLibrary.World then
-							print("break1")
-							sendbreak = true
-							break
-						else
-							print("break2")
-							break
+						--elseif v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w ~= playerLibrary.World then
+							--print("break1")
+							--sendbreak = true
+							--break
+						--else
+							--print("break2")
+							--break
 						end
 					end
 					
@@ -1968,7 +1970,7 @@ spawn(function()
 						break
 					end
 					
-						
+					print(pickupcount)	
 					if closest ~= nil and (target == nil or target.Parent == nil) then
 					
 						closest.Parent.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
@@ -1987,6 +1989,10 @@ spawn(function()
 							--LogMe("Drop " .. objectname .. " removed")
 							objectname = ""
 						end
+					elseif pickupcount == 0 then
+						_G.DropCoolOff = os.time()
+						_G.LastDrop = os.time()
+						objectname = ""					
 					end
 				end
 				LogMe("Ending Drops")
