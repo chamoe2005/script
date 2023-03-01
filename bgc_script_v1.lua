@@ -1,4 +1,4 @@
-print("Version 2.6.3")
+print("Version 2.6.4")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1960,6 +1960,9 @@ spawn(function()
 					end
 					
 					if sendbreak then
+						_G.DropCoolOff = os.time()
+						_G.LastDrop = os.time()
+						objectname = ""
 						break
 					end
 					
