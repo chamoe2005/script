@@ -1,4 +1,4 @@
-print("Version 2.6.7")
+print("Version 2.6.8")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1259,7 +1259,7 @@ library.Signal.Fired("Stat Changed"):Connect(function(p1)
 		if _G.BuyEggMode == "None" then
 			library.Variables.AutoHatchEggId = nil
 		elseif library.Variables.AutoHatchEggId then
-			LogMe(library.Variables.AutoHatchEggId .. " Opened")
+			--LogMe(library.Variables.AutoHatchEggId .. " Opened")
 			_G.eggopened = true
 			_G.LastEgg = os.time()
 		end
@@ -1836,10 +1836,10 @@ spawn(function()
 			--LogMe("Auto Hatch Egg" .. tostring(library.Variables.AutoHatchEggId))
 			
 			if _G.BuyEggMode == "Best" and newBest ~= "" and (newBest ~= _G.lastBest or not _G.eggopened or (os.time() > (_G.LastEgg + _G.EggTimeout))) then
-					LogMe("Buy Mode " .. _G.BuyEggMode)
-					LogMe("Last Egg " .. os.time() - _G.LastEgg)
-					LogMe("Egg Opened " .. tostring(_G.eggopened))
-					LogMe("New Best " .. tostring(newBest))
+					--LogMe("Buy Mode " .. _G.BuyEggMode)
+					--LogMe("Last Egg " .. os.time() - _G.LastEgg)
+					--LogMe("Egg Opened " .. tostring(_G.eggopened))
+					LogMe("Opening " .. tostring(newBest))
 					--LogMe("AutoHatchEgg" .. library.Variables.AutoHatchEggId)
 					--LogMe("AutoHatchEnabled" .. library.Variables.AutoHatchEnabled)
 				_G.eggopened = false
