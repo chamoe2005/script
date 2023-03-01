@@ -1,4 +1,4 @@
-print("Version 2.6.8")
+print("Version 2.6.9")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -2135,14 +2135,17 @@ spawn(function()
 			--end
 			if NewItemWindow.Enabled then		
 				for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
-					connection:Fire()
+					wait(1)
 					LogMe("Closing New Item Window")
+					connection:Fire()
 					updateBoosts()
 				end
 			elseif MessageWindow.Enabled then
 				for i, connection in pairs(getconnections(MessageWindow.Frame.Ok.MouseButton1Click)) do
-					connection:Fire()
+					wait(1)
 					LogMe("Closing Message Window")
+					wait(1)
+					connection:Fire()
 				end
 			end
 		end
