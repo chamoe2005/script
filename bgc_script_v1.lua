@@ -1,4 +1,4 @@
-print("Version 2.6.4")
+print("Version 2.6.5")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1934,7 +1934,7 @@ spawn(function()
 							if pickupsLib[v.Name].a == "Main" then
 								droparea = pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a
 							end
-							
+							print(pickupsLib[v.Name].w)
 							if pickupsLib[v.Name] and _G[droparea] then
 								for a,b in pairs(currency) do
 									if _G[a] and tonumber(_G.droprange) ~= nil then
@@ -1952,9 +1952,11 @@ spawn(function()
 								--break
 							end
 						elseif v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w ~= playerLibrary.World then
+							print("break1")
 							sendbreak = true
 							break
 						else
+							print("break2")
 							break
 						end
 					end
