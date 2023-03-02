@@ -1,4 +1,4 @@
-print("Version 2.7")
+print("Version 2.8")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1394,10 +1394,33 @@ function openEgg(egg)
 	--end
 end
 
+local sharedModules = game:GetService("ReplicatedStorage").Nevermore["Shared Modules"]
+local remotes = nil
+
+local counter = 0
+for a,b in pairs(sharedModules:GetChildren()) do
+
+	--print(a)
+	for c,d in pairs(b:GetChildren()) do
+		--print(d)
+		counter++
+	end
+	if counter > 100 then
+		remotes = b
+		counter = 0
+	end
+end
+
+local openegg = nil
+local connection = nil
+for i,v in pairs(getconnections(remotes["open egg"].Event)) do
+	connection = v
+	openegg = v.Function
+end
 
 local egg = wally:CreateWindow('Eggs')
 	egg:Section('Select Eggs')
-	--egg:Toggle('Faster Hatch', {flag = "EggFastHatch"}, function(fasthatch) if fasthatch then _G.EggDelay = 3 else _G.EggDelay = 5 end end)
+	egg:Toggle('Hide Animation', {flag = "HideAnimation"}, function() spawn(function() if egg.flags.HideAnimation then connection:Disable() else connection:Enable() end end) end)
 	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = {"None", "Best", "Any"} })
 	
  
