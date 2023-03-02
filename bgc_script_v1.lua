@@ -2133,6 +2133,7 @@ local ClickButton = function(button)
 
 end
 
+_G.ImportantWindows = library.Variables.ImportantWindows
 
 game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item"):GetPropertyChangedSignal("Enabled"):Connect(function()
 	if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item").Enabled then
