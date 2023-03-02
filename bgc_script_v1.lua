@@ -1,4 +1,4 @@
-print("Version 2.9.5")
+print("Version 2.9.6")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1972,7 +1972,7 @@ spawn(function()
 							for index, baddrop in pairs(baddrops) do
 								if baddrop == v.Name then
 									isbaddrop = true
-									LogMe(baddrop .. " is bad")
+									--LogMe(baddrop .. " is bad")
 								end
 							end
 							--print(pickupsLib[v.Name].w)
@@ -2034,7 +2034,7 @@ spawn(function()
 								GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y + 2,GetPlayerRoot().CFrame.Z)
 							end
 							toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
-							LogMe("Picking up " .. dropname)
+							--LogMe("Picking up " .. dropname)
 							wait(.1)
 						until (dropcurrency == "XP" and wait(.5)) or (_G.statchanged[dropcurrency] or os.time() > dropStart + 1)
 
@@ -2054,7 +2054,7 @@ spawn(function()
 							end
 							table.insert(baddrops, dropname)
 						else
-							LogMe("Could not pickup " .. dropcurrency)
+							--LogMe("Could not pickup " .. dropcurrency)
 							table.insert(baddrops, dropname)
 						end
 					elseif pickupcount == 0 then
