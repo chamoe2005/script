@@ -1,4 +1,4 @@
-print("Version 2.6.9")
+print("Version 2.7")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -2123,7 +2123,35 @@ spawn(function()
 		end
 	end
 end)
+---[[
 
+local ClickButton = function(button)
+	
+	mousemoveabs(button.AbsolutePosition.X, button.AbsolutePosition.Y)
+	wait(.1)
+	mouse1click()
+
+end
+
+
+game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item"):GetPropertyChangedSignal("Enabled"):Connect(function()
+	if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item").Enabled then
+		print("Closing New Item Window")
+		library.Variables.ImportantWindows = {}
+		game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item").Enabled = false
+	end
+end)
+
+game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Message"):GetPropertyChangedSignal("Enabled"):Connect(function()
+	if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Message").Enabled then
+		print("Closing Message Window")
+		library.Variables.ImportantWindows = {}
+		game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Message").Enabled = false
+	end
+end)
+
+--]]
+--[[
 spawn(function()
 	while wait(1) do
 		if not library.Variables.LoadingWorld then
@@ -2133,6 +2161,7 @@ spawn(function()
 			--while wait(1) and not NewItemWindow.Enabled do
 				--print(NewItemWindow.Enabled)
 			--end
+			
 			if NewItemWindow.Enabled then		
 				for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
 					wait(1)
@@ -2151,6 +2180,7 @@ spawn(function()
 		end
 	end
 end)
+--]]
 
 spawn(function()
 	while wait(15) do
