@@ -1,9 +1,10 @@
-print("Version 2.9.8")
+print("Version 2.9.9")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
 _G.LastSell = os.time()
 _G.LastDrop = os.time()
+_G.droptimeout = .25
 _G.TeleportDelay = 2
 _G.LastEgg = os.time()
 _G.lastBest = ""
@@ -2036,7 +2037,7 @@ spawn(function()
 							toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
 							--LogMe("Picking up " .. dropname)
 							wait(.1)
-						until (dropcurrency == "XP" and wait(.5)) or (_G.statchanged[dropcurrency] or os.time() > dropStart + 1)
+						until (dropcurrency == "XP" and wait(.5)) or (_G.statchanged[dropcurrency] or os.time() > dropStart + _G.droptimeout)
 
 						if dropcurrency == "XP" then
 							--LogMe("Moving to next " .. dropcurrency)
