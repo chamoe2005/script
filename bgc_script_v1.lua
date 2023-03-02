@@ -1,4 +1,4 @@
-print("Version 2.9.9")
+print("Version 3.0")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -2037,7 +2037,7 @@ spawn(function()
 							toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
 							--LogMe("Picking up " .. dropname)
 							wait(.1)
-						until (dropcurrency == "XP" and wait(.5)) or (_G.statchanged[dropcurrency] or os.time() > dropStart + _G.droptimeout)
+						until (dropcurrency == "XP" and wait(.5)) or (_G.statchanged[dropcurrency] or os.time() > dropStart + math.random(_G.droptimeout, _G.droptimeout * 2)
 
 						if dropcurrency == "XP" then
 							--LogMe("Moving to next " .. dropcurrency)
