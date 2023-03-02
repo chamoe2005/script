@@ -1,4 +1,4 @@
-print("Version 2.8.1")
+print("Version 2.9.5")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -913,7 +913,7 @@ local doFairyExchange = function()
 
 		game:GetService("ReplicatedStorage").Remotes["fairy exchange"]:InvokeServer(ohTable1)
 	elseif farm.flags["Fairy Exchange"] then
-		LogMe((playerLibrary.FairyExchange - os.time()) / 60 / 60 .. " hours until Fairy Exchange")
+		LogMe((playerLibrary.FairyExchange - os.time()) / 60 .. " minutes until Fairy Exchange")
 	end
 
 end
@@ -936,7 +936,7 @@ local doReaperExchange = function()
 
 		game:GetService("ReplicatedStorage").Remotes["reaper exchange"]:InvokeServer(ohTable1)
 	elseif farm.flags["Reaper Exchange"] then
-		LogMe((playerLibrary.ReaperExchange - os.time()) / 60 / 60 .. " hours until Reaper Exchange")
+		LogMe((playerLibrary.ReaperExchange - os.time()) / 60 .. " minutes until Reaper Exchange")
 	end
 
 end
@@ -1252,8 +1252,12 @@ end
 		
 _G.eggopened = false
 --_G.starthatch = os.time()
+_G.statchanged = {}
 				
 library.Signal.Fired("Stat Changed"):Connect(function(p1)
+	
+	_G.statchanged[p1] = true
+	
 	--local coins = library.Save.Get()["Coins"]
 	if p1 == "EggsOpened" then
 		if _G.BuyEggMode == "None" then
@@ -1940,6 +1944,10 @@ spawn(function()
 				_G.LastDrop = os.time() + _G.DropCoolOff
 				LogMe("Starting Drops")
 				local objectname = ""
+				local baddrops = {}
+				local pickupTotals = {}
+					
+					
 				while _G.drops and (os.time() < _G.DropCoolOff) do
 					--local playerLibrary = library.Save.Get()
 					--_G.playerCoins = playerLibrary["Coins"]
@@ -1948,6 +1956,8 @@ spawn(function()
 				
 					local closest = nil
 					local dis = math.huge
+					local dropcurrency = nil
+					local dropname = nil
 					
 					local pickupsLib = library.Network.Invoke("Get Pickups")
 					local pickupcount = 0
@@ -1958,16 +1968,29 @@ spawn(function()
 							if pickupsLib[v.Name].a == "Main" then
 								droparea = pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a
 							end
+							local isbaddrop = false
+							for index, baddrop in pairs(baddrops) do
+								if baddrop == v.Name then
+									isbaddrop = true
+									LogMe(baddrop .. " is bad")
+								end
+							end
 							--print(pickupsLib[v.Name].w)
-							if pickupsLib[v.Name] and _G[droparea] then
+							if not isbaddrop and pickupsLib[v.Name] and _G[droparea] then
 								pickupcount++
 								for a,b in pairs(currency) do
 									if _G[a] and tonumber(_G.droprange) ~= nil then
 										for x,y in pairs(b) do
 											if v ~= nil and v.Name ~= objectname and v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (GetPlayerRoot().Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (GetPlayerRoot().Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
 												--root.CFrame = CFrame.new(root.CFrame.X,v.CFrame.Y,root.CFrame.Z)
-												closest = v.POS
-												dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
+												
+												
+												--if not baddrop then
+													closest = v.POS
+													dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
+													dropcurrency = a
+													dropname = v.Name
+												--end
 												--print("closest " .. v.Name .. " " .. y)
 											end
 										end
@@ -2003,14 +2026,36 @@ spawn(function()
 						--if dis > 250 then
 							--G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+1, closest.Position.Y+3, closest.Position.Z+1))
 						--end
-						if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
-							GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y + 2,GetPlayerRoot().CFrame.Z)
-						end
-						toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
-						wait(.1)
-						if objectname ~= "" then
-							--LogMe("Drop " .. objectname .. " removed")
-							objectname = ""
+						local dropStart = os.time()
+						local oldamount = playerLibrary[dropcurrency]
+						_G.statchanged = {[dropcurrency] = false}
+						repeat
+							if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
+								GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y + 2,GetPlayerRoot().CFrame.Z)
+							end
+							toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
+							LogMe("Picking up " .. dropname)
+							wait(.1)
+						until (dropcurrency == "XP" and wait(.5)) or (_G.statchanged[dropcurrency] or os.time() > dropStart + 1)
+
+						if dropcurrency == "XP" then
+							--LogMe("Moving to next " .. dropcurrency)
+							if pickupTotals[dropcurrency] == nil then
+								pickupTotals[dropcurrency] = 1
+							else
+								pickupTotals[dropcurrency] = pickupTotals[dropcurrency] + 1
+							end
+							table.insert(baddrops, dropname)
+						elseif _G.statchanged[dropcurrency] then
+							if pickupTotals[dropcurrency] == nil then
+								pickupTotals[dropcurrency] = playerLibrary[dropcurrency] - oldamount
+							else
+								pickupTotals[dropcurrency] = pickupTotals[dropcurrency] + (playerLibrary[dropcurrency] - oldamount)
+							end
+							table.insert(baddrops, dropname)
+						else
+							LogMe("Could not pickup " .. dropcurrency)
+							table.insert(baddrops, dropname)
 						end
 					elseif pickupcount == 0 then
 						LogMe("No Valid Drops")
@@ -2019,7 +2064,14 @@ spawn(function()
 						objectname = ""					
 					end
 				end
-				LogMe("Ending Drops")
+				--LogMe("Ending Drops")
+				for a,b in pairs(pickupTotals) do
+					local message = "Picked up " .. library.Functions.NumberShorten(b) .. " " .. a
+					if a == "XP" then 
+						message = message .. " Orbs"
+					end
+					LogMe(message)
+				end
 				_G.LastDrop = os.time()
 				objectname = ""
 				
@@ -2157,22 +2209,24 @@ local ClickButton = function(button)
 end
 
 _G.ImportantWindows = library.Variables.ImportantWindows
+library.Variables.ImportantWindows = {}
 
-game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item"):GetPropertyChangedSignal("Enabled"):Connect(function()
-	if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item").Enabled then
-		print("Closing New Item Window")
-		library.Variables.ImportantWindows = {}
-		game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item").Enabled = false
+local MessageWindows = {["NewItemWindow"] = {["GUI"] = GetLocalPlayer().PlayerGui:FindFirstChild("New Item"), ["Messages"] = {"None"}},
+						["MessageWindow"] = {["GUI"] = GetLocalPlayer().PlayerGui:FindFirstChild("Message"), ["Messages"] = {" to buy this"}},
+						["BuyWorldWindow"] = {["GUI"] = GetLocalPlayer().PlayerGui:FindFirstChild("Buy World"), ["Messages"] = {" to buy this."}}}
+						
+for name, values in pairs(MessageWindows) do
+	
+	for i, message in pairs(values.Messages) do
+		--print(message)
+		values.GUI:GetPropertyChangedSignal("Enabled"):Connect(function()
+																if values.GUI.Enabled == true and (values.GUI.Frame.Desc ~= nil and string.find(values.GUI.Frame.Desc.Text, message)) or message == "None" then
+																	LogMe("Closing " .. values.GUI.Name .. " Window")
+																	values.GUI.Enabled = false
+																end
+															end)
 	end
-end)
-
-game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Message"):GetPropertyChangedSignal("Enabled"):Connect(function()
-	if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Message").Enabled then
-		print("Closing Message Window")
-		library.Variables.ImportantWindows = {}
-		game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Message").Enabled = false
-	end
-end)
+end
 
 --]]
 --[[
