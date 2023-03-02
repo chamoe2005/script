@@ -1,4 +1,4 @@
-print("Version 2.8")
+print("Version 2.8.1")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1419,8 +1419,8 @@ for i,v in pairs(getconnections(remotes["open egg"].Event)) do
 end
 
 local egg = wally:CreateWindow('Eggs')
-	egg:Section('Select Eggs')
 	egg:Toggle('Hide Animation', {flag = "HideAnimation"}, function() spawn(function() if egg.flags.HideAnimation then connection:Disable() else connection:Enable() end end) end)
+	egg:Section('Select Eggs')
 	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = {"None", "Best", "Any"} })
 	
  
