@@ -1,4 +1,4 @@
-print("Version 3.0.2")
+print("Version 3.0.3")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -2223,6 +2223,7 @@ for name, values in pairs(MessageWindows) do
 		values.GUI:GetPropertyChangedSignal("Enabled"):Connect(function()
 																if values.GUI.Enabled == true and ((values.GUI.Frame:FindFirstChild("Desc") ~= nil and string.find(values.GUI.Frame.Desc.Text, message)) or message == "None") then
 																	LogMe("Closing " .. values.GUI.Name .. " Window")
+																	library.Variables.ImportantWindows = {}
 																	values.GUI.Enabled = false
 																end
 															end)
