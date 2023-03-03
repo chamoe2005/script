@@ -1,4 +1,4 @@
-print("Version 3.0.1")
+print("Version 3.0.2")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -997,7 +997,7 @@ end
 	end
 	
 	updateBoosts()
-	
+--[[	
 	local merchant = wally:CreateWindow('Merchant')
 	merchant:Section("Merchant Auto Buy")
 	merchant:Toggle("Pet ", {flag = "Pet "})
@@ -1007,7 +1007,7 @@ end
 	for a,b in orderedPairs(library.Directory.Potions) do
 		merchant:Toggle(a .. " ", {flag = a .. " "})
 	end
-
+]]--
 	
 local function doMerchant()
 	local ohTable1 = {
