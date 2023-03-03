@@ -1055,7 +1055,7 @@ end
 	
 library.Signal.Fired("Merchant Active"):Connect(function()
 													
-													doMerchant()
+													--doMerchant()
 													
 												end)
 
