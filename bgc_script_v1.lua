@@ -1,4 +1,4 @@
-print("Version 3.0.3")
+print("Version 3.0.4")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -997,17 +997,18 @@ end
 	end
 	
 	updateBoosts()
---[[	
+	
 	local merchant = wally:CreateWindow('Merchant')
 	merchant:Section("Merchant Auto Buy")
 	merchant:Toggle("Pet ", {flag = "Pet "})
 	for a,b in orderedPairs(library.Directory.Boosts) do
-		merchant:Toggle(a .. " ", {flag = a .. " "})
+		merchant:Toggle(a .. " ", {flag = a .. " "}, function() spawn(function() doMerchant() end) end)
 	end
 	for a,b in orderedPairs(library.Directory.Potions) do
-		merchant:Toggle(a .. " ", {flag = a .. " "})
+		merchant:Toggle(a .. " ", {flag = a .. " "}, function() spawn(function() doMerchant() end) end)
 	end
-]]--
+
+
 	
 local function doMerchant()
 	local ohTable1 = {
@@ -1037,11 +1038,24 @@ local function doMerchant()
 							end
 							
 							if buy then
+							--[[
 								for x, connection in pairs(getconnections(GetLocalPlayer().PlayerGui.Merchant.Frame["Item" .. e].Buy.Activated)) do
 									connection:Fire()
 									LogMe("Buying Item " .. e)
 									wait(1)
 								end
+							]]--
+							local ohTable1 = {
+								[1] = {
+									[1] = f
+								},
+								[2] = {
+									[1] = false
+								}
+							}
+							LogMe("Buying Item " .. e)
+							game:GetService("ReplicatedStorage").Remotes["buy merchant item"]:FireServer(ohTable1)
+							wait(.25)
 							end
 						end
 					--end
@@ -1055,7 +1069,7 @@ end
 	
 library.Signal.Fired("Merchant Active"):Connect(function()
 													
-													--doMerchant()
+													doMerchant()
 													
 												end)
 
