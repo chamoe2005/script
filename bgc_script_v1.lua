@@ -1,4 +1,4 @@
-print("Version 3.0.6")
+print("Version 3.0.7")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1091,7 +1091,7 @@ end
 	
 	spawn(function() doMerchant() end)
 	
-game:GetLocalPlayer().PlayerGui.Alert.ChildAdded:Connect(function(this)
+GetLocalPlayer().PlayerGui.Alert.ChildAdded:Connect(function(this)
 	print("Alert: " .. this.Text)
 end)
 	
