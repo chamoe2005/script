@@ -1,4 +1,4 @@
-print("Version 3.0.8")
+print("Version 3.1.3")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -8,7 +8,7 @@ _G.droptimeout = .25
 _G.TeleportDelay = 2
 _G.LastEgg = os.time()
 _G.lastBest = ""
-_G.EggTimeout = 10
+_G.EggTimeout = 5
 _G.oldeggs = {}
 _G["Drop TimeOut"] = 10
 _G["Drop Delay"] = 60
@@ -998,7 +998,15 @@ end
 	
 	updateBoosts()
 
-
+	local merchant = wally:CreateWindow('Merchant')
+	merchant:Section("Merchant Auto Buy")
+	merchant:Toggle("Pet ", {flag = "Pet "})
+	for a,b in orderedPairs(library.Directory.Boosts) do
+		merchant:Toggle(a .. " ", {flag = a .. " "})
+	end
+	for a,b in orderedPairs(library.Directory.Potions) do
+		merchant:Toggle(a .. " ", {flag = a .. " "})
+	end
 	
 local function doMerchant()
 	local ohTable1 = {
@@ -1011,16 +1019,6 @@ local function doMerchant()
 					}
 	local merch = game:GetService("ReplicatedStorage").Remotes["get merchant items"]:InvokeServer(ohTable1)
 	local playerLibrary = library.Save.Get()
-	for a,b in orderedPairs(library.Directory.Boosts) do
-		if playerLibrary.BoostsInventory[a] ~= nil then
-			print(a, playerLibrary.BoostsInventory[a])
-		end
-	end
-	for a,b in orderedPairs(library.Directory.Potions) do
-		if playerLibrary.Potions[a] ~= nil then
-			print(a, playerLibrary.Potions[a])
-		end
-	end
 	for a,b in pairs(merch) do
 		for c,d in pairs(b) do																							
 			if d then
@@ -1060,13 +1058,6 @@ local function doMerchant()
 								game:GetService("ReplicatedStorage").Remotes["buy merchant item"]:FireServer(ohTable1)
 								wait(.25)
 								
-								if playerLibrary.BoostsInventory[f.name] ~= nil then
-									print(f.name, playerLibrary.BoostsInventory[f.name])
-								end
-								if playerLibrary.Potions[f.name] ~= nil then
-									print(f.name, playerLibrary.Potions[f.name])
-								end
-
 								updateBoosts()
 							end
 						end
@@ -1078,15 +1069,7 @@ local function doMerchant()
 end
 
 	
-	local merchant = wally:CreateWindow('Merchant')
-	merchant:Section("Merchant Auto Buy")
-	merchant:Toggle("Pet ", {flag = "Pet "})
-	for a,b in orderedPairs(library.Directory.Boosts) do
-		merchant:Toggle(a .. " ", {flag = a .. " "})
-	end
-	for a,b in orderedPairs(library.Directory.Potions) do
-		merchant:Toggle(a .. " ", {flag = a .. " "})
-	end
+
 
 	
 	spawn(function() doMerchant() end)
@@ -1919,6 +1902,7 @@ spawn(function()
 			elseif _G.BuyEggMode == "Best" and newBest == "" then
 				library.Variables.AutoHatchEggId = nil
 				_G.lastBest = ""
+				_G["Drop Delay"] = 0
 				--print(_G.eggopened, os.time() - _G.LastEgg)
 
 
@@ -1962,21 +1946,21 @@ spawn(function()
 		end
 		
 
-		if tonumber(_G["Drop Delay"]) ~= nil then
-			if tonumber(_G["Drop Delay"]) < 5 then
-				changeSetting("Box", "Drop Delay", 5, true)
-			end
-		else
-			changeSetting("Box", "Drop Delay", 5, true)
-		end
+		--if tonumber(_G["Drop Delay"]) ~= nil then
+			--if tonumber(_G["Drop Delay"]) < 1 then
+				--changeSetting("Box", "Drop Delay", 1, true)
+			--end
+		--else
+			--changeSetting("Box", "Drop Delay", 1, true)
+		--end
 		
-		if tonumber(_G["Drop TimeOut"]) ~= nil then
-			if tonumber(_G["Drop TimeOut"]) < 5 then
-				changeSetting("Box", "Drop TimeOut", 5, true)
-			end
-		else
-			changeSetting("Box", "Drop TimeOut", 5, true)
-		end
+		--if tonumber(_G["Drop TimeOut"]) ~= nil then
+			--if tonumber(_G["Drop TimeOut"]) < 5 then
+				--changeSetting("Box", "Drop TimeOut", 5, true)
+			--end
+		--else
+			--changeSetting("Box", "Drop TimeOut", 5, true)
+		--end
 		
 		
 		if _G.drops and os.time() > (_G.LastDrop + tonumber(_G["Drop Delay"])) and not library.Variables.LoadingWorld then		
@@ -2006,11 +1990,11 @@ spawn(function()
 					local pickupcount = 0
 					
 					for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
+						local droparea = pickupsLib[v.Name].a
+						if pickupsLib[v.Name].a == "Main" then
+							droparea = pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a
+						end
 						if v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w == playerLibrary.World then
-							local droparea = pickupsLib[v.Name].a
-							if pickupsLib[v.Name].a == "Main" then
-								droparea = pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a
-							end
 							local isbaddrop = false
 							for index, baddrop in pairs(baddrops) do
 								if baddrop == v.Name then
@@ -2046,7 +2030,8 @@ spawn(function()
 							--print("break1")
 							--sendbreak = true
 							--break
-						--else
+						elseif v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w ~= playerLibrary.World then
+							changeWorld(playerLibrary.World, pickupsLib[v.Name].w)
 							--print("break2")
 							--break
 						end
@@ -2250,7 +2235,7 @@ local ClickButton = function(button)
 	mouse1click()
 
 end
-
+--[[
 _G.ImportantWindows = library.Variables.ImportantWindows
 library.Variables.ImportantWindows = {}
 
@@ -2265,7 +2250,7 @@ for name, values in pairs(MessageWindows) do
 		values.GUI:GetPropertyChangedSignal("Enabled"):Connect(function()
 																if values.GUI.Enabled == true and ((values.GUI.Frame:FindFirstChild("Desc") ~= nil and string.find(values.GUI.Frame.Desc.Text, message)) or message == "None") then
 																	LogMe("Closing " .. values.GUI.Name .. " Window")
-																	library.Variables.ImportantWindows = {}
+																	--library.Variables.ImportantWindows = {}
 																	values.GUI.Enabled = false
 																end
 															end)
@@ -2273,7 +2258,7 @@ for name, values in pairs(MessageWindows) do
 end
 
 --]]
---[[
+
 spawn(function()
 	while wait(1) do
 		if not library.Variables.LoadingWorld then
@@ -2283,26 +2268,26 @@ spawn(function()
 			--while wait(1) and not NewItemWindow.Enabled do
 				--print(NewItemWindow.Enabled)
 			--end
-			
-			if NewItemWindow.Enabled then		
+			local closeWindow = nil
+			if NewItemWindow.Enabled then
 				for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
-					wait(1)
-					LogMe("Closing New Item Window")
-					connection:Fire()
-					updateBoosts()
+					closeWindow = connection.Function
 				end
+				updateBoosts()
+				LogMe("Closing New Item Window")
 			elseif MessageWindow.Enabled then
 				for i, connection in pairs(getconnections(MessageWindow.Frame.Ok.MouseButton1Click)) do
-					wait(1)
-					LogMe("Closing Message Window")
-					wait(1)
-					connection:Fire()
+					closeWindow = connection.Function
 				end
+				LogMe("Closing Message Window")			
+			end
+			if closeWindow ~= nil then
+				closeWindow()
 			end
 		end
 	end
 end)
---]]
+
 
 spawn(function()
 	while wait(15) do
