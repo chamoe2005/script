@@ -1,5 +1,5 @@
-print("Version 3.1.3")
-
+print("Version 3.1.5")
+_G.forcedrops = true
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
 _G.LastSell = os.time()
@@ -1796,7 +1796,7 @@ game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.
 game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.Position = UDim2.new(0, 0, 0, 0)
 game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.Size = UDim2.new(1, 1, 1, -10)
 
-		
+_G["Old Drop Delay"] = 0		
 
 spawn(function()
 			
@@ -1896,12 +1896,18 @@ spawn(function()
 					--LogMe("AutoHatchEgg" .. library.Variables.AutoHatchEggId)
 					--LogMe("AutoHatchEnabled" .. library.Variables.AutoHatchEnabled)
 				_G.eggopened = false
-				openEgg(newBest)
-				_G.lastBest = newBest
+				if _G.forcedrops then
+				_G["Old Drop Delay"] = _G["Drop Delay"]
+				_G.["Drop Delay"] = 0
+				else
+					openEgg(newBest)
+					_G.lastBest = newBest
+				end
 				
 			elseif _G.BuyEggMode == "Best" and newBest == "" then
 				library.Variables.AutoHatchEggId = nil
 				_G.lastBest = ""
+				_G["Old Drop Delay"] = _G["Drop Delay"]
 				_G["Drop Delay"] = 0
 				--print(_G.eggopened, os.time() - _G.LastEgg)
 
@@ -1967,6 +1973,9 @@ spawn(function()
 			--_G.DropCoolOff = os.time() + _G.DropDelay			
 			--_G.CollectingDrops = true
 			--spawn(function()
+				if _G["Drop Delay"] == 0 then
+					_G["Drop Delay"] = _G["Old Drop Delay"]
+				end
 				_G.DropCoolOff = os.time() + tonumber(_G["Drop TimeOut"] + _G.TeleportDelay)
 				_G.LastDrop = os.time() + _G.DropCoolOff
 				LogMe("Starting Drops")
