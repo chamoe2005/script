@@ -1,4 +1,4 @@
-print("Version 3.0.5")
+print("Version 3.0.6")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -1016,9 +1016,9 @@ local function doMerchant()
 			print(a, playerLibrary.BoostsInventory[a])
 		end
 	end
-	for a,b in orderedPairs(library.Directory.Boosts) do
-		if playerLibrary.PotionsInventory[a] ~= nil then
-			print(a, playerLibrary.PotionsInventory[a])
+	for a,b in orderedPairs(library.Directory.Potions) do
+		if playerLibrary.Potions[a] ~= nil then
+			print(a, playerLibrary.Potions[a])
 		end
 	end
 	for a,b in pairs(merch) do
@@ -1048,27 +1048,27 @@ local function doMerchant()
 									wait(1)
 								end
 							]]--
-							local ohTable1 = {
-								[1] = {
-									[1] = f.name
-								},
-								[2] = {
-									[1] = false
+								local ohTable1 = {
+									[1] = {
+										[1] = f.name
+									},
+									[2] = {
+										[1] = false
+									}
 								}
-							}
-							LogMe("Buying Item " .. e)
-							game:GetService("ReplicatedStorage").Remotes["buy merchant item"]:FireServer(ohTable1)
-							wait(.25)
-							
-							if playerLibrary.BoostsInventory[f.name] ~= nil then
-								print(f.name, playerLibrary.BoostsInventory[f.name])
+								LogMe("Buying Item " .. e)
+								game:GetService("ReplicatedStorage").Remotes["buy merchant item"]:FireServer(ohTable1)
+								wait(.25)
+								
+								if playerLibrary.BoostsInventory[f.name] ~= nil then
+									print(f.name, playerLibrary.BoostsInventory[f.name])
+								end
+								if playerLibrary.Potions[f.name] ~= nil then
+									print(f.name, playerLibrary.Potions[f.name])
+								end
+
+								updateBoosts()
 							end
-						
-							if playerLibrary.PotionsInventory[f.name] ~= nil then
-								print(f.name, playerLibrary.PotionsInventory[f.name])
-							end
-							
-							updateBoosts()
 						end
 					--end
 				end
@@ -1090,6 +1090,10 @@ end
 
 	
 	spawn(function() doMerchant() end)
+	
+game:GetLocalPlayer().PlayerGui.Alert.ChildAdded:Connect(function(this)
+	print("Alert: " .. this.Text)
+end)
 	
 library.Signal.Fired("Merchant Active"):Connect(function()
 													
