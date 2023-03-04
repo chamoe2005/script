@@ -1,4 +1,4 @@
-print("Version 3.0.4")
+print("Version 3.0.5")
 
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -997,16 +997,6 @@ end
 	end
 	
 	updateBoosts()
-	
-	local merchant = wally:CreateWindow('Merchant')
-	merchant:Section("Merchant Auto Buy")
-	merchant:Toggle("Pet ", {flag = "Pet "})
-	for a,b in orderedPairs(library.Directory.Boosts) do
-		merchant:Toggle(a .. " ", {flag = a .. " "}, function() spawn(function() doMerchant() end) end)
-	end
-	for a,b in orderedPairs(library.Directory.Potions) do
-		merchant:Toggle(a .. " ", {flag = a .. " "}, function() spawn(function() doMerchant() end) end)
-	end
 
 
 	
@@ -1021,6 +1011,16 @@ local function doMerchant()
 					}
 	local merch = game:GetService("ReplicatedStorage").Remotes["get merchant items"]:InvokeServer(ohTable1)
 	local playerLibrary = library.Save.Get()
+	for a,b in orderedPairs(library.Directory.Boosts) do
+		if playerLibrary.BoostsInventory[a] ~= nil then
+			print(a, playerLibrary.BoostsInventory[a])
+		end
+	end
+	for a,b in orderedPairs(library.Directory.Boosts) do
+		if playerLibrary.PotionsInventory[a] ~= nil then
+			print(a, playerLibrary.PotionsInventory[a])
+		end
+	end
 	for a,b in pairs(merch) do
 		for c,d in pairs(b) do																							
 			if d then
@@ -1028,8 +1028,10 @@ local function doMerchant()
 				wait(1)																												
 				for e,f in pairs(d) do
 					--for g,h in pairs(f)
+						LogMe("Merchant Item " .. e .. " - "  .. f.amount .. " " .. f.reward .. " " .. f.name .. " " .. f.cost .. " " .. f.currency)
+							
 						for x = 1, f.amount do
-							LogMe(f.amount .. " " .. e .. " " .. f.reward .. " " .. f.name .. " " .. f.cost .. " " .. f.currency)
+		
 							local buy = false
 							if f.reward == "Pet" and merchant.flags["Pet "] and playerLibrary[f.currency] >= f.cost then
 								buy = true
@@ -1038,6 +1040,7 @@ local function doMerchant()
 							end
 							
 							if buy then
+								
 							--[[
 								for x, connection in pairs(getconnections(GetLocalPlayer().PlayerGui.Merchant.Frame["Item" .. e].Buy.Activated)) do
 									connection:Fire()
@@ -1047,7 +1050,7 @@ local function doMerchant()
 							]]--
 							local ohTable1 = {
 								[1] = {
-									[1] = f
+									[1] = f.name
 								},
 								[2] = {
 									[1] = false
@@ -1056,7 +1059,16 @@ local function doMerchant()
 							LogMe("Buying Item " .. e)
 							game:GetService("ReplicatedStorage").Remotes["buy merchant item"]:FireServer(ohTable1)
 							wait(.25)
+							
+							if playerLibrary.BoostsInventory[f.name] ~= nil then
+								print(f.name, playerLibrary.BoostsInventory[f.name])
 							end
+						
+							if playerLibrary.PotionsInventory[f.name] ~= nil then
+								print(f.name, playerLibrary.PotionsInventory[f.name])
+							end
+							
+							updateBoosts()
 						end
 					--end
 				end
@@ -1064,6 +1076,18 @@ local function doMerchant()
 		end
 	end
 end
+
+	
+	local merchant = wally:CreateWindow('Merchant')
+	merchant:Section("Merchant Auto Buy")
+	merchant:Toggle("Pet ", {flag = "Pet "})
+	for a,b in orderedPairs(library.Directory.Boosts) do
+		merchant:Toggle(a .. " ", {flag = a .. " "})
+	end
+	for a,b in orderedPairs(library.Directory.Potions) do
+		merchant:Toggle(a .. " ", {flag = a .. " "})
+	end
+
 	
 	spawn(function() doMerchant() end)
 	
