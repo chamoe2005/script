@@ -1,4 +1,4 @@
-print("Version 3.2.1")
+print("Version 3.2.6")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -1296,6 +1296,7 @@ library.Signal.Fired("Stat Changed"):Connect(function(p1)
 			--LogMe(library.Variables.AutoHatchEggId .. " Opened")
 			_G.eggopened = true
 			_G.LastEgg = os.time()
+
 		end
 	--elseif p1 == "Coins" and coins > _G.playerCoins then
 		--LogMe(coins - _G.playerCoins .. " added!")
@@ -1412,6 +1413,8 @@ function openEgg(egg)
 			wait(1)
 			
 		end
+		_G.eggopened = false
+		_G.nomoney = false
 		start = os.time()
 		while (os.time() < start + _G.EggTimeout) and not _G.nomoney and not _G.eggopened do 
 		wait()
@@ -1419,9 +1422,8 @@ function openEgg(egg)
 		end
 			if _G.eggopened and _G["Drop Delay"] ~= _G["Old Drop Delay"] then
 				changeSetting("Box", "Drop Delay", _G["Old Drop Delay"], true)
-			elseif not _G.nomoney and not _G.eggopened then
-				print("Did not recieve egg open flag")
-				_G.eggopened = false
+			elseif _G.nomoney and not _G.eggopened then
+				--print("Did not recieve egg open flag")
 				_G.LastEgg = 0
 				if _G.drops and _G.forcedrops then
 					if _G["Drop Delay"] ~= 0 then
@@ -1429,6 +1431,9 @@ function openEgg(egg)
 						changeSetting("Box", "Drop Delay", 0, true)
 					end
 				end
+			elseif not _G.eggopened then
+				print("Did not recieve egg open flag")
+				_G.LastEgg = 0
 			end
 
 	end
@@ -1847,6 +1852,8 @@ spawn(function()
 						}
 		local bestCurr = ""
 		local playerLibrary = library.Save.Get()
+		local newBest = ""
+				
 		--if playerLibrary.Boosts["Fast Hatch"] then 
 			--_G.NextEgg = _G.LastEgg + 3
 		--else 
@@ -1889,12 +1896,12 @@ spawn(function()
 						_G[i] and newworldfound then
 						bestEgg[v.Currency].Name = i
 						bestEgg[v.Currency].Cost = v.Cost
-						bestCurr = v.Currency
+						_G.bestCurr = v.Currency
 						
 					end
 				end
 				
-				local newBest = ""
+				newBest = _G.lastBest[_G.lastBestCurrency].Name
 				
 				if bestEgg["Diamonds"].Name and bestEgg["Coins"].Name and bestEgg["Pearls"].Name then
 					--print("Opening " .. bestEgg.Name)
@@ -1931,14 +1938,16 @@ spawn(function()
 					end
 				end
 
-			
+			--print(os.time() - _G.LastEgg)
 		
 				--_G.lastBest[v.Currency].Cost = newBest[v.Currency].Cost
 			--LogMe("Auto Hatch Enabled" .. tostring(library.Variables.AutoHatchEnabled))
 			--LogMe("Auto Hatch Egg" .. tostring(library.Variables.AutoHatchEggId))
 			
-			if _G.BuyEggMode == "Best" and newBest ~= "" and (_G.thisBest ~= _G.lastBest or not _G.eggopened or (os.time() > (_G.LastEgg + _G.EggTimeout))) then
-				_G.lastBest = _G.thisBest
+			if _G.BuyEggMode == "Best" and newBest ~= "" and newBest ~= nil and (_G.thisBest[_G.bestCurr].Name ~= _G.lastBest[_G.bestCurr].Name or (os.time() > (_G.LastEgg + _G.EggTimeout))) then
+				--print(os.time() - _G.LastEgg)
+				--print(_G.thisBest[_G.bestCurr].Name)
+				--print(_G.lastBest[_G.bestCurr].Name)
 				--print("newbest", newBest)
 				for a,b in pairs(Eggs) do
 					if b.Name == newBest then
@@ -1952,7 +1961,7 @@ spawn(function()
 					LogMe("Opening " .. tostring(newBest))
 					--LogMe("AutoHatchEgg" .. library.Variables.AutoHatchEggId)
 					--LogMe("AutoHatchEnabled" .. library.Variables.AutoHatchEnabled)
-					_G.eggopened = false
+					
 			--	if _G.drops and _G.forcedrops then
 					--_G["Old Drop Delay"] = _G["Drop Delay"]
 					--changeSetting("Box", "Drop Delay", 0, true)
@@ -1960,16 +1969,20 @@ spawn(function()
 					--changeSetting("Box", "Drop Delay", 1, true)
 					 --= _G["Old Drop Delay"]
 					openEgg(newBest)
+					_G.lastBest = _G.thisBest
+				
 
 				
 					
 			--	end
 				
-			elseif _G.BuyEggMode == "Best" and newBest == "" then
+			elseif _G.BuyEggMode == "Best" and not _G[_G.thisBest[_G.bestCurr].Name] then
+				print("No Egg to Hatch")
 				library.Variables.AutoHatchEggId = nil
-				_G.lastBest = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
-						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0},
-						 ["Pearls"] = {["Name"] = nil, ["Cost"] = 0}}
+				wait(5)
+				--_G.lastBest = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
+						-- ["Coins"] = {["Name"] = nil, ["Cost"] = 0},
+						 -- ["Pearls"] = {["Name"] = nil, ["Cost"] = 0}}
 				--_G["Old Drop Delay"] = _G["Drop Delay"]
 				--_G["Drop Delay"] = 0
 				--print(_G.eggopened, os.time() - _G.LastEgg)
@@ -2435,14 +2448,14 @@ spawn(function()
 				if MessageWindow.Frame.Desc.Text:find("to buy this Egg") then
 					LogMe("Not Enough to buy egg")
 					_G.nomoney = true
-					_G.eggopened = false
-					_G.LastEgg = 0
-					if _G.drops and _G.forcedrops then
-						if _G["Drop Delay"] ~= 0 then
-							_G["Old Drop Delay"] = _G["Drop Delay"]
-							changeSetting("Box", "Drop Delay", 0, true)
-						end
-					end
+					--_G.eggopened = false
+					--_G.LastEgg = 0
+					--if _G.drops and _G.forcedrops then
+						--if _G["Drop Delay"] ~= 0 then
+							--_G["Old Drop Delay"] = _G["Drop Delay"]
+							--changeSetting("Box", "Drop Delay", 0, true)
+						--end
+					--end
 				end
 				for i, connection in pairs(getconnections(MessageWindow.Frame.Ok.MouseButton1Click)) do
 					closeWindow = connection.Function
