@@ -1,4 +1,4 @@
-print("Version 3.2.6")
+print("Version 3.2.7")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -1557,7 +1557,7 @@ local drop = wally:CreateWindow('Drops')
     type = 'number'
 	}, function() if _G["Drop Delay"] ~= 0 then _G["Old Drop Delay"] = _G["Drop Delay"] end end )
 	--changeSetting("Box", "Drop Delay", 60, true)
-    
+    _G["Old Drop Delay"] = _G["Drop Delay"]
 		
 
 	
