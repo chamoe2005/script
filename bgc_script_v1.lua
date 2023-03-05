@@ -1,4 +1,4 @@
-print("Version 3.2")
+print("Version 3.2.1")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2061,38 +2061,40 @@ spawn(function()
 					
 					if _G.forcedrops then
 						for x,y in pairs(game.Workspace.Stuff.Pickups:GetChildren()) do
-							local droparea = tostring(pickupsLib[y.Name].a)
-							if pickupsLib[y.Name].a == "Main" then
-								droparea = tostring(pickupsLib[y.Name].w .. " " .. pickupsLib[y.Name].a)
-							end	
-							for a,b in pairs(areas) do
-								--print(a,b)
-								for c,d in pairs(b) do
-								--print(c)
-								--print(c,d)
-									for e,f in pairs(currency) do
-										if e == _G.lastBestCurrency then
-											for g,h in pairs(f) do
-												
-												if d == "VIP" and VIP then
-													if _G[e] and y:FindFirstChild(h) and _G[a] then dropfound = true sendbreak = true break end --  
-												elseif d ~= "VIP" and d == "Main" then
-													if _G[e] and y:FindFirstChild(h) and _G[a .. " " .. d] then dropfound = true sendbreak = true break end -- 
-												elseif d ~= "VIP" and d ~= "Main" then
-													if _G[e] and y:FindFirstChild(h) and _G[d] then dropfound = true sendbreak = true break end --  
-												end	
+							if y ~= nil and pickupsLib[y.Name] ~= nil then
+								local droparea = tostring(pickupsLib[y.Name].a)
+								if pickupsLib[y.Name].a == "Main" then
+									droparea = tostring(pickupsLib[y.Name].w .. " " .. pickupsLib[y.Name].a)
+								end	
+								for a,b in pairs(areas) do
+									--print(a,b)
+									for c,d in pairs(b) do
+									--print(c)
+									--print(c,d)
+										for e,f in pairs(currency) do
+											if e == _G.lastBestCurrency then
+												for g,h in pairs(f) do
+													
+													if d == "VIP" and VIP then
+														if _G[e] and y:FindFirstChild(h) and _G[a] then dropfound = true sendbreak = true break end --  
+													elseif d ~= "VIP" and d == "Main" then
+														if _G[e] and y:FindFirstChild(h) and _G[a .. " " .. d] then dropfound = true sendbreak = true break end -- 
+													elseif d ~= "VIP" and d ~= "Main" then
+														if _G[e] and y:FindFirstChild(h) and _G[d] then dropfound = true sendbreak = true break end --  
+													end	
+												end
+												if sendbreak then
+													break
+												end
 											end
-											if sendbreak then
-												break
-											end
+										end
+										if sendbreak then
+											break
 										end
 									end
 									if sendbreak then
 										break
 									end
-								end
-								if sendbreak then
-									break
 								end
 							end
 						end
@@ -2142,49 +2144,51 @@ spawn(function()
 						pickupsLib = library.Network.Invoke("Get Pickups")
 						
 						for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
-							local droparea = pickupsLib[v.Name].a
-							if pickupsLib[v.Name].a == "Main" then
-								droparea = pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a
-							end
-							if v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w == playerLibrary.World and _G[droparea] then
-								local isbaddrop = false
-								for index, baddrop in pairs(baddrops) do
-									if baddrop == v.Name then
-										isbaddrop = true
-										--LogMe(baddrop .. " is bad")
-									end
+							if v ~= nil and pickupsLib[v.Name] ~= nil then
+								local droparea = pickupsLib[v.Name].a
+								if pickupsLib[v.Name].a == "Main" then
+									droparea = pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a
 								end
-								--print(pickupsLib[v.Name].w)
-								if not isbaddrop and pickupsLib[v.Name] and _G[droparea] then
-									pickupcount++
-									for a,b in pairs(currency) do
-										if _G[a] and tonumber(_G.droprange) ~= nil then
-											for x,y in pairs(b) do
-												if v ~= nil and v.Name ~= objectname and v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (GetPlayerRoot().Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (GetPlayerRoot().Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
-													--root.CFrame = CFrame.new(root.CFrame.X,v.CFrame.Y,root.CFrame.Z)
-													
-													
-													--if not baddrop then
-														closest = v.POS
-														dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
-														dropcurrency = a
-														dropname = v.Name
-													--end
-													--print("closest " .. v.Name .. " " .. y)
+								if v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w == playerLibrary.World and _G[droparea] then
+									local isbaddrop = false
+									for index, baddrop in pairs(baddrops) do
+										if baddrop == v.Name then
+											isbaddrop = true
+											--LogMe(baddrop .. " is bad")
+										end
+									end
+									--print(pickupsLib[v.Name].w)
+									if not isbaddrop and pickupsLib[v.Name] and _G[droparea] then
+										pickupcount++
+										for a,b in pairs(currency) do
+											if _G[a] and tonumber(_G.droprange) ~= nil then
+												for x,y in pairs(b) do
+													if v ~= nil and v.Name ~= objectname and v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (GetPlayerRoot().Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (GetPlayerRoot().Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
+														--root.CFrame = CFrame.new(root.CFrame.X,v.CFrame.Y,root.CFrame.Z)
+														
+														
+														--if not baddrop then
+															closest = v.POS
+															dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
+															dropcurrency = a
+															dropname = v.Name
+														--end
+														--print("closest " .. v.Name .. " " .. y)
+													end
 												end
 											end
 										end
+									else
+										--break
 									end
-								else
+								--elseif v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w ~= playerLibrary.World then
+									--print("break1")
+									--sendbreak = true
+									--break
+								elseif v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w ~= playerLibrary.World then
+									--print("break2")
 									--break
 								end
-							--elseif v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w ~= playerLibrary.World then
-								--print("break1")
-								--sendbreak = true
-								--break
-							elseif v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w ~= playerLibrary.World then
-								--print("break2")
-								--break
 							end
 						end
 						
