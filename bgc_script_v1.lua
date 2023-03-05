@@ -1,4 +1,8 @@
-print("Version 3.1.5")
+print("Version 3.2")
+_G.highhigh = 99
+_G.lowhigh = 33
+_G.highlow = .80
+_G.lowlow = 0
 _G.forcedrops = true
 _G.settingsloaded = false
 _G.DisabledEggs = {"Valentine's 2023 Egg", "Season 1 Egg"}
@@ -7,8 +11,8 @@ _G.LastDrop = os.time()
 _G.droptimeout = .25
 _G.TeleportDelay = 2
 _G.LastEgg = os.time()
-_G.lastBest = ""
-_G.EggTimeout = 5
+_G.lastBest = {}
+_G.EggTimeout = 10
 _G.oldeggs = {}
 _G["Drop TimeOut"] = 10
 _G["Drop Delay"] = 60
@@ -1408,14 +1412,25 @@ function openEgg(egg)
 			wait(1)
 			
 		end
-		
-		wait(_G.EggTimeout)
-		if not _G.eggopened then
-			print("Did not recieve egg open flag")
-			_G.eggopened = false
-			_G.LastEgg = 0
-			--_G.LastEgg = os.time()
+		start = os.time()
+		while (os.time() < start + _G.EggTimeout) and not _G.nomoney and not _G.eggopened do 
+		wait()
+
 		end
+			if _G.eggopened and _G["Drop Delay"] ~= _G["Old Drop Delay"] then
+				changeSetting("Box", "Drop Delay", _G["Old Drop Delay"], true)
+			elseif not _G.nomoney and not _G.eggopened then
+				print("Did not recieve egg open flag")
+				_G.eggopened = false
+				_G.LastEgg = 0
+				if _G.drops and _G.forcedrops then
+					if _G["Drop Delay"] ~= 0 then
+						_G["Old Drop Delay"] = _G["Drop Delay"]
+						changeSetting("Box", "Drop Delay", 0, true)
+					end
+				end
+			end
+
 	end
 			
 		--library.Variables.OpeningEgg = false
@@ -1455,7 +1470,9 @@ local egg = wally:CreateWindow('Eggs')
 	
  
 	for a,b in orderedPairs(Eggs) do
-		egg:Toggle(a, {location = _G, flag = a}, function() _G.lastBest = "" end)
+		egg:Toggle(a, {location = _G, flag = a}, function() _G.lastBest = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
+																			 ["Coins"] = {["Name"] = nil, ["Cost"] = 0},
+																			 ["Pearls"] = {["Name"] = nil, ["Cost"] = 0}} end)
 		_G[a] = false
 	end
 
@@ -1533,14 +1550,17 @@ local drop = wally:CreateWindow('Drops')
 	drop:Box('Drop Delay', {location = _G,
     flag = "Drop Delay",
     type = 'number'
-	})
-	changeSetting("Box", "Drop Delay", 60, true)
+	}, function() if _G["Drop Delay"] ~= 0 then _G["Old Drop Delay"] = _G["Drop Delay"] end end )
+	--changeSetting("Box", "Drop Delay", 60, true)
     
+		
+
+	
 	drop:Box('Drop TimeOut', {location = _G,
         flag = "Drop TimeOut",
         type = 'number'
     })
-	changeSetting("Box", "Drop TimeOut", 10, true)
+	--changeSetting("Box", "Drop TimeOut", 10, true)
 
 	
 
@@ -1796,7 +1816,15 @@ game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.
 game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.Position = UDim2.new(0, 0, 0, 0)
 game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].TextLabel.Size = UDim2.new(1, 1, 1, -10)
 
-_G["Old Drop Delay"] = 0		
+_G.lastBest = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
+						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0},
+						 ["Pearls"] = {["Name"] = nil, ["Cost"] = 0}
+						}
+_G.thisBest = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
+						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0},
+						 ["Pearls"] = {["Name"] = nil, ["Cost"] = 0}
+						} 
+_G.lastBestCurrency = "Pearls"
 
 spawn(function()
 			
@@ -1817,6 +1845,7 @@ spawn(function()
 						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0},
 						 ["Pearls"] = {["Name"] = nil, ["Cost"] = 0}
 						}
+		local bestCurr = ""
 		local playerLibrary = library.Save.Get()
 		--if playerLibrary.Boosts["Fast Hatch"] then 
 			--_G.NextEgg = _G.LastEgg + 3
@@ -1847,11 +1876,21 @@ spawn(function()
 						end
 					end
 				
-				
-				
-					if playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] and newworldfound then
+					if ((playerLibrary[v.Currency] > v.Cost and v.Cost > bestEgg[v.Currency].Cost and -- enough for this egg and costs more than last egg or no last egg and
+						((playerLibrary[_G.lastBestCurrency] < _G.lastBest[_G.lastBestCurrency].Cost) or _G.lastBest[_G.lastBestCurrency].Cost == 0))  or --no last egg or still enough for last egg
+						(_G.forcedrops and _G.drops and -- force drops and not same currency as last egg and more expensive or same currency as last egg and currency less than 60 eggs and currency more than 1200 last egg
+							((v.Currency ~= _G.lastBestCurrency and (v.Cost > _G.lastBest[_G.lastBestCurrency].Cost) and (v.Cost > bestEgg[v.Currency].Cost)) or --and (playerLibrary[v.Currency] > v.Cost) 
+								((v.Currency == _G.lastBestCurrency) and 
+									((v.Cost > _G.lastBest[_G.lastBestCurrency].Cost) and (playerLibrary[v.Currency] > 13 * _G.lastBest[_G.lastBestCurrency].Cost * _G["Drop TimeOut"]) or
+										(v.Cost < _G.lastBest[_G.lastBestCurrency].Cost and (playerLibrary[v.Currency] < .5 * v.Cost * _G["Drop TimeOut"]))))))) and
+								 --(playerLibrary[v.Currency] > v.Cost * _G["Drop TimeOut"] * 12))) and  -- and playerLibrary[v.Currency] > v.Cost * 33
+															  --((playerLibrary[v.Currency] < _G.highhigh * v.Cost) and (playerLibrary[v.Currency] > _G.lowhigh * v.Cost)))) and 
+															-- (playerLibrary[v.Currency] < _G.highlow * v.Cost and playerLibrary[v.Currency] >= _G.lowlow )))) and 
+						_G[i] and newworldfound then
 						bestEgg[v.Currency].Name = i
 						bestEgg[v.Currency].Cost = v.Cost
+						bestCurr = v.Currency
+						
 					end
 				end
 				
@@ -1884,31 +1923,55 @@ spawn(function()
 				elseif bestEgg["Coins"].Name then
 					newBest = bestEgg["Coins"].Name
 				end
+				
+				for a,b in pairs(bestEgg) do
+					if b.Name == newBest then
+						_G.thisBest[a].Name = b.Name
+						_G.thisBest[a].Cost = b.Cost
+					end
+				end
 
+			
+		
+				--_G.lastBest[v.Currency].Cost = newBest[v.Currency].Cost
 			--LogMe("Auto Hatch Enabled" .. tostring(library.Variables.AutoHatchEnabled))
 			--LogMe("Auto Hatch Egg" .. tostring(library.Variables.AutoHatchEggId))
 			
-			if _G.BuyEggMode == "Best" and newBest ~= "" and (newBest ~= _G.lastBest or not _G.eggopened or (os.time() > (_G.LastEgg + _G.EggTimeout))) then
+			if _G.BuyEggMode == "Best" and newBest ~= "" and (_G.thisBest ~= _G.lastBest or not _G.eggopened or (os.time() > (_G.LastEgg + _G.EggTimeout))) then
+				_G.lastBest = _G.thisBest
+				--print("newbest", newBest)
+				for a,b in pairs(Eggs) do
+					if b.Name == newBest then
+						_G.lastBestCurrency = b.Currency
+						--print(b.Currency)
+					end
+				end
 					--LogMe("Buy Mode " .. _G.BuyEggMode)
 					--LogMe("Last Egg " .. os.time() - _G.LastEgg)
 					--LogMe("Egg Opened " .. tostring(_G.eggopened))
 					LogMe("Opening " .. tostring(newBest))
 					--LogMe("AutoHatchEgg" .. library.Variables.AutoHatchEggId)
 					--LogMe("AutoHatchEnabled" .. library.Variables.AutoHatchEnabled)
-				_G.eggopened = false
-				if _G.forcedrops then
-				_G["Old Drop Delay"] = _G["Drop Delay"]
-				_G.["Drop Delay"] = 0
-				else
+					_G.eggopened = false
+			--	if _G.drops and _G.forcedrops then
+					--_G["Old Drop Delay"] = _G["Drop Delay"]
+					--changeSetting("Box", "Drop Delay", 0, true)
+				--else
+					--changeSetting("Box", "Drop Delay", 1, true)
+					 --= _G["Old Drop Delay"]
 					openEgg(newBest)
-					_G.lastBest = newBest
-				end
+
+				
+					
+			--	end
 				
 			elseif _G.BuyEggMode == "Best" and newBest == "" then
 				library.Variables.AutoHatchEggId = nil
-				_G.lastBest = ""
-				_G["Old Drop Delay"] = _G["Drop Delay"]
-				_G["Drop Delay"] = 0
+				_G.lastBest = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
+						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0},
+						 ["Pearls"] = {["Name"] = nil, ["Cost"] = 0}}
+				--_G["Old Drop Delay"] = _G["Drop Delay"]
+				--_G["Drop Delay"] = 0
 				--print(_G.eggopened, os.time() - _G.LastEgg)
 
 
@@ -1973,9 +2036,6 @@ spawn(function()
 			--_G.DropCoolOff = os.time() + _G.DropDelay			
 			--_G.CollectingDrops = true
 			--spawn(function()
-				if _G["Drop Delay"] == 0 then
-					_G["Drop Delay"] = _G["Old Drop Delay"]
-				end
 				_G.DropCoolOff = os.time() + tonumber(_G["Drop TimeOut"] + _G.TeleportDelay)
 				_G.LastDrop = os.time() + _G.DropCoolOff
 				LogMe("Starting Drops")
@@ -1997,108 +2057,191 @@ spawn(function()
 					
 					local pickupsLib = library.Network.Invoke("Get Pickups")
 					local pickupcount = 0
+					local dropfound = false
 					
-					for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
-						local droparea = pickupsLib[v.Name].a
-						if pickupsLib[v.Name].a == "Main" then
-							droparea = pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a
-						end
-						if v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w == playerLibrary.World then
-							local isbaddrop = false
-							for index, baddrop in pairs(baddrops) do
-								if baddrop == v.Name then
-									isbaddrop = true
-									--LogMe(baddrop .. " is bad")
-								end
-							end
-							--print(pickupsLib[v.Name].w)
-							if not isbaddrop and pickupsLib[v.Name] and _G[droparea] then
-								pickupcount++
-								for a,b in pairs(currency) do
-									if _G[a] and tonumber(_G.droprange) ~= nil then
-										for x,y in pairs(b) do
-											if v ~= nil and v.Name ~= objectname and v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (GetPlayerRoot().Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (GetPlayerRoot().Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
-												--root.CFrame = CFrame.new(root.CFrame.X,v.CFrame.Y,root.CFrame.Z)
+					if _G.forcedrops then
+						for x,y in pairs(game.Workspace.Stuff.Pickups:GetChildren()) do
+							local droparea = tostring(pickupsLib[y.Name].a)
+							if pickupsLib[y.Name].a == "Main" then
+								droparea = tostring(pickupsLib[y.Name].w .. " " .. pickupsLib[y.Name].a)
+							end	
+							for a,b in pairs(areas) do
+								--print(a,b)
+								for c,d in pairs(b) do
+								--print(c)
+								--print(c,d)
+									for e,f in pairs(currency) do
+										if e == _G.lastBestCurrency then
+											for g,h in pairs(f) do
 												
-												
-												--if not baddrop then
-													closest = v.POS
-													dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
-													dropcurrency = a
-													dropname = v.Name
-												--end
-												--print("closest " .. v.Name .. " " .. y)
+												if d == "VIP" and VIP then
+													if _G[e] and y:FindFirstChild(h) and _G[a] then dropfound = true sendbreak = true break end --  
+												elseif d ~= "VIP" and d == "Main" then
+													if _G[e] and y:FindFirstChild(h) and _G[a .. " " .. d] then dropfound = true sendbreak = true break end -- 
+												elseif d ~= "VIP" and d ~= "Main" then
+													if _G[e] and y:FindFirstChild(h) and _G[d] then dropfound = true sendbreak = true break end --  
+												end	
+											end
+											if sendbreak then
+												break
 											end
 										end
 									end
+									if sendbreak then
+										break
+									end
 								end
-							else
+								if sendbreak then
+									break
+								end
+							end
+						end
+						
+						--print("drop found", dropfound)
+						
+						if not dropfound or (playerLibrary.World == "Spawn World" and _G.lastBestCurrency == "Pearls" and _G["Pearls"])  then
+							local newWorld = nil
+							for a,b in pairs(areas) do
+								if a ~= playerLibrary.World then
+									for c,d in pairs(b) do
+										for e,f in pairs(currency) do
+											for g,h in pairs(f) do
+												sendbreak = false
+												if d == "VIP" and VIP then
+													if _G[d] then newWorld = a sendbreak = true break end
+												elseif d ~= "VIP" and d == "Main" then
+													if _G[a .. " " .. d] then newWorld = a sendbreak = true break end
+												elseif d ~= "VIP" and d ~= "Main" then
+													if _G[d] then newWorld = a sendbreak = true break end
+												end
+												if sendbreak then
+													break
+												end
+											end
+											if sendbreak then
+												break
+											end
+										end
+										if sendbreak then
+											break
+										end
+									end
+									if sendbreak then
+										break
+									end
+								end
+							end
+							if newWorld ~= nil then
+								changeWorld(playerLibrary.World, newWorld)
+							end
+						end
+					end
+					
+					if dropfound then
+						sendbreak = false
+						pickupsLib = library.Network.Invoke("Get Pickups")
+						
+						for i , v in ipairs(game.Workspace.Stuff.Pickups:GetChildren()) do
+							local droparea = pickupsLib[v.Name].a
+							if pickupsLib[v.Name].a == "Main" then
+								droparea = pickupsLib[v.Name].w .. " " .. pickupsLib[v.Name].a
+							end
+							if v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w == playerLibrary.World and _G[droparea] then
+								local isbaddrop = false
+								for index, baddrop in pairs(baddrops) do
+									if baddrop == v.Name then
+										isbaddrop = true
+										--LogMe(baddrop .. " is bad")
+									end
+								end
+								--print(pickupsLib[v.Name].w)
+								if not isbaddrop and pickupsLib[v.Name] and _G[droparea] then
+									pickupcount++
+									for a,b in pairs(currency) do
+										if _G[a] and tonumber(_G.droprange) ~= nil then
+											for x,y in pairs(b) do
+												if v ~= nil and v.Name ~= objectname and v:FindFirstChild('POS') and v:FindFirstChild(y) and v[y]:FindFirstChild("TouchInterest") and (GetPlayerRoot().Position-v.POS.Position).magnitude <= tonumber(_G.droprange) and (GetPlayerRoot().Position-v.POS.Position).magnitude < dis then --and farm.flags.Drops == true  and _G.sell ~= true then
+													--root.CFrame = CFrame.new(root.CFrame.X,v.CFrame.Y,root.CFrame.Z)
+													
+													
+													--if not baddrop then
+														closest = v.POS
+														dis = (GetPlayerRoot().Position-v.POS.Position).magnitude
+														dropcurrency = a
+														dropname = v.Name
+													--end
+													--print("closest " .. v.Name .. " " .. y)
+												end
+											end
+										end
+									end
+								else
+									--break
+								end
+							--elseif v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w ~= playerLibrary.World then
+								--print("break1")
+								--sendbreak = true
+								--break
+							elseif v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w ~= playerLibrary.World then
+								--print("break2")
 								--break
 							end
-						--elseif v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w ~= playerLibrary.World then
-							--print("break1")
-							--sendbreak = true
-							--break
-						elseif v ~= nil and pickupsLib[v.Name] ~= nil and pickupsLib[v.Name].w ~= playerLibrary.World then
-							changeWorld(playerLibrary.World, pickupsLib[v.Name].w)
-							--print("break2")
-							--break
 						end
-					end
-					
-					if sendbreak then
-						_G.DropCoolOff = os.time()
-						_G.LastDrop = os.time()
-						objectname = ""
-						break
-					end
-					
-					--print(pickupcount)	
-					if closest ~= nil and (target == nil or target.Parent == nil) then
-					
-						closest.Parent.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
-																objectname = object.name
-															end)
-						local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
-						--if dis > 250 then
-							--G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+1, closest.Position.Y+3, closest.Position.Z+1))
-						--end
-						local dropStart = os.time()
-						local oldamount = playerLibrary[dropcurrency]
-						_G.statchanged = {[dropcurrency] = false}
-						repeat
-							if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
-								GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y + 2,GetPlayerRoot().CFrame.Z)
-							end
-							toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
-							--LogMe("Picking up " .. dropname)
-							wait(.1)
-						until (dropcurrency == "XP" and wait(.5)) or (_G.statchanged[dropcurrency] or os.time() > dropStart + math.random(_G.droptimeout, _G.droptimeout * 2))
+						
+						if sendbreak then
+							_G.DropCoolOff = os.time()
+							_G.LastDrop = os.time()
+							objectname = ""
+							break
+						end
+						
+						--print(pickupcount)	
+						if closest ~= nil and (target == nil or target.Parent == nil) then
+						
+							closest.Parent.Parent.ChildRemoved:connect(function(object) --_G.Pickups[v.Name] = false 
+																	objectname = object.name
+																end)
+							local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
+							--if dis > 250 then
+								--G.player.Character:SetPrimaryPartCFrame(CFrame.new(closest.Position.X+1, closest.Position.Y+3, closest.Position.Z+1))
+							--end
+							local dropStart = os.time()
+							local oldamount = playerLibrary[dropcurrency]
+							_G.statchanged = {[dropcurrency] = false}
+							repeat
+								if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
+									GetPlayerRoot().CFrame = CFrame.new(GetPlayerRoot().CFrame.X,closest.CFrame.Y + 2,GetPlayerRoot().CFrame.Z)
+								end
+								toTarget(GetPlayerRoot().Position,closest.Position + Vector3.new(0,2,0),closest.CFrame + Vector3.new(0,2,0))
+								--LogMe("Picking up " .. dropname)
+								wait(.1)
+							until (dropcurrency == "XP" and wait(.5)) or (_G.statchanged[dropcurrency] or os.time() > dropStart + math.random(_G.droptimeout, _G.droptimeout * 2))
 
-						if dropcurrency == "XP" then
-							--LogMe("Moving to next " .. dropcurrency)
-							if pickupTotals[dropcurrency] == nil then
-								pickupTotals[dropcurrency] = 1
+							if dropcurrency == "XP" then
+								--LogMe("Moving to next " .. dropcurrency)
+								if pickupTotals[dropcurrency] == nil then
+									pickupTotals[dropcurrency] = 1
+								else
+									pickupTotals[dropcurrency] = pickupTotals[dropcurrency] + 1
+								end
+								table.insert(baddrops, dropname)
+							elseif _G.statchanged[dropcurrency] then
+								if pickupTotals[dropcurrency] == nil then
+									pickupTotals[dropcurrency] = playerLibrary[dropcurrency] - oldamount
+								else
+									pickupTotals[dropcurrency] = pickupTotals[dropcurrency] + (playerLibrary[dropcurrency] - oldamount)
+								end
+								table.insert(baddrops, dropname)
 							else
-								pickupTotals[dropcurrency] = pickupTotals[dropcurrency] + 1
+								--LogMe("Could not pickup " .. dropcurrency)
+								table.insert(baddrops, dropname)
 							end
-							table.insert(baddrops, dropname)
-						elseif _G.statchanged[dropcurrency] then
-							if pickupTotals[dropcurrency] == nil then
-								pickupTotals[dropcurrency] = playerLibrary[dropcurrency] - oldamount
-							else
-								pickupTotals[dropcurrency] = pickupTotals[dropcurrency] + (playerLibrary[dropcurrency] - oldamount)
-							end
-							table.insert(baddrops, dropname)
-						else
-							--LogMe("Could not pickup " .. dropcurrency)
-							table.insert(baddrops, dropname)
+						elseif pickupcount == 0 then
+							LogMe("No Valid Drops")
+							_G.DropCoolOff = os.time()
+							_G.LastDrop = os.time()
+							objectname = ""					
 						end
-					elseif pickupcount == 0 then
-						LogMe("No Valid Drops")
-						_G.DropCoolOff = os.time()
-						_G.LastDrop = os.time()
-						objectname = ""					
 					end
 				end
 				--LogMe("Ending Drops")
@@ -2285,10 +2428,22 @@ spawn(function()
 				updateBoosts()
 				LogMe("Closing New Item Window")
 			elseif MessageWindow.Enabled then
+				if MessageWindow.Frame.Desc.Text:find("to buy this Egg") then
+					LogMe("Not Enough to buy egg")
+					_G.nomoney = true
+					_G.eggopened = false
+					_G.LastEgg = 0
+					if _G.drops and _G.forcedrops then
+						if _G["Drop Delay"] ~= 0 then
+							_G["Old Drop Delay"] = _G["Drop Delay"]
+							changeSetting("Box", "Drop Delay", 0, true)
+						end
+					end
+				end
 				for i, connection in pairs(getconnections(MessageWindow.Frame.Ok.MouseButton1Click)) do
 					closeWindow = connection.Function
 				end
-				LogMe("Closing Message Window")			
+				--LogMe("Closing Message Window")			
 			end
 			if closeWindow ~= nil then
 				closeWindow()
