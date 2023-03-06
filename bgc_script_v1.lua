@@ -1,4 +1,4 @@
-print("Version 3.2.8")
+print("Version 3.2.9")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -786,7 +786,7 @@ function doBubblePass()
 
 			for a,b in pairs(library.Directory.BubblePass) do
 			
-				if b.eggs <= playerLibrary.BubblePass.CurrentEggs and not playerLibrary.BubblePass.Claimed[a] then
+				if b.eggs <= playerLibrary.BubblePass.Eggs and not playerLibrary.BubblePass.Claimed[a] then
 					LogMe("Claiming Bubble Pass Prize #" .. a .. " - " .. b.eggs .. " eggs")
 
 					local ohTable1 = {
