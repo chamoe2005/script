@@ -1,4 +1,4 @@
-print("Version 3.3.6")
+print("Version 3.3.7")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -730,6 +730,7 @@ local closest = nil
 							closest = v:FindFirstChildWhichIsA("MeshPart")
 							if closest ~= nil then
 								LogMe("TP to Lootbag " .. v.Name)
+								local playerroot = GetPlayerRoot()
 								GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
 								local dis = closest.CFrame.Y - GetPlayerRoot().CFrame.Y
 								if dis < (closest.Size.Y * -1) or dis > closest.Size.Y then
@@ -1783,6 +1784,7 @@ local CollectChests = function()
 				local startTime = os.time()
 				repeat
 					LogMe("TP to Chest")
+					local playerroot = GetPlayerRoot()
 					GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(chest.Position.X + math.random(8,20), chest.Position.Y + 10, chest.Position.Z + math.random(8,20)))
 					wait(_G.TeleportDelay)
 					toTarget(GetPlayerRoot().Position,chest.Position + Vector3.new(math.random(1,3), 0, math.random(1,3)),chest.CFrame)
