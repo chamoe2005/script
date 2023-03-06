@@ -1,4 +1,4 @@
-print("Version 3.3.7")
+print("Version 3.3.8")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -741,7 +741,7 @@ local closest = nil
 							
 							end
 							
-						until closest == nil
+						until closest == nil or (os.time() > (startTime + 10))
 				end
 				
 			end
