@@ -1,4 +1,4 @@
-print("Version 3.2.7")
+print("Version 3.2.8")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -828,7 +828,7 @@ function doBubblePass()
 				LogMe((highestEggPrize - playerLibrary.BubblePass.CurrentEggs) .. " eggs left before Bubble Pass is complete")
 			end
 			
-		elseif game.ReplicatedStorage.SeasonActive.Value and not playerLibrary.BubblePass and farm.flags.ClaimPass and playerLibrary["Diamonds"] >= 1000000000 then
+		elseif game.ReplicatedStorage.SeasonActive.Value and (not playerLibrary.BubblePass or not playerLibrary.BubblePass.Owned) and farm.flags.ClaimPass and playerLibrary["Diamonds"] >= 1000000000 then
 		
 			LogMe("Purchasing Bubble Pass")
 		
