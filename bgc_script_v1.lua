@@ -1,4 +1,4 @@
-print("Version 3.3.3")
+print("Version 3.3.6")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -846,8 +846,8 @@ function doBubblePass()
 
 			game:GetService("ReplicatedStorage").Remotes["buy bubble pass"]:FireServer(ohTable1)
 		
-		elseif game.ReplicatedStorage.SeasonActive.Value and farm.flags.ClaimPass then
-			LogMe("Bubble Pass not Owned")
+		elseif game.ReplicatedStorage.SeasonActive.Value and farm.flags.ClaimPass and not playerLibrary.BubblePass.Owned and playerLibrary["Diamonds"] < 2000000000 then
+			LogMe("Need " .. library.Functions.NumberShorten(2000000000 - playerLibrary["Diamonds"]) .. " Diamonds to purchase Bubble Pass")
 		elseif not game.ReplicatedStorage.SeasonActive.Value then
 			LogMe("Bubble Pass Season not Active")			
 		end
@@ -2088,7 +2088,7 @@ spawn(function()
 									--print(c)
 									--print(c,d)
 										for e,f in pairs(currency) do
-											if e == _G.lastBestCurrency then
+											--if e == _G.lastBestCurrency then
 												for g,h in pairs(f) do
 													
 													if d == "VIP" and VIP then
@@ -2102,7 +2102,7 @@ spawn(function()
 												if sendbreak then
 													break
 												end
-											end
+											--end
 										end
 										if sendbreak then
 											break
