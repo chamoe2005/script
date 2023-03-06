@@ -1,4 +1,4 @@
-print("Version 3.3.2")
+print("Version 3.3.3")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -813,7 +813,7 @@ function doBubblePass()
 
 			end
 			
-			if allClaimed and playerLibrary.BubblePass.CurrentEggs > highestEggPrize and playerLibrary["Diamonds"] >= 500000000 then
+			if allClaimed and playerLibrary.BubblePass.Eggs > highestEggPrize and playerLibrary["Diamonds"] >= 500000000 then
 			
 				LogMe("All Bubble Pass Prizes claimed, restarting pass")
 			
@@ -828,7 +828,7 @@ function doBubblePass()
 
 				game:GetService("ReplicatedStorage").Remotes["restart bubble pass"]:FireServer(ohTable1)
 			else
-				LogMe((highestEggPrize - playerLibrary.BubblePass.CurrentEggs) .. " eggs left before Bubble Pass is complete")
+				LogMe((highestEggPrize - playerLibrary.BubblePass.Eggs) .. " eggs left before Bubble Pass is complete")
 			end
 			
 		elseif game.ReplicatedStorage.SeasonActive.Value and (not playerLibrary.BubblePass or not playerLibrary.BubblePass.Owned) and farm.flags.ClaimPass and playerLibrary["Diamonds"] >= 2000000000 then
