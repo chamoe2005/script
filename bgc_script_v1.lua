@@ -1,4 +1,4 @@
-print("Version 3.4.3")
+print("Version 3.5")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -222,10 +222,11 @@ local Dir = COREGUI:FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOver
 					if #Players:GetPlayers() <= 1 then
 						LogMe("Rejoining")
 						Players.LocalPlayer:Kick("\nRejoining...")
-						wait()
+						wait(math.random(15,180))
 						TeleportService:Teleport(PlaceId, Players.LocalPlayer)
 					else
 						LogMe("Rejoining Private Server")
+						wait(math.random(15,180))
 						TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Players.LocalPlayer)
 					end
 				end
@@ -2642,6 +2643,149 @@ spawn(function()
 		end
 	end
 end)
+
+
+						function sma(period)
+							local t = {}
+							function sum(a, ...)
+								if a then return a+sum(...) else return 0 end
+							end
+							function average(n)
+								if #t == period then table.remove(t, 1) end
+								t[#t + 1] = n
+								return sum(unpack(t)) / #t
+							end
+							return average
+						end
+
+						_G.currAlertWait = 60
+						_G.currAlertMsgWaitMins = 15
+						local smaPeriodMin = 60 / _G.currAlertWait
+						local smaPeriodHour = smaPeriodMin * 60						
+
+		function getCurrRate(currAverage, lastTime, period, isformatted)
+			local currAvg = currAverage
+			local currRate = 0
+			if period == "mins" then
+				currRate = math.floor(currAvg * smaPeriodMin) -- / (os.time() - lastTime))
+			elseif period == "hours" then
+				currRate = math.floor(currAvg * smaPeriodHour) -- / (os.time() - lastTime))
+			end
+			local isNeg = false
+			if currRate < 0 then
+				isNeg = true
+				currRate = -currRate
+			end	
+			local currTril = currRate / 1000000000000
+			local currBil = currRate / 1000000000
+			local currMil = currRate / 1000000
+			local currThou = currRate / 1000
+			--currRate = math.floor(currRate)
+			if currTril >= 1 then
+				currFormatted = string.format("%.1fT", currTril)
+			elseif currBil >= 1 then
+				currFormatted = string.format("%.1fB", currBil)
+			elseif currMil >= 1 then
+				currFormatted = string.format("%.1fM", currMil)
+			elseif currThou >= 1 then
+				currFormatted = string.format("%.1fK", currThou)
+			else
+				currFormatted = math.floor(currRate)
+			end
+			if isNeg then
+				currFormatted = "-" .. currFormatted
+			end
+			if isformatted then
+				return currFormatted
+			elseif not isformatted then
+				return currRate
+			end
+		end
+
+					--local playerData = f:InvokeServer("GetPlayerData")
+					--local eggsOpenedindex = require(game:GetService("ReplicatedStorage").Assets.Modules.Library.index)["EGGS_OPENED"]
+					--local bubblesBlownindex = require(game:GetService("ReplicatedStorage").Assets.Modules.Library.index)["BUBBLES_BLOWN"]
+					--local shardindex = require(game:GetService("ReplicatedStorage").Assets.Modules.Library.index)["SHARDS"]
+					local stats = {"EggsOpened", "TotalBubbles"}
+					for a,b in pairs(currency) do
+						table.insert(stats, a)
+					end
+					
+					for a,b in pairs(stats) do
+						_G[b .. "sma"] = sma(smaPeriodMin)
+						_G[b .. "smahour"] = sma(smaPeriodHour)
+						_G[b .. "FirstVal"] = 0
+						_G[b .. "LastVal"] = 0
+						_G[b .. "LastTime"] = 0
+						_G[b .. "AlertLast"] = 0
+										
+					end
+					
+
+				spawn(function()	
+					while wait(.1) do
+						for a,b in pairs(stats) do
+							local playerLibrary = library.Save.Get()
+							if b == "EggsOpened" then
+								local eggtotal = 0
+								for c,d in pairs(playerLibrary[b]) do
+									if d ~= nil and d > 0 then
+										eggtotal = eggtotal + d
+									end
+								end
+								formatted = eggtotal
+								unformatted = eggtotal
+							else	
+								formatted = playerLibrary[b]
+								unformatted = playerLibrary[b]
+							end
+							while true do  
+								formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
+								if (k==0) then
+									break
+								end
+							end
+							if _G[b .. "LastTime"] ~= 0 then
+								if os.time() >= (_G[b .. "LastTime"] + _G.currAlertWait) then
+									local ratemins = getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", true)
+									local ratehours = getCurrRate(_G[b .. "smahour"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "hours", true)
+									if getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) > 0 then
+										LogMe(ratemins .. " " .. b .. "/min")
+									end
+									if getCurrRate(_G[b .. "smahour"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "hours", false) ~= 0 then
+										LogMe(ratehours .. " " .. b .. "/hour")
+									end
+									if getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) ~= 0 or 
+											getCurrRate(_G[b .. "smahour"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "hours", false) ~= 0 then
+										LogMe("Total " .. b .. ": " .. formatted)
+									end
+									_G[b .. "LastVal"] = unformatted
+									_G[b .. "LastTime"] = os.time()
+									
+									--[[
+									if (_G[b .. "AlertLast"] == 0 or os.time() >= (_G[b .. "AlertLast"] + (smaPeriodMin * _G.currAlertWait * _G.currAlertMsgWaitMins))) then
+										print("Total: " .. formatted .. " #\n# Current Rates:\t" .. ratemins .. "/min & " .. ratehours .. "/hour")
+										_G[b .. "AlertLast"] = os.time()
+									else
+										local minutesLeft = 0
+										local secondsLeft = (_G[b .. "AlertLast"] + (smaPeriodMin * _G.currAlertWait * _G.currAlertMsgWaitMins)) - os.time()
+										if secondsLeft >= 60 then
+											minutesLeft = math.floor(secondsLeft / 60)
+											secondsLeft = secondsLeft - (minutesLeft * 60)
+										end
+										--print(string.format("%02d:%02d", minutesLeft, secondsLeft))
+									end
+									]]--
+									
+								end
+							elseif _G[b .. "LastTime"] == 0 then
+								_G[b .. "FirstVal"] = unformatted
+								_G[b .. "LastVal"] = unformatted
+								_G[b .. "LastTime"] = os.time()
+							end
+						end
+					end
+				end)
 
 
 if _G.autoloadsettings then
