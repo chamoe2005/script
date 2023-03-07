@@ -1,4 +1,4 @@
-print("Version 3.4.2")
+print("Version 3.4.3")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -219,13 +219,15 @@ local Dir = COREGUI:FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOver
 		if Err.Name == "ErrorTitle" then
 			Err:GetPropertyChangedSignal("Text"):Connect(function()
 				if Err.Text:sub(0, 12) == "Disconnected" then
-					--if #Players:GetPlayers() <= 1 then
+					if #Players:GetPlayers() <= 1 then
+						LogMe("Rejoining")
 						Players.LocalPlayer:Kick("\nRejoining...")
 						wait()
 						TeleportService:Teleport(PlaceId, Players.LocalPlayer)
-					--else
-						--TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Players.LocalPlayer)
-					--end
+					else
+						LogMe("Rejoining Private Server")
+						TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Players.LocalPlayer)
+					end
 				end
 			end)
 		end
