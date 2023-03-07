@@ -1,4 +1,4 @@
-print("Version 3.5.5")
+print("Version 3.5.6")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -33,8 +33,6 @@ if not game:IsLoaded() then
 	notLoaded:Destroy()
 end
 
-Players = game:GetService("Players")
-PlaceId, JobId = game.PlaceId, game.JobId
 
 function GetLocalPlayer()
 	local player = Players.LocalPlayer
@@ -211,9 +209,21 @@ local workspace = GetWorkspace()
 local map = GetMap()
 local chests = GetChests()
 
-TeleportService = game:GetService("TeleportService")
+Players = game:GetService("Players")
+PlaceId, JobId = game.PlaceId, game.JobId
 
+if JobId ~= "3c92b463-72b8-3e89-9214-cc7c145f340a" and JobId ~= "cf4bed63-0521-9077-d9d2-6e1ec43a7a35" then
+	LogMe("Disconeccted: In a Public Server")
+	Players.LocalPlayer:Kick("...")
+end
 
+	game.ReplicatedStorage:WaitForChild("SHUTDOWN").OnClientEvent:Connect(function()
+															LogMe("Disconnected:  Shutdown Initiated")
+															Players.LocalPlayer:Kick("...")
+
+															end)
+
+--[[
 local Dir = COREGUI:FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOverlay")
 	Dir.DescendantAdded:Connect(function(Err)
 		if Err.Name == "ErrorTitle" then
@@ -233,6 +243,7 @@ local Dir = COREGUI:FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOver
 			end)
 		end
 	end)
+]]--
 
 local GC = getconnections or get_signal_cons
 	if GC then
