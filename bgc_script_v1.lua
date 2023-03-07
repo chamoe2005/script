@@ -1,4 +1,4 @@
-print("Version 3.5")
+print("Version 3.5.1")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2738,6 +2738,12 @@ end)
 							else	
 								formatted = playerLibrary[b]
 								unformatted = playerLibrary[b]
+							end
+							if formatted == nil then
+								formatted = 0
+							end
+							if unformatted == nil then
+								unformatted = 0
 							end
 							while true do  
 								formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
