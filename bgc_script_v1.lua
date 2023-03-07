@@ -1,4 +1,4 @@
-print("Version 3.5.6")
+print("Version 3.5.7")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -32,6 +32,9 @@ if not game:IsLoaded() then
 	game.Loaded:Wait()
 	notLoaded:Destroy()
 end
+
+Players = game:GetService("Players")
+PlaceId, JobId = game.PlaceId, game.JobId
 
 
 function GetLocalPlayer()
@@ -209,8 +212,6 @@ local workspace = GetWorkspace()
 local map = GetMap()
 local chests = GetChests()
 
-Players = game:GetService("Players")
-PlaceId, JobId = game.PlaceId, game.JobId
 
 if JobId ~= "3c92b463-72b8-3e89-9214-cc7c145f340a" and JobId ~= "cf4bed63-0521-9077-d9d2-6e1ec43a7a35" then
 	LogMe("Disconeccted: In a Public Server")
