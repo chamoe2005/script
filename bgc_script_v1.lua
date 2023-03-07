@@ -1,4 +1,4 @@
-print("Version 3.5.1")
+print("Version 3.5.2")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2755,15 +2755,18 @@ end)
 								if os.time() >= (_G[b .. "LastTime"] + _G.currAlertWait) then
 									local ratemins = getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", true)
 									local ratehours = getCurrRate(_G[b .. "smahour"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "hours", true)
+									--[[
 									if getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) > 0 then
 										LogMe(ratemins .. " " .. b .. "/min")
 									end
 									if getCurrRate(_G[b .. "smahour"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "hours", false) ~= 0 then
 										LogMe(ratehours .. " " .. b .. "/hour")
 									end
+									]]--
 									if getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) ~= 0 or 
 											getCurrRate(_G[b .. "smahour"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "hours", false) ~= 0 then
-										LogMe("Total " .. b .. ": " .. formatted)
+										--LogMe("Total " .. b .. ": " .. formatted)
+										LogMe("Total " .. b .. ": " .. formatted .. " #\n# Current Rates:\t" .. ratemins .. "/min & " .. ratehours .. "/hour")
 									end
 									_G[b .. "LastVal"] = unformatted
 									_G[b .. "LastTime"] = os.time()
