@@ -1,4 +1,4 @@
-print("Version 3.5.2")
+print("Version 3.5.3")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2766,7 +2766,8 @@ end)
 									if getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) ~= 0 or 
 											getCurrRate(_G[b .. "smahour"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "hours", false) ~= 0 then
 										--LogMe("Total " .. b .. ": " .. formatted)
-										LogMe("Total " .. b .. ": " .. formatted .. " #\n# Current Rates:\t" .. ratemins .. "/min & " .. ratehours .. "/hour")
+										LogMe("Total " .. b .. ": " .. library.Functions.NumberShorten(formatted) .. " #\n# Current Rates:\t" 
+											.. library.Functions.NumberShorten(ratemins) .. "/min & " .. library.Functions.NumberShorten(ratehours) .. "/hour")
 									end
 									_G[b .. "LastVal"] = unformatted
 									_G[b .. "LastTime"] = os.time()
