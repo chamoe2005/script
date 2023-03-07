@@ -1,4 +1,4 @@
-print("Version 3.3.8")
+print("Version 3.4.1")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -856,9 +856,11 @@ function doBubblePass()
 end
 		farm:Toggle('Claim Bubble Pass', {flag = 'ClaimPass'}, function() spawn(function() doBubblePass() end) end)
 		
-function doTierRewards()
+local doTierRewards = function()
+	
+	for a,b in pairs(library.Directory.Rewards) do
 
-	if farm.flags["Tier Rewards"] then
+	if farm.flags[a .. " Rewards"] then
 
 		local playerLibrary = library.Save.Get()
 		--local Rewards = {["Spawn World"] = 0}
@@ -869,7 +871,6 @@ function doTierRewards()
 			--end
 		--end
 
-			for a,b in pairs(library.Directory.Worlds) do
 				local rewardslot = 0
 				
 				if playerLibrary.Rewards[a] ~= nil then
@@ -904,8 +905,7 @@ function doTierRewards()
 	
 end
 		
-		farm:Toggle('Tier Rewards', {flag = 'Tier Rewards'}, function() spawn(function() doTierRewards() end) end)
-		
+	
 local doFairyExchange = function()
 	local playerLibrary = library.Save.Get()
 	
@@ -925,8 +925,7 @@ local doFairyExchange = function()
 		LogMe((playerLibrary.FairyExchange - os.time()) / 60 .. " minutes until Fairy Exchange")
 	end
 
-end
-		
+end	
 	farm:Toggle('Fairy Exchange', {flag = 'Fairy Exchange'}, function() spawn(function() doFairyExchange() end) end)
 	
 local doReaperExchange = function()
@@ -951,12 +950,19 @@ local doReaperExchange = function()
 end
 		
 	farm:Toggle('Reaper Exchange', {flag = 'Reaper Exchange'}, function() spawn(function() doReaperExchange() end) end)
+	
+		farm:Section("Tier Rewards")
+		for a,b in pairs(library.Directory.Rewards) do
+			farm:Toggle(a .. " Rewards", {flag = a .. " Rewards"}, function() spawn(function() doTierRewards() end) end)
+		end
+	
+
 
 local function doBoost(boostType)
 	--print(boostType)
 
-	if farm.flags[boostType] ~= nil and farm.flags[boostType] ~= "" and tonumber(farm.flags[boostType]) ~= nil and tonumber(farm.flags[boostType]) > 0 and library.Save.Get().BoostsInventory[boostType] and farm.flags[boostType] <= library.Save.Get().BoostsInventory[boostType] then
-		for i = 1, farm.flags[boostType] do
+	if _G[boostType] ~= nil and _G[boostType] ~= "" and tonumber(_G[boostType]) ~= nil and tonumber(_G[boostType]) > 0 and library.Save.Get().BoostsInventory[boostType] and _G[boostType] <= library.Save.Get().BoostsInventory[boostType] then
+		for i = 1, _G[boostType] do
 			LogMe("Using " .. boostType .. " boost")
 			local ohTable1 = {
 				[1] = {
@@ -982,6 +988,15 @@ local function doBoost(boostType)
 	end
 end
 
+	local boosts = wally:CreateWindow('Boosts / Potions')
+	for a,b in orderedPairs(library.Directory.Boosts) do
+		--print(a)
+		boosts:Box(a, {flag = a, location = _G,
+        type = 'number'},
+		function() doBoost(a) end)	
+	end
+	
+
 local function updateBoosts()
 	for a,b in pairs(library.Directory.Boosts) do
 		--print(library.Save.Get().BoostsInventory[a])
@@ -994,26 +1009,19 @@ local function updateBoosts()
 	end
 end
 
-	farm:Section("Boosts")
+	--boosts:Section("Boosts")
 
-	for a,b in orderedPairs(library.Directory.Boosts) do
-		--print(a)
-		farm:Box(a, {flag = a,
-        type = 'number'},
-		function() doBoost(a) end)
-		
-	end
-	
+
+
 	updateBoosts()
 
-	local merchant = wally:CreateWindow('Merchant')
-	merchant:Section("Merchant Auto Buy")
-	merchant:Toggle("Pet ", {flag = "Pet "})
+	boosts:Section("Merchant Auto Buy")
+	boosts:Toggle("Pet ", {flag = "Pet "})
 	for a,b in orderedPairs(library.Directory.Boosts) do
-		merchant:Toggle(a .. " ", {flag = a .. " "})
+		boosts:Toggle(a .. " ", {flag = a .. " "})
 	end
 	for a,b in orderedPairs(library.Directory.Potions) do
-		merchant:Toggle(a .. " ", {flag = a .. " "})
+		boosts:Toggle(a .. " ", {flag = a .. " "})
 	end
 	
 local function doMerchant()
@@ -1039,9 +1047,9 @@ local function doMerchant()
 						for x = 1, f.amount do
 		
 							local buy = false
-							if f.reward == "Pet" and merchant.flags["Pet "] and playerLibrary[f.currency] >= f.cost then
+							if f.reward == "Pet" and boosts.flags["Pet "] and playerLibrary[f.currency] >= f.cost then
 								buy = true
-							elseif merchant.flags[f.name .. " "] and playerLibrary[f.currency] >= f.cost then
+							elseif boosts.flags[f.name .. " "] and playerLibrary[f.currency] >= f.cost then
 								buy = true
 							end
 							
@@ -1677,9 +1685,9 @@ local loadSettings = function()
 			local json = game:GetService("HttpService"):JSONDecode(readfile("bgcsettings.txt"))
 			local playername = plr.Name
 			
-			if json[playername] == nil then
-				playername = "newuser"
-			end
+			--if json[playername] == nil then
+				--playername = "newuser"
+			--end
 			
 			if json[playername] ~= nil then
 				for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
@@ -2430,9 +2438,43 @@ for name, values in pairs(MessageWindows) do
 															end)
 	end
 end
-
 --]]
 
+local MessageWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Message")
+MessageWindow:GetPropertyChangedSignal("Enabled"):Connect(function()
+																local closeWindow
+																if MessageWindow.Enabled then
+																	print("Message Window Enabled")
+																	for i, connection in pairs(getconnections(MessageWindow.Frame.Ok.MouseButton1Click)) do
+																		closeWindow = connection.Function
+																	end
+																	--repeat
+																		print("Closing Message Window")
+																		closeWindow()
+																	--until not MessageWindow.Enabled
+																else
+																	print("Message Window Disabled")
+																end
+															end)
+
+local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
+NewItemWindow:GetPropertyChangedSignal("Enabled"):Connect(function()
+																local closeWindow
+																if NewItemWindow.Enabled then
+																	print("New Item Window Enabled")
+																	for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
+																		closeWindow = connection.Function
+																	end
+																	--repeat
+																		print("Closing New Item Window")
+																		closeWindow()
+																		updateBoosts()
+																	--until not MessageWindow.Enabled
+																else
+																	print("New Item Window Disabled")
+																end
+															end)			
+--[[
 spawn(function()
 	while wait(1) do
 		if not library.Variables.LoadingWorld then
@@ -2473,7 +2515,7 @@ spawn(function()
 		end
 	end
 end)
-
+]]--
 
 spawn(function()
 	while wait(15) do
