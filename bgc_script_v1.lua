@@ -1,4 +1,4 @@
-print("Version 3.4.1")
+print("Version 3.4.2")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -1989,7 +1989,7 @@ spawn(function()
 					
 			--	end
 				
-			elseif _G.BuyEggMode == "Best" and not _G[_G.thisBest[_G.bestCurr].Name] then
+			elseif _G.BuyEggMode == "Best" and (not _G.bestCurr or not _G.thisBest or not _G[_G.thisBest[_G.bestCurr].Name]) then
 				print("No Egg to Hatch")
 				library.Variables.AutoHatchEggId = nil
 				wait(5)
