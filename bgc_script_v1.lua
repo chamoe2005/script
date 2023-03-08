@@ -1,4 +1,4 @@
-print("Version 3.5.8")
+print("Version 3.5.9")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -221,7 +221,7 @@ local chests = GetChests()
 
 	game.ReplicatedStorage:WaitForChild("SHUTDOWN").OnClientEvent:Connect(function()
 															LogMe("Disconnected:  Shutdown Initiated")
-															Players.LocalPlayer:Kick("...")
+															Players.LocalPlayer:Kick("Shutdown Initiated")
 
 															end)
 
@@ -2721,7 +2721,9 @@ end)
 					--local shardindex = require(game:GetService("ReplicatedStorage").Assets.Modules.Library.index)["SHARDS"]
 					local stats = {"EggsOpened", "TotalBubbles"}
 					for a,b in pairs(currency) do
-						table.insert(stats, a)
+						if a ~= "XP" then
+							table.insert(stats, a)
+						end
 					end
 					
 					for a,b in pairs(stats) do
@@ -2737,6 +2739,7 @@ end)
 
 				spawn(function()	
 					while wait(.1) do
+						local zerocounter = 0
 						for a,b in pairs(stats) do
 							local playerLibrary = library.Save.Get()
 							if b == "EggsOpened" then
@@ -2783,6 +2786,10 @@ end)
 											.. library.Functions.NumberShorten(getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false)) .. "/min\t" 
 											.. library.Functions.NumberShorten(getCurrRate(_G[b .. "smahour"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "hours", false)) .. "/hour")
 									end
+									if getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) == 0 then
+										zerocounter++
+										LogMe("Stats with Zero: " .. zerocounter .. "/" .. #stats)
+									end
 									_G[b .. "LastVal"] = unformatted
 									_G[b .. "LastTime"] = os.time()
 									
@@ -2807,6 +2814,10 @@ end)
 								_G[b .. "LastVal"] = unformatted
 								_G[b .. "LastTime"] = os.time()
 							end
+						end
+						if zerocounter == #stats then
+							LogMe("Disconnected: Player Frozen")
+							Players.LocalPlayer:Kick("Player Frozen")
 						end
 					end
 				end)
