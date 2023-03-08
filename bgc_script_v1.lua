@@ -1,4 +1,4 @@
-print("Version 3.5.9")
+print("Version 3.6")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2459,7 +2459,7 @@ end
 local MessageWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Message")
 MessageWindow:GetPropertyChangedSignal("Enabled"):Connect(function()
 																local closeWindow
-																if MessageWindow.Enabled then
+																if MessageWindow.Enabled and not string.find(MessageWindow.Frame.Desc.Text, "Delete this team?") then
 																	print("Message Window Enabled")
 																	for i, connection in pairs(getconnections(MessageWindow.Frame.Ok.MouseButton1Click)) do
 																		closeWindow = connection.Function
