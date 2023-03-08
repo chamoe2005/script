@@ -9,9 +9,24 @@ end
 
 if game.placeId == 11746859781 then
 
+	--[[
+
+	TeleportService = game:GetService("TeleportService")
+	TeleportService:Teleport(PlaceId, Players.LocalPlayer)
+	TeleportService.LocalPlayerArrivedFromTeleport:Connect(function()
+
+															Players.LocalPlayer:Kick("...")
+
+															end)
+		
+	]]--
+	
+
+
 	_G.startscript = true
 	_G.canceltimeout = 10
 	_G.autoloadsettings = true
+	_G.kickonzerostats = true
 	--_G.ChallengeName = "Valentines"
 	--_G.ChallengeRemote = "claim valentines prize"
 

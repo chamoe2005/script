@@ -2815,7 +2815,7 @@ end)
 								_G[b .. "LastTime"] = os.time()
 							end
 						end
-						if zerocounter == #stats then
+						if zerocounter == #stats and _G.kickonzerostats then
 							LogMe("Disconnected: Player Frozen")
 							Players.LocalPlayer:Kick("Player Frozen")
 						end
