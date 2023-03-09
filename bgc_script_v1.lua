@@ -1,4 +1,4 @@
-print("Version 3.6.3")
+print("Version 3.6.4")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2569,6 +2569,7 @@ for i, connection in pairs(getconnections(netremotes["msg"].Event)) do
 	oldMessage = connection.Function
 	oldCon = connection
 end
+oldCon:Disable()
 
 local newMessage = function(...)
 					local v16 = { "msg", ... };
@@ -2588,7 +2589,6 @@ repeat
 	wait(1)
 	messageremote = game:GetService("ReplicatedStorage").Remotes:FindFirstChild("msg")
 until messageremote ~= nil
-oldCon:Disable()
 messageremote.OnClientEvent:Connect(newMessage)
 print("Done")
 
