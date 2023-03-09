@@ -1,4 +1,4 @@
-print("Version 3.6")
+print("Version 3.6.1")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2454,7 +2454,7 @@ for name, values in pairs(MessageWindows) do
 															end)
 	end
 end
---]]
+
 
 local MessageWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Message")
 MessageWindow:GetPropertyChangedSignal("Enabled"):Connect(function()
@@ -2466,12 +2466,15 @@ MessageWindow:GetPropertyChangedSignal("Enabled"):Connect(function()
 																	end
 																	--repeat
 																		print("Closing Message Window")
-																		closeWindow()
+																		if closeWindow ~= nil then
+																			closeWindow()
+																		end
 																	--until not MessageWindow.Enabled
 																else
 																	print("Message Window Disabled")
 																end
 															end)
+--]]
 
 local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
 NewItemWindow:GetPropertyChangedSignal("Enabled"):Connect(function()
@@ -2489,7 +2492,102 @@ NewItemWindow:GetPropertyChangedSignal("Enabled"):Connect(function()
 																else
 																	print("New Item Window Disabled")
 																end
-															end)			
+															end)	
+
+
+function DecodePacket(p9)
+	local v38 = {};
+	local v39 = p9[1];
+	local v40 = 0;
+	local v41, v42, v43 = pairs(p9[2]);
+	while true do
+		local v44, v45 = v41(v42, v43);
+		if v44 then
+
+		else
+			break;
+		end;
+		v43 = v44;
+		local v46 = v39[v44];
+		if v45 then
+			if v45 ~= 2 then
+				local u5 = nil;
+				if pcall(function()
+					u5 = library.Functions.Compress.Decode(v46);
+				end) then
+					if u5 then
+						if v45 == 1 then
+							u5 = library.Services.HttpService:JSONDecode(u5);
+						end;
+						v38[v44] = u5;
+					else
+						u1.Print("Failed to decode packet argument [bold](" .. v46 .. ")[/bold]", true);
+					end;
+				else
+					u1.Print("Failed to decode packet argument [bold](" .. v46 .. ")[/bold]", true);
+				end;
+			else
+				v38[v44] = nil;
+			end;
+		else
+			v38[v44] = v46;
+		end;
+		v40 = v44;	
+	end;
+	return unpack(v38, 1, v40);
+end;
+
+local sharedModules = game:GetService("ReplicatedStorage").Nevermore["Shared Modules"]
+local netremotes = nil
+
+local counter = 0
+for a,b in pairs(sharedModules:GetChildren()) do
+
+	if b:FindFirstChild("msg") then
+		netremotes = b
+	end
+	--[[
+	for c,d in pairs(b:GetChildren()) do
+		--print(d)
+		counter++
+	end
+	if counter > 100 then
+		remotes = b
+		counter = 0
+	end
+	]]--
+end
+
+local oldMessage = nil
+local oldCon = nil
+for i, connection in pairs(getconnections(netremotes["msg"].Event)) do 
+	oldMessage = connection.Function
+	oldCon = connection
+end
+
+local newMessage = function(...)
+					local v16 = { "msg", ... };
+					local v22, v23 = unpack(v16);
+					--print(v22);
+					_G.ohString1, _G.ohTable2 = DecodePacket(v23)
+					print(_G.ohString1)
+					if not _G.ohString1:find("to buy this egg") and not _G.ohString1:find("to buy this Egg") then
+						oldMessage(_G.ohString1)
+					else
+						_G.nomoney = true
+					end
+					--
+end
+local messageremote = game:GetService("ReplicatedStorage").Remotes:FindFirstChild("msg")
+repeat
+	wait(1)
+	messageremote = game:GetService("ReplicatedStorage").Remotes:FindFirstChild("msg")
+until messageremote ~= nil
+oldCon:Disable()
+messageremote.OnClientEvent:Connect(newMessage)
+print("Done")
+
+															
 --[[
 spawn(function()
 	while wait(1) do
