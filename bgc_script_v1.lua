@@ -1,4 +1,4 @@
-print("Version 3.6.1")
+print("Version 3.6.2")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2537,6 +2537,9 @@ function DecodePacket(p9)
 	return unpack(v38, 1, v40);
 end;
 
+
+spawn(function()
+
 local sharedModules = game:GetService("ReplicatedStorage").Nevermore["Shared Modules"]
 local netremotes = nil
 
@@ -2587,6 +2590,7 @@ oldCon:Disable()
 messageremote.OnClientEvent:Connect(newMessage)
 print("Done")
 
+end)
 															
 --[[
 spawn(function()
