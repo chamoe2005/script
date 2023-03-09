@@ -1,4 +1,4 @@
-print("Version 3.6.6")
+print("Version 3.6.8")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -1352,14 +1352,14 @@ local changeWorld = function(old, new)
 				game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
 				wait(1)
 				while library.Variables.LoadingWorld do
-					print("TPing to Atlantis")
+					LogMe("TPing to Atlantis")
 					wait(1)
 				end
 			elseif old == "Atlantis" and new == "Spawn World" and oldworldfound then
 				game:GetService("Workspace").MAP.Portal.Interact.Activated:Fire()
 				wait(1)
 				while library.Variables.LoadingWorld do
-					print("TPing to Spawn World")
+					LogMe("TPing to Spawn World")
 					wait(1)
 				end
 			elseif new == "Atlantis" and not newworldfound and playerLibrary[library.Directory.Worlds[new].cost.currency] >= library.Directory.Worlds[new].cost.amount then
@@ -1378,7 +1378,7 @@ local changeWorld = function(old, new)
 				game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
 				wait(1)
 				while library.Variables.LoadingWorld do
-					print("TPing to Atlantis")
+					LogMe("TPing to Atlantis")
 					wait(1)
 				end
 			elseif new == old then
@@ -1789,7 +1789,7 @@ local CollectChests = function()
 				for c,d in pairs(playerLibrary.Teams) do
 					if d.name == library.Directory.Chests[b.name].currencyType then
 					
-						print("Switching to " .. library.Directory.Chests[b.name].currencyType .. " Team")
+						LogMe("Switching to " .. library.Directory.Chests[b.name].currencyType .. " Team")
 						
 						local ohTable1 = {
 							[1] = {
@@ -1819,7 +1819,7 @@ local CollectChests = function()
 				
 				for c,d in pairs(playerLibrary.Teams) do
 					if d.name == "Bubbles" then
-						print("Switching to Bubbles Team")	
+						LogMe("Switching to Bubbles Team")	
 						local ohTable1 = {
 							[1] = {
 								[1] = d.uid
@@ -2410,7 +2410,7 @@ spawn(function()
 			for a,b in pairs(library.Directory.Chests) do
 				--if b.world ~= playerLibrary.World and 
 				if _G.chesttimers[a] then
-					print(a .. " Timer: " .. _G.chesttimers[a])
+					LogMe(a .. " Timer: " .. _G.chesttimers[a])
 				end
 			end
 		end
@@ -2480,7 +2480,7 @@ local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirst
 NewItemWindow:GetPropertyChangedSignal("Enabled"):Connect(function()
 																local closeWindow
 																if NewItemWindow.Enabled then
-																	print("New Item Window Enabled")
+																	LogMe("New Item Window Enabled")
 																	for i, connection in pairs(getconnections(NewItemWindow.Frame.Claim.Activated)) do
 																		closeWindow = connection.Function
 																	end
@@ -2490,7 +2490,7 @@ NewItemWindow:GetPropertyChangedSignal("Enabled"):Connect(function()
 																		updateBoosts()
 																	--until not MessageWindow.Enabled
 																else
-																	print("New Item Window Disabled")
+																	LogMe("New Item Window Disabled")
 																end
 															end)	
 
@@ -2502,17 +2502,17 @@ spawn(function()
 																		local closeWindow
 																		if MessageWindow.Enabled and not string.find(MessageWindow.Frame.Desc.Text, "Delete this team?") then
 																			--library.Signal.Fire("Window Opened", MessageWindow)
-																			print("Message Window Popup")
+																			LogMe("Message Window Popup")
 																			for i, connection in pairs(getconnections(MessageWindow.Frame.Ok.MouseButton1Click)) do
 																				closeWindow = connection.Function
 																			end
 																			--repeat
 																				if closeWindow ~= nil then
-																					print("Closing Message Window")
+																					LogMe("Closing Message Window")
 																					closeWindow()
 																					_G.nomoney = true
 																				else
-																					print("Couldn't Close Message Window")
+																					LogMe("Couldn't Close Message Window")
 																				end
 																		end
 																			--until not MessageWindow.Enabled
