@@ -1,4 +1,4 @@
-print("Version 3.6.5")
+print("Version 3.6.6")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2424,7 +2424,7 @@ spawn(function()
 		end
 	end
 end)
----[[
+
 --[[
 local ClickButton = function(button)
 	
@@ -2584,7 +2584,7 @@ for a,b in pairs(sharedModules:GetChildren()) do
 	if b:FindFirstChild("msg") then
 		netremotes = b
 	end
-	--[[
+	
 	for c,d in pairs(b:GetChildren()) do
 		--print(d)
 		counter++
@@ -2628,7 +2628,8 @@ messageremote.OnClientEvent:Connect(newMessage)
 print("Done")
 
 end)
---]]														
+--]]
+														
 --[[
 spawn(function()
 	while wait(1) do
