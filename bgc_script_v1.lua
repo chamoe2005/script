@@ -1,4 +1,4 @@
-print("Version 3.6.4")
+print("Version 3.6.5")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2495,8 +2495,41 @@ NewItemWindow:GetPropertyChangedSignal("Enabled"):Connect(function()
 															end)	
 
 
+spawn(function()
+	while wait(.5) do
+		local library = require(game.ReplicatedStorage:WaitForChild("Nevermore"):WaitForChild("Library"))
+		local MessageWindow = game:GetService("Players").LocalPlayer.PlayerGui.Message
+																		local closeWindow
+																		if MessageWindow.Enabled and not string.find(MessageWindow.Frame.Desc.Text, "Delete this team?") then
+																			--library.Signal.Fire("Window Opened", MessageWindow)
+																			print("Message Window Popup")
+																			for i, connection in pairs(getconnections(MessageWindow.Frame.Ok.MouseButton1Click)) do
+																				closeWindow = connection.Function
+																			end
+																			--repeat
+																				if closeWindow ~= nil then
+																					print("Closing Message Window")
+																					closeWindow()
+																					_G.nomoney = true
+																				else
+																					print("Couldn't Close Message Window")
+																				end
+																		end
+																			--until not MessageWindow.Enabled
+																			--library.Signal.Fire("Window Closed", MessageWindow)
+																			--return
+																		--else --if MessageWindow.Enabled then
+																			--library.Signal.Fire("Window Opened", MessageWindow)
+																			--return
+																		--end
+																		--library.Signal.Fire("Window Closed", MessageWindow)
+																	
+		
 
+	end
+end)
 
+--[[
 spawn(function()
 
 function DecodePacket(p9)
@@ -2560,7 +2593,7 @@ for a,b in pairs(sharedModules:GetChildren()) do
 		remotes = b
 		counter = 0
 	end
-	]]--
+	
 end
 
 local oldMessage = nil
@@ -2573,7 +2606,9 @@ oldCon:Disable()
 
 local newMessage = function(...)
 					local v16 = { "msg", ... };
+					print(v16)
 					local v22, v23 = unpack(v16);
+					print(v22, v23)
 					--print(v22);
 					_G.ohString1, _G.ohTable2 = DecodePacket(v23)
 					print(_G.ohString1)
@@ -2593,7 +2628,7 @@ messageremote.OnClientEvent:Connect(newMessage)
 print("Done")
 
 end)
-															
+--]]														
 --[[
 spawn(function()
 	while wait(1) do
