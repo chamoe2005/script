@@ -1,4 +1,4 @@
-print("Version 3.6.2")
+print("Version 3.6.3")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2425,7 +2425,7 @@ spawn(function()
 	end
 end)
 ---[[
-
+--[[
 local ClickButton = function(button)
 	
 	mousemoveabs(button.AbsolutePosition.X, button.AbsolutePosition.Y)
@@ -2433,7 +2433,7 @@ local ClickButton = function(button)
 	mouse1click()
 
 end
---[[
+
 _G.ImportantWindows = library.Variables.ImportantWindows
 library.Variables.ImportantWindows = {}
 
@@ -2495,6 +2495,10 @@ NewItemWindow:GetPropertyChangedSignal("Enabled"):Connect(function()
 															end)	
 
 
+
+
+spawn(function()
+
 function DecodePacket(p9)
 	local v38 = {};
 	local v39 = p9[1];
@@ -2537,8 +2541,6 @@ function DecodePacket(p9)
 	return unpack(v38, 1, v40);
 end;
 
-
-spawn(function()
 
 local sharedModules = game:GetService("ReplicatedStorage").Nevermore["Shared Modules"]
 local netremotes = nil
