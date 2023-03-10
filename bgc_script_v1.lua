@@ -1,4 +1,4 @@
-print("Version 3.6.9")
+print("Version 3.7")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2143,7 +2143,7 @@ spawn(function()
 							end
 						end
 						
-						print("drop found", dropfound)
+						--print("drop found", dropfound)
 						
 						if not dropfound or (playerLibrary.World == "Spawn World" and _G.lastBestCurrency == "Pearls" and _G["Pearls"])  then
 							local newWorld = nil
