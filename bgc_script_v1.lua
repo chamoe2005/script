@@ -1,4 +1,4 @@
-print("Version 3.6.8")
+print("Version 3.6.9")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2109,39 +2109,41 @@ spawn(function()
 									droparea = tostring(pickupsLib[y.Name].w .. " " .. pickupsLib[y.Name].a)
 								end	
 								for a,b in pairs(areas) do
+									if playerLibrary.World == a then
 									--print(a,b)
-									for c,d in pairs(b) do
-									--print(c)
-									--print(c,d)
-										for e,f in pairs(currency) do
-											--if e == _G.lastBestCurrency then
-												for g,h in pairs(f) do
-													
-													if d == "VIP" and VIP then
-														if _G[e] and y:FindFirstChild(h) and _G[a] then dropfound = true sendbreak = true break end --  
-													elseif d ~= "VIP" and d == "Main" then
-														if _G[e] and y:FindFirstChild(h) and _G[a .. " " .. d] then dropfound = true sendbreak = true break end -- 
-													elseif d ~= "VIP" and d ~= "Main" then
-														if _G[e] and y:FindFirstChild(h) and _G[d] then dropfound = true sendbreak = true break end --  
-													end	
-												end
-												if sendbreak then
-													break
-												end
-											--end
+										for c,d in pairs(b) do
+										--print(c)
+										--print(c,d)
+											for e,f in pairs(currency) do
+												--if e == _G.lastBestCurrency then
+													for g,h in pairs(f) do
+														
+														if d == "VIP" and VIP then
+															if _G[e] and y:FindFirstChild(h) and _G[a] then dropfound = true sendbreak = true break end --  
+														elseif d ~= "VIP" and d == "Main" then
+															if _G[e] and y:FindFirstChild(h) and _G[a .. " " .. d] then dropfound = true sendbreak = true break end -- 
+														elseif d ~= "VIP" and d ~= "Main" then
+															if _G[e] and y:FindFirstChild(h) and _G[d] then dropfound = true sendbreak = true break end --  
+														end	
+													end
+													if sendbreak then
+														break
+													end
+												--end
+											end
+											if sendbreak then
+												break
+											end
 										end
 										if sendbreak then
 											break
 										end
 									end
-									if sendbreak then
-										break
-									end
 								end
 							end
 						end
 						
-						--print("drop found", dropfound)
+						print("drop found", dropfound)
 						
 						if not dropfound or (playerLibrary.World == "Spawn World" and _G.lastBestCurrency == "Pearls" and _G["Pearls"])  then
 							local newWorld = nil
@@ -2175,6 +2177,7 @@ spawn(function()
 									end
 								end
 							end
+							print("newworld", newWorld)
 							if newWorld ~= nil then
 								changeWorld(playerLibrary.World, newWorld)
 							end
