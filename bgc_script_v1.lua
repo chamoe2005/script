@@ -1,4 +1,4 @@
-print("Version 3.7.8")
+print("Version 3.8")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -712,7 +712,27 @@ local SpinPrizeWheel = function()
 		end
 end
 
+spawn(function()
+		local ohTable1 = {
+			[1] = {
+				[1] = "St. Patrick's 2023",
+				[2] = "Spawn World"
+			},
+			[2] = {
+				[1] = false,
+				[2] = false
+			}
+		}
+
+		game:GetService("ReplicatedStorage").Remotes["buy area"]:InvokeServer(ohTable1)
+	end
+end)
+
+
+
 		farm:Toggle('Free Prize Wheel', {flag = 'FreePrizeWheel'}, function() spawn(function() SpinPrizeWheel() end) end)
+		farm:Toggle('St Pattys Wheel', {location = _G, flag = 'StPattysWheel'})
+
 
 local Eggs = {}
 for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetChildren()) do
@@ -1867,6 +1887,9 @@ _G.thisBest = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
 						} 
 _G.lastBestCurrency = "Pearls"
 
+_G["Old Drop Delay"] = 0		
+
+
 spawn(function()
 			
 	while wait(.1) do
@@ -1884,12 +1907,11 @@ spawn(function()
 	
 		local bestEgg = {["Diamonds"] = {["Name"] = nil, ["Cost"] = 0},
 						 ["Coins"] = {["Name"] = nil, ["Cost"] = 0},
-						 ["Pearls"] = {["Name"] = nil, ["Cost"] = 0}
+						 ["Pearls"] = {["Name"] = nil, ["Cost"] = 0},
+						 ["Rainbows"] = {["Name"] = nil, ["Cost"] = 0}
 						}
-		local bestCurr = ""
+		
 		local playerLibrary = library.Save.Get()
-		local newBest = ""
-				
 		--if playerLibrary.Boosts["Fast Hatch"] then 
 			--_G.NextEgg = _G.LastEgg + 3
 		--else 
@@ -1919,7 +1941,136 @@ spawn(function()
 						end
 					end
 				
-					if ((playerLibrary[v.Currency] > v.Cost and v.Cost > bestEgg[v.Currency].Cost and -- enough for this egg and costs more than last egg or no last egg and
+				
+				
+					if playerLibrary[v.Currency] ~= nil and playerLibrary[v.Currency] > (v.Cost * multiplier) and v.Cost > bestEgg[v.Currency].Cost and _G[i] and newworldfound then
+						bestEgg[v.Currency].Name = i
+						bestEgg[v.Currency].Cost = v.Cost
+					end
+				end
+				
+				local newBest = ""
+				
+				if bestEgg["Diamonds"].Name and bestEgg["Coins"].Name and bestEgg["Pearls"].Name and bestEgg["Rainbows"].Name then
+					--print("Opening " .. bestEgg.Name)
+					newBest = bestEgg["Rainbows"].Name
+				elseif bestEgg["Diamonds"].Name and bestEgg["Coins"].Name then
+					if bestEgg["Diamonds"].Name == "Safe Egg" and bestEgg["Coins"].Cost <= 35000 then
+						newBest = bestEgg["Diamonds"].Name
+							--openEgg(bestEgg["Diamonds"].Name)
+					elseif bestEgg["Diamonds"].Name == "Lantern Egg" and bestEgg["Coins"].Cost <= 250000 then
+						newBest = bestEgg["Diamonds"].Name
+					elseif bestEgg["Diamonds"].Name == "Banana Bandana on Nana Egg" and bestEgg["Coins"].Cost <= 500000 then
+						newBest = bestEgg["Diamonds"].Name
+							--openEgg(bestEgg["Diamonds"].Name)
+					elseif bestEgg["Coins"].Cost > bestEgg["Diamonds"].Cost then
+						newBest = bestEgg["Coins"].Name
+							--openEgg(bestEgg["Coins"].Name)
+					else
+						newBest = bestEgg["Diamonds"].Name
+							--openEgg(bestEgg["Diamonds"].Name)
+					end				
+				elseif bestEgg["Pearls"].Name then
+					newBest = bestEgg["Pearls"].Name
+				elseif bestEgg["Rainbows"].Name then
+					newBest = bestEgg["Rainbows"].Name
+				elseif bestEgg["Diamonds"].Name then
+					newBest = bestEgg["Diamonds"].Name
+					--openEgg(bestEgg["Diamonds"].Name)
+				elseif bestEgg["Coins"].Name then
+					newBest = bestEgg["Coins"].Name
+				end
+
+			--LogMe("Auto Hatch Enabled" .. tostring(library.Variables.AutoHatchEnabled))
+			--LogMe("Auto Hatch Egg" .. tostring(library.Variables.AutoHatchEggId))
+			
+			if _G.BuyEggMode == "Best" and newBest ~= "" and (newBest ~= _G.lastBest or not _G.eggopened or (os.time() > (_G.LastEgg + _G.EggTimeout))) then
+					--LogMe("Buy Mode " .. _G.BuyEggMode)
+					--LogMe("Last Egg " .. os.time() - _G.LastEgg)
+					--LogMe("Egg Opened " .. tostring(_G.eggopened))
+					LogMe("Opening " .. tostring(newBest))
+					--LogMe("AutoHatchEgg" .. library.Variables.AutoHatchEggId)
+					--LogMe("AutoHatchEnabled" .. library.Variables.AutoHatchEnabled)
+				_G.eggopened = false
+				openEgg(newBest)
+				_G.lastBest = newBest
+				
+			elseif _G.BuyEggMode == "Best" and newBest == "" then
+				library.Variables.AutoHatchEggId = nil
+				_G.lastBest = ""
+				--print(_G.eggopened, os.time() - _G.LastEgg)
+
+
+				
+			elseif _G.BuyEggMode == "Any" then --and (not _G.eggopened or (os.time() > _G.LastEgg + _G.EggTimeout)) then
+				--_G.eggopened = true
+				for i,v in orderedPairs(Eggs) do
+					LogMe("Buy Mode " .. _G.BuyEggMode)
+					LogMe("Last Egg " .. os.time() - _G.LastEgg)
+					LogMe("Egg Opened " .. tostring(_G.eggopened))
+				
+					
+					
+					--_G.eggopened = false
+				
+					while _G[i] and library.Variables.AutoHatchEggId ~= nil and i == library.Variables.AutoHatchEggId do
+						--print("Opening " .. i)
+						_G.eggopened = false
+						openEgg(i)
+					end
+					
+					while not _G.eggopened do
+						wait()
+					end
+					
+					if _G.BuyEggMode ~= "Any" then
+						break
+					end
+				end
+			elseif _G.BuyEggMode == "None" then
+				library.Variables.AutoHatchEggId = nil
+				--library.Variables.AutoHatchEnabled = false
+			end
+			--wait(_G.TeleportDelay)
+		--end
+		
+		
+		
+				
+				
+
+
+		
+		--if playerLibrary.Boosts["Fast Hatch"] then 
+			--_G.NextEgg = _G.LastEgg + 3
+		--else 
+			--_G.NextEgg = _G.LastEgg +  5
+		--end
+		--if os.time() > _G.NextEgg and _G.eggopened then
+			--if _G.BuyEggMode ~= "None" then
+				--LogMe("Hatching Eggs", _G.NextEgg)
+			--end
+			
+				--[[	
+	
+			
+				for i,v in pairs(Eggs) do
+				
+				
+					local newworldfound = false
+					
+					if v.World == "Spawn World" then
+						newworldfound = true
+					end
+			
+			
+					for a,b in pairs(playerLibrary.Worlds) do
+						if b == v.World then
+							newworldfound = true
+						end
+					end
+				
+					if playerLibrary[v.Currency] ~= nil and ((playerLibrary[v.Currency] > v.Cost and v.Cost > bestEgg[v.Currency].Cost and -- enough for this egg and costs more than last egg or no last egg and
 						((playerLibrary[_G.lastBestCurrency] < _G.lastBest[_G.lastBestCurrency].Cost) or _G.lastBest[_G.lastBestCurrency].Cost == 0))  or --no last egg or still enough for last egg
 						(_G.forcedrops and _G.drops and -- force drops and not same currency as last egg and more expensive or same currency as last egg and currency less than 60 eggs and currency more than 1200 last egg
 							((v.Currency ~= _G.lastBestCurrency and (v.Cost > _G.lastBest[_G.lastBestCurrency].Cost) and (v.Cost > bestEgg[v.Currency].Cost)) or --and (playerLibrary[v.Currency] > v.Cost) 
@@ -2056,6 +2207,8 @@ spawn(function()
 			end
 			--wait(_G.TeleportDelay)
 		--end
+		
+		]]--
 		
 		if farm.flags.FreeLoot then
 			--print("Do Free Loot")
@@ -2377,6 +2530,22 @@ spawn(function()
 
 	end	
 		
+	end
+end)
+
+spawn(function()
+	while _G["StPattysWheel"] and wait(5) do
+
+		local ohTable1 = {
+			[1] = {
+				[1] = false
+			},
+			[2] = {
+				[1] = 2
+			}
+		}
+
+		game:GetService("ReplicatedStorage").Remotes["buy event wheel spin"]:InvokeServer(ohTable1)
 	end
 end)
 	
