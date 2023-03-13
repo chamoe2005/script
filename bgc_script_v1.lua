@@ -1,4 +1,4 @@
-print("Version 3.7.4")
+print("Version 3.7.5")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -45,7 +45,6 @@ function GetLocalPlayer()
 		wait(1)
 		print("Waiting for LocalPlayer")
 	end
-	game:GetService("Workspace")[player.Name].Head.PlayerNameTag.Enabled = false
 
 	return player
 end
@@ -216,6 +215,7 @@ end
 local workspace = GetWorkspace()
 local map = GetMap()
 local chests = GetChests()
+game:GetService("Workspace")[plr.Name].Head.PlayerNameTag.Enabled = false
 
 
 --if JobId ~= "3c92b463-72b8-3e89-9214-cc7c145f340a" and JobId ~= "cf4bed63-0521-9077-d9d2-6e1ec43a7a35" then
