@@ -1,4 +1,4 @@
-print("Version 3.7.3")
+print("Version 3.7.4")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -1504,6 +1504,7 @@ end
 
 local egg = wally:CreateWindow('Eggs')
 	egg:Toggle('Hide Animation', {flag = "HideAnimation"}, function() spawn(function() if egg.flags.HideAnimation then connection:Disable() else connection:Enable() end end) end)
+	egg:Toggle('Kick on Zero Eggs', {flag = "KickZeroEggs"})
 	egg:Section('Select Eggs')
 	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = {"None", "Best", "Any"} })
 	
@@ -2886,7 +2887,8 @@ end)
 					end
 					
 
-				spawn(function()	
+				spawn(function()
+					local zeroeggcounter = 0
 					while wait(.1) do
 						local zerocounter = 0
 						for a,b in pairs(stats) do
@@ -2939,6 +2941,15 @@ end)
 										zerocounter++
 										LogMe("Stats with Zero: " .. zerocounter .. "/" .. #stats)
 									end
+									
+									if b == "EggsOpened" and getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) == 0 then
+										zeroeggcounter++
+										LogMe("Zero Eggs Counter :" .. zeroeggcounter)
+									else
+										zeroeggcounter = 0
+									end
+											
+										
 									_G[b .. "LastVal"] = unformatted
 									_G[b .. "LastTime"] = os.time()
 									
@@ -2967,6 +2978,9 @@ end)
 						if zerocounter == #stats and _G.kickonzerostats then
 							LogMe("Disconnected: Player Frozen")
 							Players.LocalPlayer:Kick("Player Frozen")
+						elseif egg.flags["KickZeroEggs"] and zeroeggcounter >= 4 then
+							LogMe("Disconnected: No Eggs Opened")
+							Players.LocalPlayer:Kick("No Eggs Opened")
 						end
 					end
 				end)
