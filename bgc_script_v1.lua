@@ -1,4 +1,4 @@
-print("Version 3.7")
+print("Version 3.7.3")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -45,8 +45,12 @@ function GetLocalPlayer()
 		wait(1)
 		print("Waiting for LocalPlayer")
 	end
+	game:GetService("Workspace")[player.Name].Head.PlayerNameTag.Enabled = false
+
 	return player
 end
+
+print(GetLocalPlayer().Name)
 
 if not isfile("bgclog" .. GetLocalPlayer().Name .. ".txt") then
 	writefile("bgclog" .. GetLocalPlayer().Name .. ".txt", "Start of Log File\n")
@@ -1434,11 +1438,13 @@ function openEgg(egg)
 	
 	if eggmap ~= nil then
 		if not library.Variables.AutoHatchEnabled or not library.Variables.AutoHatchEggId or library.Variables.AutoHatchEggId ~= egg or (GetPlayerRoot().Position-eggmap.EGG.Position).magnitude > 10 then
-			GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(eggmap.EGG.Position + Vector3.new(3,-5,-3)))
-			wait(.1)
-			library.Variables.AutoHatchEnabled = true
-			library.Variables.AutoHatchEggId = egg
-			wait(1)
+			if GetPlayerChar() then
+				GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(eggmap.EGG.Position + Vector3.new(3,-5,-3)))
+				wait(.1)
+				library.Variables.AutoHatchEnabled = true
+				library.Variables.AutoHatchEggId = egg
+				wait(1)
+			end
 			
 		end
 		_G.eggopened = false
@@ -2145,7 +2151,7 @@ spawn(function()
 						
 						--print("drop found", dropfound)
 						
-						if not dropfound or (playerLibrary.World == "Spawn World" and _G.lastBestCurrency == "Pearls" and _G["Pearls"])  then
+						if not dropfound then --or (playerLibrary.World == "Spawn World" and _G.lastBestCurrency == "Pearls" and _G["Pearls"])  then
 							local newWorld = nil
 							for a,b in pairs(areas) do
 								if a ~= playerLibrary.World then
@@ -2177,8 +2183,8 @@ spawn(function()
 									end
 								end
 							end
-							print("newworld", newWorld)
 							if newWorld ~= nil then
+								print("newworld", newWorld)
 								changeWorld(playerLibrary.World, newWorld)
 							end
 						end
