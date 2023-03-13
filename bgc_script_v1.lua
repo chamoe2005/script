@@ -1,4 +1,4 @@
-print("Version 3.8.2")
+print("Version 3.8.3")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -1289,10 +1289,16 @@ local doChallenge = function()
 						changeSetting("Checkmark", "Collect Drops", true, true)
 						changeSetting("Checkmark", "Diamonds", true, true)
 						changeSetting("Box", "Range", 50000, true)
+					elseif b.challengeType == "RainbowPickups" then
+						LogMe("Switching ON Rainbow Pickups")
+						changeSetting("Checkmark", "Collect Drops", true, true)
+						changeSetting("Checkmark", "Rainbow", true, true)
+						changeSetting("Box", "Range", 50000, true)
+					
 					elseif b.challengeType == "LegendaryPets" then
 						LogMe("Switch to Legendary Challenege")
 						if _G.oldeggs["Buy Mode"] == nil then
-							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}}, {}, true)
+							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Snail Egg", "Pineapple Egg", "Lantern Egg", "Magma Egg", "Common Egg"}}, {}, true)
 							LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
 							_G.oldeggs = oldeggs
 						else
@@ -1300,14 +1306,14 @@ local doChallenge = function()
 							for a,b in pairs(_G.oldeggs["Eggs"]) do
 								LogMe(b)
 							end
-							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}}, _G.oldeggs, false)
+							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Snail Egg", "Pineapple Egg", "Lantern Egg", "Magma Egg", "Common Egg"}}, _G.oldeggs, false)
 							--_G.oldeggs = oldeggs
 						end
 						--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}})
 					elseif b.challengeType == "GodlyPets" then
 						LogMe("Switch to Godly Challenege")
 						if _G.oldeggs["Buy Mode"] == nil then
-							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Safe Egg", "Galaxy Egg", "Common Egg"}}, {}, true)
+							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg", "Galaxy Egg", "Common Egg"}}, {}, true)
 							LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
 							_G.oldeggs = oldeggs
 						else
@@ -1315,7 +1321,22 @@ local doChallenge = function()
 							for a,b in pairs(_G.oldeggs["Eggs"]) do
 								LogMe(b)
 							end
-							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Safe Egg", "Galaxy Egg", "Common Egg"}}, _G.oldeggs, false)
+							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg", "Galaxy Egg", "Common Egg"}}, _G.oldeggs, false)
+							--_G.oldeggs = oldeggs
+						end
+						--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Safe Egg", "Galaxy Egg", "Common Egg"}}, )					
+					elseif b.challengeType == "SecretPets" then
+						LogMe("Switch to Secret Challenege")
+						if _G.oldeggs["Buy Mode"] == nil then
+							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Safe Egg", "Spotted Egg", "Common Egg"}}, {}, true)
+							LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+							_G.oldeggs = oldeggs
+						else
+							LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+							for a,b in pairs(_G.oldeggs["Eggs"]) do
+								LogMe(b)
+							end
+							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Safe Egg", "Spotted Egg", "Common Egg"}}, _G.oldeggs, false)
 							--_G.oldeggs = oldeggs
 						end
 						--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Safe Egg", "Galaxy Egg", "Common Egg"}}, )					
