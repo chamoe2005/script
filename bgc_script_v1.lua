@@ -1,4 +1,4 @@
-print("Version 3.7.6")
+print("Version 3.7.8")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -1354,14 +1354,14 @@ local changeWorld = function(old, new)
 
 			if old == "Spawn World" and new == "Atlantis" and newworldfound then
 				game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
-				wait(1)
+				wait(10)
 				while library.Variables.LoadingWorld do
 					LogMe("TPing to Atlantis")
 					wait(1)
 				end
 			elseif old == "Atlantis" and new == "Spawn World" and oldworldfound then
 				game:GetService("Workspace").MAP.Portal.Interact.Activated:Fire()
-				wait(1)
+				wait(10)
 				while library.Variables.LoadingWorld do
 					LogMe("TPing to Spawn World")
 					wait(1)
@@ -1380,7 +1380,7 @@ local changeWorld = function(old, new)
 				game:GetService("ReplicatedStorage").Remotes["buy world"]:FireServer(ohTable1)
 				wait(1)
 				game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
-				wait(1)
+				wait(10)
 				while library.Variables.LoadingWorld do
 					LogMe("TPing to Atlantis")
 					wait(1)
@@ -2978,9 +2978,11 @@ end)
 						if zerocounter == #stats and _G.kickonzerostats then
 							LogMe("Disconnected: Player Frozen")
 							Players.LocalPlayer:Kick("Player Frozen")
+							break
 						elseif egg.flags["KickZeroEggs"] and zeroeggcounter >= 2 then
 							LogMe("Disconnected: No Eggs Opened")
 							Players.LocalPlayer:Kick("No Eggs Opened")
+							break
 						end
 					end
 				end)
