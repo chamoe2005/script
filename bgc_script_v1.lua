@@ -1,4 +1,4 @@
-print("Version 3.7.5")
+print("Version 3.7.6")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -2945,7 +2945,7 @@ end)
 									if b == "EggsOpened" and getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) == 0 then
 										zeroeggcounter++
 										LogMe("Zero Eggs Counter :" .. zeroeggcounter)
-									else
+									elseif b == "EggsOpened" and getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) > 0 then
 										zeroeggcounter = 0
 									end
 											
@@ -2978,7 +2978,7 @@ end)
 						if zerocounter == #stats and _G.kickonzerostats then
 							LogMe("Disconnected: Player Frozen")
 							Players.LocalPlayer:Kick("Player Frozen")
-						elseif egg.flags["KickZeroEggs"] and zeroeggcounter >= 4 then
+						elseif egg.flags["KickZeroEggs"] and zeroeggcounter >= 2 then
 							LogMe("Disconnected: No Eggs Opened")
 							Players.LocalPlayer:Kick("No Eggs Opened")
 						end
