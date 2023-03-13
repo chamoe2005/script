@@ -1,4 +1,4 @@
-print("Version 3.8.1")
+print("Version 3.8.2")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -18,6 +18,9 @@ _G["Drop TimeOut"] = 10
 _G["Drop Delay"] = 60
 _G.DropCoolOff = os.time() + _G["Drop Delay"]
 _G.playerCoins = 0
+
+_G.ChallengeName = "Event"
+_G.ChallengeRemote = "claim event prize"
 
 --local dropdowns = {}
 --dropdowns.Bubblesell = {"No Sell", "Sell 1", "Sell 2"}
