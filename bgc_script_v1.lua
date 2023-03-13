@@ -1,4 +1,4 @@
-print("Version 3.8")
+print("Version 3.8.1")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -725,7 +725,6 @@ spawn(function()
 		}
 
 		game:GetService("ReplicatedStorage").Remotes["buy area"]:InvokeServer(ohTable1)
-	end
 end)
 
 
@@ -2534,18 +2533,20 @@ spawn(function()
 end)
 
 spawn(function()
-	while _G["StPattysWheel"] and wait(5) do
+	while wait(5) do
+		if _G["StPattysWheel"] then
 
-		local ohTable1 = {
-			[1] = {
-				[1] = false
-			},
-			[2] = {
-				[1] = 2
+			local ohTable1 = {
+				[1] = {
+					[1] = false
+				},
+				[2] = {
+					[1] = 2
+				}
 			}
-		}
 
-		game:GetService("ReplicatedStorage").Remotes["buy event wheel spin"]:InvokeServer(ohTable1)
+			game:GetService("ReplicatedStorage").Remotes["buy event wheel spin"]:InvokeServer(ohTable1)
+		end
 	end
 end)
 	
