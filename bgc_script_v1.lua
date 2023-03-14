@@ -1,4 +1,4 @@
-print("Version 3.8.4")
+print("Version 3.8.5")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -390,7 +390,7 @@ local changeSetting = function(settingtype, settingname, value, fire)
 						--print(selectionname, value)
 					end
 				end
-			else
+			elseif b.Parent.DropContainer then
 				for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
 					if v.Name == "TextButton" and v.Text == currentValue then
 						if fire then
@@ -1261,12 +1261,17 @@ local doChallenge = function()
 						LogMe("Switching OFF Coin Pickups")
 						changeSetting("Checkmark", "Collect Drops", false, true)
 						changeSetting("Checkmark", "Coins", false, true)
-						changeSetting("Box", "Range", 0, true)
+						--changeSetting("Box", "Range", 0, true)
 					elseif b.challengeType == "DiamondPickups" then
 						LogMe("Switching OFF Diamond Pickups")
 						changeSetting("Checkmark", "Collect Drops", false, true)
 						changeSetting("Checkmark", "Diamonds", false, true)
-						changeSetting("Box", "Range", 0, true)
+						--changeSetting("Box", "Range", 0, true)
+					elseif b.challengeType == "RainbowPickups" then
+						LogMe("Switching OFF Rainbow Pickups")
+						changeSetting("Checkmark", "Collect Drops", false, true)
+						changeSetting("Checkmark", "Rainbows", false, true)
+						--changeSetting("Box", "Range", 0, true)
 					elseif b.challengeType == "LegendaryPets" or b.challengeType == "GodlyPets" or b.challengeType == "SecretPets" then
 						LogMe("Switch Back Eggs")
 						switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
