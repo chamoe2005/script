@@ -1,4 +1,4 @@
-print("Version 3.8.3")
+print("Version 3.8.4")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -1267,7 +1267,7 @@ local doChallenge = function()
 						changeSetting("Checkmark", "Collect Drops", false, true)
 						changeSetting("Checkmark", "Diamonds", false, true)
 						changeSetting("Box", "Range", 0, true)
-					elseif b.challengeType == "LegendaryPets" or b.challengeType == "GodlyPets" then
+					elseif b.challengeType == "LegendaryPets" or b.challengeType == "GodlyPets" or b.challengeType == "SecretPets" then
 						LogMe("Switch Back Eggs")
 						switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
 						_G.oldeggs = {}
@@ -1977,6 +1977,8 @@ spawn(function()
 				if bestEgg["Diamonds"].Name and bestEgg["Coins"].Name and bestEgg["Pearls"].Name and bestEgg["Rainbows"].Name then
 					--print("Opening " .. bestEgg.Name)
 					newBest = bestEgg["Rainbows"].Name
+				elseif bestEgg["Pearls"].Name and bestEgg["Diamonds"].Name and bestEgg["Coins"].Name then
+					newBest = bestEgg["Pearls"].Name			
 				elseif bestEgg["Diamonds"].Name and bestEgg["Coins"].Name then
 					if bestEgg["Diamonds"].Name == "Safe Egg" and bestEgg["Coins"].Cost <= 35000 then
 						newBest = bestEgg["Diamonds"].Name
