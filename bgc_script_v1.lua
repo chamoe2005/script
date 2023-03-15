@@ -1,4 +1,4 @@
-print("Version 4.0")
+print("Version 4.0.1")
 					
 _G.GrindKick = true
 _G.highhigh = 99
@@ -3123,10 +3123,10 @@ end)
 					end
 
 				spawn(function()
-					local grindkick = false
 					local zeroeggcounter = 0
 					while wait(.1) do
 						local zerocounter = 0
+						local grindkick = 0
 						for a,b in pairs(stats) do
 							local playerLibrary = library.Save.Get()
 							if b == "EggsOpened" then
@@ -3180,7 +3180,7 @@ end)
 									
 									if _G.drops and _G.GrindKick and _G[b] and getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) == 0 then
 										LogMe("Grind " .. b .. " Zero")
-										grindkick = true
+										grindkick++
 									end
 									
 									if b == "EggsOpened" and getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) == 0 then
@@ -3224,7 +3224,16 @@ end)
 							LogMe("Disconnected: No Eggs Opened")
 							Players.LocalPlayer:Kick("No Eggs Opened")
 							break
-						elseif grindkick then
+						end
+						
+						local currencysgrinding = 0
+						for a,b in pairs(currency) do
+							if _G.drops and _G[a] then
+								currencysgrinding++
+							end
+						end
+						
+						if _G.GrindKick and currencysgrinding > 0 and grindkick == currencysgrinding then
 							LogMe("Disconnected: No Currency")
 							Players.LocalPlayer:Kick("No Currency")
 							break
