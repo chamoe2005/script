@@ -1,4 +1,4 @@
-print("Version 4.0.6")
+print("Version 4.1.1")
 					
 _G.GrindKick = true
 _G["PearlsMin"] = 750000000
@@ -1274,6 +1274,170 @@ function switchEggs(args, old, switch)
 	end
 end
 
+local startQuest = 	function(quest)
+
+						if quest.challengeType == "CoinPickups" or quest.challengeType == "Coins" then
+							LogMe("Switching ON Coin Pickups")
+							changeSetting("Checkmark", "Collect Drops", true, true)
+							changeSetting("Checkmark", "Coins", true, true)
+							changeSetting("Box", "Range", 50000, true)
+							changeSetting("Box", "Drop Delay", 60, true)
+							changeSetting("Box", "Drop TimeOut", 30, true)
+							for a,b in pairs(currency) do
+								if a ~= "Coins" then
+									changeSetting("Checkmark", a, false, true)
+								end
+							end
+							_G.GrindKick = false
+						elseif quest.challengeType == "DiamondPickups" or quest.challengeType == "Diamonds" then
+							LogMe("Switching ON Diamond Pickups")
+							changeSetting("Checkmark", "Collect Drops", true, true)
+							changeSetting("Checkmark", "Diamonds", true, true)
+							changeSetting("Box", "Range", 50000, true)
+							changeSetting("Box", "Drop Delay", 60, true)
+							changeSetting("Box", "Drop TimeOut", 30, true)
+							for a,b in pairs(currency) do
+								if a ~= "Diamonds" then
+									changeSetting("Checkmark", a, false, true)
+								end
+							end
+							_G.GrindKick = false
+						elseif quest.challengeType == "PearlPickups" or quest.challengeType == "Pearls" then
+							LogMe("Switching ON Pearl Pickups")
+							changeSetting("Checkmark", "Collect Drops", true, true)
+							changeSetting("Checkmark", "Pearls", true, true)
+							changeSetting("Box", "Range", 50000, true)
+							changeSetting("Box", "Drop Delay", 60, true)
+							changeSetting("Box", "Drop TimeOut", 30, true)
+							for a,b in pairs(currency) do
+								if a ~= "Pearls" then
+									changeSetting("Checkmark", a, false, true)
+								end
+							end
+							_G.GrindKick = false
+						elseif quest.challengeType == "RainbowPickups" or quest.challengeType == "Rainbows" then
+							LogMe("Switching ON Rainbow Pickups")
+							changeSetting("Checkmark", "Collect Drops", true, true)
+							changeSetting("Checkmark", "Rainbows", true, true)
+							changeSetting("Box", "Range", 50000, true)
+							changeSetting("Box", "Drop Delay", 60, true)
+							changeSetting("Box", "Drop TimeOut", 30, true)
+							for a,b in pairs(currency) do
+								if a ~= "Rainbows" then
+									changeSetting("Checkmark", a, false, true)
+								end
+							end
+							_G.GrindKick = false
+						elseif quest.challengeType == "LegendaryPets" then
+							LogMe("Switch to Legendary Challenege")
+							if _G.oldeggs["Buy Mode"] == nil then
+								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Snail Egg", "Pineapple Egg", "Lantern Egg", "Magma Egg", "Common Egg"}}, {}, true)
+								LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+								_G.oldeggs = oldeggs
+							else
+								LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+								for a,b in pairs(_G.oldeggs["Eggs"]) do
+									LogMe(b)
+								end
+								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Snail Egg", "Pineapple Egg", "Lantern Egg", "Magma Egg", "Common Egg"}}, _G.oldeggs, false)
+								--_G.oldeggs = oldeggs
+							end
+							--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}})
+						elseif quest.challengeType == "GodlyPets" then
+							LogMe("Switch to Godly Challenege")
+							if _G.oldeggs["Buy Mode"] == nil then
+								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg", "Galaxy Egg", "Common Egg"}}, {}, true)
+								LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+								_G.oldeggs = oldeggs
+							else
+								LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+								for a,b in pairs(_G.oldeggs["Eggs"]) do
+									LogMe(b)
+								end
+								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg", "Galaxy Egg", "Common Egg"}}, _G.oldeggs, false)
+								--_G.oldeggs = oldeggs
+							end
+							--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Safe Egg", "Galaxy Egg", "Common Egg"}}, )					
+						elseif quest.challengeType == "SecretPets" then
+							LogMe("Switch to Secret Challenege")
+							if _G.oldeggs["Buy Mode"] == nil then
+								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Safe Egg", "Spotted Egg", "Common Egg"}}, {}, true)
+								LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+								_G.oldeggs = oldeggs
+							else
+								LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+								for a,b in pairs(_G.oldeggs["Eggs"]) do
+									LogMe(b)
+								end
+								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Safe Egg", "Spotted Egg", "Common Egg"}}, _G.oldeggs, false)
+								--_G.oldeggs = oldeggs
+							end
+							--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Safe Egg", "Galaxy Egg", "Common Egg"}}, )					
+						end
+
+					end
+
+local endQuest = 	function(quest)
+
+						if quest.challengeType == "CoinPickups" or quest.challengeType == "Coins" then
+							LogMe("Switching OFF Coin Pickups")
+							changeSetting("Checkmark", "Collect Drops", false, true)
+							changeSetting("Checkmark", "Coins", false, true)
+							--changeSetting("Box", "Range", 0, true)
+						elseif quest.challengeType == "DiamondPickups" or quest.challengeType == "Diamonds" then
+							LogMe("Switching OFF Diamond Pickups")
+							changeSetting("Checkmark", "Collect Drops", false, true)
+							changeSetting("Checkmark", "Diamonds", false, true)
+							--changeSetting("Box", "Range", 0, true)
+						elseif quest.challengeType == "PearlPickups" or quest.challengeType == "Pearls" then
+							LogMe("Switching OFF Pearl Pickups")
+							changeSetting("Checkmark", "Collect Drops", false, true)
+							changeSetting("Checkmark", "Pearls", false, true)
+							--changeSetting("Box", "Range", 0, true)
+						elseif quest.challengeType == "RainbowPickups" or quest.challengeType == "Rainbows" then
+							LogMe("Switching OFF Rainbow Pickups")
+							changeSetting("Checkmark", "Collect Drops", false, true)
+							changeSetting("Checkmark", "Rainbows", false, true)
+							--changeSetting("Box", "Range", 0, true)
+						elseif quest.challengeType == "LegendaryPets" or quest.challengeType == "GodlyPets" or quest.challengeType == "SecretPets" then
+							LogMe("Switch Back Eggs")
+							switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
+							_G.oldeggs = {}
+						else
+							wait(5)
+						end
+					
+
+					end
+
+
+
+local doQuest = function()
+
+					local playerLibrary = library.Save.Get()
+					--local lastPrize = 0
+					for a,b in pairs(library.Directory.Quests) do
+						if _G["Atlantis Quest"] and a == "Atlantis" and playerLibrary.Quests["Atlantis"] then   -- _G.[World .. "Quest"]  ~= nil and then
+							print("Atlantis Quest Stage " .. playerLibrary.Quests["Atlantis"].stage .. " of " .. #library.Directory.Quests["Atlantis"])
+							while wait(.1) and _G["Atlantis Quest"] and playerLibrary.Quests["Atlantis"].stage <= #library.Directory.Quests["Atlantis"] do
+					
+								local currentstage = playerLibrary.Quests["Atlantis"].stage
+								startQuest(b[currentstage])
+							
+								--local startTime = os.time()
+								while wait(30) and playerLibrary.Quests["Atlantis"].progress > 0 and playerLibrary.Quests["Atlantis"].progress <= b[playerLibrary.Quests["Atlantis"].stage].amount and currentstage <= playerLibrary.Quests["Atlantis"].stage do
+									print((playerLibrary.Quests["Atlantis"].progress / b[playerLibrary.Quests["Atlantis"].stage].amount) * 100 .. "%" .. " of " .. b[playerLibrary.Quests["Atlantis"].stage].challengeType)
+								end
+								print("Stage " .. currentstage .. " finished.  Next Stage: " .. playerLibrary.Quests["Atlantis"].stage)
+								endQuest(b[currentstage])
+							
+							end
+						end
+					end
+
+				end
+
+
 
 		
 local doChallenge = function()
@@ -1305,118 +1469,14 @@ local doChallenge = function()
 
 					game:GetService("ReplicatedStorage").Remotes[_G.ChallengeRemote]:FireServer(ohTable1)
 					
-					if b.challengeType == "CoinPickups" then
-						LogMe("Switching OFF Coin Pickups")
-						changeSetting("Checkmark", "Collect Drops", false, true)
-						changeSetting("Checkmark", "Coins", false, true)
-						--changeSetting("Box", "Range", 0, true)
-					elseif b.challengeType == "DiamondPickups" then
-						LogMe("Switching OFF Diamond Pickups")
-						changeSetting("Checkmark", "Collect Drops", false, true)
-						changeSetting("Checkmark", "Diamonds", false, true)
-						--changeSetting("Box", "Range", 0, true)
-					elseif b.challengeType == "RainbowPickups" then
-						LogMe("Switching OFF Rainbow Pickups")
-						changeSetting("Checkmark", "Collect Drops", false, true)
-						changeSetting("Checkmark", "Rainbows", false, true)
-						--changeSetting("Box", "Range", 0, true)
-					elseif b.challengeType == "LegendaryPets" or b.challengeType == "GodlyPets" or b.challengeType == "SecretPets" then
-						LogMe("Switch Back Eggs")
-						switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
-						_G.oldeggs = {}
-					else
-						wait(5)
-					end
+					endQuest(b)
 					
 				elseif a == (playerLibrary[_G.ChallengeName].Claimed + 1) then
 				
 					print ((b.amount - playerLibrary[_G.ChallengeName].Progress[b.challengeType]) .. " " .. b.challengeType .. " remaining to claim " .. _G.ChallengeName .. " " .. a)
 				
-					if b.challengeType == "CoinPickups" then
-						LogMe("Switching ON Coin Pickups")
-						changeSetting("Checkmark", "Collect Drops", true, true)
-						changeSetting("Checkmark", "Coins", true, true)
-						changeSetting("Box", "Range", 50000, true)
-						changeSetting("Box", "Drop Delay", 60, true)
-						changeSetting("Box", "Drop TimeOut", 30, true)
-						for a,b in pairs(currency) do
-							if a ~= "Coins" then
-								changeSetting("Checkmark", a, false, true)
-							end
-						end
-						_G.GrindKick = false
-					elseif b.challengeType == "DiamondPickups" then
-						LogMe("Switching ON Diamond Pickups")
-						changeSetting("Checkmark", "Collect Drops", true, true)
-						changeSetting("Checkmark", "Diamonds", true, true)
-						changeSetting("Box", "Range", 50000, true)
-						changeSetting("Box", "Drop Delay", 60, true)
-						changeSetting("Box", "Drop TimeOut", 30, true)
-						for a,b in pairs(currency) do
-							if a ~= "Diamonds" then
-								changeSetting("Checkmark", a, false, true)
-							end
-						end
-						_G.GrindKick = false
-					elseif b.challengeType == "RainbowPickups" then
-						LogMe("Switching ON Rainbow Pickups")
-						changeSetting("Checkmark", "Collect Drops", true, true)
-						changeSetting("Checkmark", "Rainbows", true, true)
-						changeSetting("Box", "Range", 50000, true)
-						changeSetting("Box", "Drop Delay", 60, true)
-						changeSetting("Box", "Drop TimeOut", 30, true)
-						for a,b in pairs(currency) do
-							if a ~= "Rainbows" then
-								changeSetting("Checkmark", a, false, true)
-							end
-						end
-						_G.GrindKick = false
-					elseif b.challengeType == "LegendaryPets" then
-						LogMe("Switch to Legendary Challenege")
-						if _G.oldeggs["Buy Mode"] == nil then
-							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Snail Egg", "Pineapple Egg", "Lantern Egg", "Magma Egg", "Common Egg"}}, {}, true)
-							LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
-							_G.oldeggs = oldeggs
-						else
-							LogMe("Chal" .. _G.oldeggs["Buy Mode"])
-							for a,b in pairs(_G.oldeggs["Eggs"]) do
-								LogMe(b)
-							end
-							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Snail Egg", "Pineapple Egg", "Lantern Egg", "Magma Egg", "Common Egg"}}, _G.oldeggs, false)
-							--_G.oldeggs = oldeggs
-						end
-						--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}})
-					elseif b.challengeType == "GodlyPets" then
-						LogMe("Switch to Godly Challenege")
-						if _G.oldeggs["Buy Mode"] == nil then
-							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg", "Galaxy Egg", "Common Egg"}}, {}, true)
-							LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
-							_G.oldeggs = oldeggs
-						else
-							LogMe("Chal" .. _G.oldeggs["Buy Mode"])
-							for a,b in pairs(_G.oldeggs["Eggs"]) do
-								LogMe(b)
-							end
-							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg", "Galaxy Egg", "Common Egg"}}, _G.oldeggs, false)
-							--_G.oldeggs = oldeggs
-						end
-						--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Safe Egg", "Galaxy Egg", "Common Egg"}}, )					
-					elseif b.challengeType == "SecretPets" then
-						LogMe("Switch to Secret Challenege")
-						if _G.oldeggs["Buy Mode"] == nil then
-							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Safe Egg", "Spotted Egg", "Common Egg"}}, {}, true)
-							LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
-							_G.oldeggs = oldeggs
-						else
-							LogMe("Chal" .. _G.oldeggs["Buy Mode"])
-							for a,b in pairs(_G.oldeggs["Eggs"]) do
-								LogMe(b)
-							end
-							local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Safe Egg", "Spotted Egg", "Common Egg"}}, _G.oldeggs, false)
-							--_G.oldeggs = oldeggs
-						end
-						--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Safe Egg", "Galaxy Egg", "Common Egg"}}, )					
-					end
+					startQuest(b)
+					
 				end
 			end
 			
@@ -1426,10 +1486,12 @@ local doChallenge = function()
 		end
 
 end
-
+		farm:Section("Quests")
+		farm:Toggle("Atlantis Quest", {location = _G, flag = "Atlantis Quest"}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doQuest() end) end)
 		if _G.ChallengeName ~= nil then
 			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doChallenge() end) end)
 		end
+		
 		
 _G.eggopened = false
 --_G.starthatch = os.time()
