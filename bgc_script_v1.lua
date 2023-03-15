@@ -1,4 +1,6 @@
-print("Version 3.8.6")
+print("Version 3.8.7")
+					
+_G.GrindKick = true
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -3086,9 +3088,9 @@ end)
 						_G[b .. "AlertLast"] = 0
 										
 					end
-					
 
 				spawn(function()
+					local grindkick = false
 					local zeroeggcounter = 0
 					while wait(.1) do
 						local zerocounter = 0
@@ -3143,6 +3145,11 @@ end)
 										LogMe("Stats with Zero: " .. zerocounter .. "/" .. #stats)
 									end
 									
+									if _G.GrindKick and _G[b] and getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) == 0 then
+										LogMe("Grind " .. b .. " Zero")
+										grindkick = true
+									end
+									
 									if b == "EggsOpened" and getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) == 0 then
 										zeroeggcounter++
 										LogMe("Zero Eggs Counter :" .. zeroeggcounter)
@@ -3183,6 +3190,10 @@ end)
 						elseif egg.flags["KickZeroEggs"] and zeroeggcounter >= 2 then
 							LogMe("Disconnected: No Eggs Opened")
 							Players.LocalPlayer:Kick("No Eggs Opened")
+							break
+						elseif grindkick then
+							LogMe("Disconnected: No Currency")
+							Players.LocalPlayer:Kick("No Currency")
 							break
 						end
 					end
