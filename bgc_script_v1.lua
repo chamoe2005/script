@@ -1,4 +1,4 @@
-print("Version 4.1.1")
+print("Version 4.1.2")
 					
 _G.GrindKick = true
 _G["PearlsMin"] = 750000000
@@ -1425,8 +1425,13 @@ local doQuest = function()
 								startQuest(b[currentstage])
 							
 								--local startTime = os.time()
-								while wait(30) and playerLibrary.Quests["Atlantis"].progress > 0 and playerLibrary.Quests["Atlantis"].progress <= b[playerLibrary.Quests["Atlantis"].stage].amount and currentstage <= playerLibrary.Quests["Atlantis"].stage do
-									print((playerLibrary.Quests["Atlantis"].progress / b[playerLibrary.Quests["Atlantis"].stage].amount) * 100 .. "%" .. " of " .. b[playerLibrary.Quests["Atlantis"].stage].challengeType)
+								local counter = 0
+								while _G["Atlantis Quest"] and wait(.1) and playerLibrary.Quests["Atlantis"].progress > 0 and playerLibrary.Quests["Atlantis"].progress <= b[playerLibrary.Quests["Atlantis"].stage].amount and currentstage <= playerLibrary.Quests["Atlantis"].stage do
+									counter++
+									if counter > 300 then
+										print((playerLibrary.Quests["Atlantis"].progress / b[playerLibrary.Quests["Atlantis"].stage].amount) * 100 .. "%" .. " of " .. b[playerLibrary.Quests["Atlantis"].stage].challengeType)
+										counter = 0
+									end
 								end
 								print("Stage " .. currentstage .. " finished.  Next Stage: " .. playerLibrary.Quests["Atlantis"].stage)
 								endQuest(b[currentstage])
