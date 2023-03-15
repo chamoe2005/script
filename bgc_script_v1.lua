@@ -1,4 +1,4 @@
-print("Version 3.8.5")
+print("Version 3.8.6")
 _G.highhigh = 99
 _G.lowhigh = 33
 _G.highlow = .80
@@ -390,7 +390,7 @@ local changeSetting = function(settingtype, settingname, value, fire)
 						--print(selectionname, value)
 					end
 				end
-			elseif b.Parent.DropContainer then
+			elseif b.Parent:FindFirstChild("DropContainer") ~= nil then
 				for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
 					if v.Name == "TextButton" and v.Text == currentValue then
 						if fire then
