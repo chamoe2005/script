@@ -1,4 +1,4 @@
-print("Version 4.0.4")
+print("Version 4.0.5")
 					
 _G.GrindKick = true
 _G["PearlsMin"] = 750000000
@@ -788,6 +788,19 @@ for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetCh
 		end
 	end
 end
+
+local currency = {}
+local areas = {}
+
+for a,b in pairs(library.Shared.Currency) do
+	currency[a] = {}
+end
+
+currency["XP"] = {["Small Orb"] = "Orb",
+				  ["Medium Orb"] = "Orb", 
+				  ["Large Orb"] = "Orb"}
+
+
 
 game:GetService("Workspace").Stuff.Lootbags.DescendantRemoving:Connect(function(desc) if desc:IsA("Model") then LogMe("Drop " .. desc.name .. " removed") end end)
 
@@ -1625,17 +1638,6 @@ local egg = wally:CreateWindow('Eggs')
 --local pickups = {"Coins Present", "Coins Bag", "Large Coin", "Medium Coin", "Small Coin", "Large Diamonds", "Small Diamond", "Orb"}
 local library = require(game:GetService("ReplicatedStorage").Nevermore.Library)
 local pickupsLib = library.Network.Invoke("Get Pickups")
-local currency = {}
-local areas = {}
-
-for a,b in pairs(library.Shared.Currency) do
-	currency[a] = {}
-end
-
-currency["XP"] = {["Small Orb"] = "Orb",
-				  ["Medium Orb"] = "Orb", 
-				  ["Large Orb"] = "Orb"}
-
 
 for i,world in pairs(library.Game.Pickups:GetChildren()) do
 
