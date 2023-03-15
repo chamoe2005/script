@@ -1,4 +1,4 @@
-print("Version 3.8.7")
+print("Version 3.8.8")
 					
 _G.GrindKick = true
 _G.highhigh = 99
@@ -3145,7 +3145,7 @@ end)
 										LogMe("Stats with Zero: " .. zerocounter .. "/" .. #stats)
 									end
 									
-									if _G.GrindKick and _G[b] and getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) == 0 then
+									if _G.drops and _G.GrindKick and _G[b] and getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) == 0 then
 										LogMe("Grind " .. b .. " Zero")
 										grindkick = true
 									end
