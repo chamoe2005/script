@@ -1,4 +1,4 @@
-print("Version 4.0.5")
+print("Version 4.0.6")
 					
 _G.GrindKick = true
 _G["PearlsMin"] = 750000000
@@ -1361,7 +1361,7 @@ local doChallenge = function()
 					elseif b.challengeType == "RainbowPickups" then
 						LogMe("Switching ON Rainbow Pickups")
 						changeSetting("Checkmark", "Collect Drops", true, true)
-						changeSetting("Checkmark", "Rainbow", true, true)
+						changeSetting("Checkmark", "Rainbows", true, true)
 						changeSetting("Box", "Range", 50000, true)
 						changeSetting("Box", "Drop Delay", 60, true)
 						changeSetting("Box", "Drop TimeOut", 30, true)
