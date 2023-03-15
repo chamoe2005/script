@@ -1,4 +1,4 @@
-print("Version 4.0.2")
+print("Version 4.0.3")
 					
 _G.GrindKick = true
 _G["PearlsMin"] = 750000000
@@ -3182,7 +3182,7 @@ end)
 									if _G.drops and _G.GrindKick and _G[b] and getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) == 0 then
 										LogMe("Grind " .. b .. " Zero")
 										grindkick++
-									elseif _G.drops and _G.GrindKick and _G["Pearls"] and getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) < _G["PearlsMin"] then
+									elseif b == "Pearls" and _G.drops and _G.GrindKick and _G[b] and getCurrRate(_G[b .. "sma"](unformatted - _G[b .. "LastVal"]), _G[b .. "LastTime"], "mins", false) < _G["PearlsMin"] then
 										LogMe("Grind " .. b .. " Less Than Threshold")
 										grindkick++
 									end
