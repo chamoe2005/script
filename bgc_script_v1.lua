@@ -1,4 +1,4 @@
-print("Version 4.0.3")
+print("Version 4.0.4")
 					
 _G.GrindKick = true
 _G["PearlsMin"] = 750000000
@@ -1324,17 +1324,40 @@ local doChallenge = function()
 						changeSetting("Checkmark", "Collect Drops", true, true)
 						changeSetting("Checkmark", "Coins", true, true)
 						changeSetting("Box", "Range", 50000, true)
+						changeSetting("Box", "Drop Delay", 60, true)
+						changeSetting("Box", "Drop TimeOut", 30, true)
+						for a,b in pairs(currency) do
+							if a ~= "Coins" then
+								changeSetting("Checkmark", a, false, true)
+							end
+						end
+						_G.GrindKick = false
 					elseif b.challengeType == "DiamondPickups" then
 						LogMe("Switching ON Diamond Pickups")
 						changeSetting("Checkmark", "Collect Drops", true, true)
 						changeSetting("Checkmark", "Diamonds", true, true)
 						changeSetting("Box", "Range", 50000, true)
+						changeSetting("Box", "Drop Delay", 60, true)
+						changeSetting("Box", "Drop TimeOut", 30, true)
+						for a,b in pairs(currency) do
+							if a ~= "Diamonds" then
+								changeSetting("Checkmark", a, false, true)
+							end
+						end
+						_G.GrindKick = false
 					elseif b.challengeType == "RainbowPickups" then
 						LogMe("Switching ON Rainbow Pickups")
 						changeSetting("Checkmark", "Collect Drops", true, true)
 						changeSetting("Checkmark", "Rainbow", true, true)
 						changeSetting("Box", "Range", 50000, true)
-					
+						changeSetting("Box", "Drop Delay", 60, true)
+						changeSetting("Box", "Drop TimeOut", 30, true)
+						for a,b in pairs(currency) do
+							if a ~= "Rainbows" then
+								changeSetting("Checkmark", a, false, true)
+							end
+						end
+						_G.GrindKick = false
 					elseif b.challengeType == "LegendaryPets" then
 						LogMe("Switch to Legendary Challenege")
 						if _G.oldeggs["Buy Mode"] == nil then
