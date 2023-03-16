@@ -1,6 +1,5 @@
-print("Version 4.1.2")
+print("Version 4.1.4")
 					
-_G.GrindKick = true
 _G["PearlsMin"] = 750000000
 _G.highhigh = 99
 _G.lowhigh = 33
@@ -1280,6 +1279,7 @@ local startQuest = 	function(quest)
 							LogMe("Switching ON Coin Pickups")
 							changeSetting("Checkmark", "Collect Drops", true, true)
 							changeSetting("Checkmark", "Coins", true, true)
+							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
 							changeSetting("Box", "Drop TimeOut", 30, true)
@@ -1288,11 +1288,11 @@ local startQuest = 	function(quest)
 									changeSetting("Checkmark", a, false, true)
 								end
 							end
-							_G.GrindKick = false
 						elseif quest.challengeType == "DiamondPickups" or quest.challengeType == "Diamonds" then
 							LogMe("Switching ON Diamond Pickups")
 							changeSetting("Checkmark", "Collect Drops", true, true)
 							changeSetting("Checkmark", "Diamonds", true, true)
+							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
 							changeSetting("Box", "Drop TimeOut", 30, true)
@@ -1301,11 +1301,11 @@ local startQuest = 	function(quest)
 									changeSetting("Checkmark", a, false, true)
 								end
 							end
-							_G.GrindKick = false
 						elseif quest.challengeType == "PearlPickups" or quest.challengeType == "Pearls" then
 							LogMe("Switching ON Pearl Pickups")
 							changeSetting("Checkmark", "Collect Drops", true, true)
 							changeSetting("Checkmark", "Pearls", true, true)
+							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
 							changeSetting("Box", "Drop TimeOut", 30, true)
@@ -1314,11 +1314,11 @@ local startQuest = 	function(quest)
 									changeSetting("Checkmark", a, false, true)
 								end
 							end
-							_G.GrindKick = false
 						elseif quest.challengeType == "RainbowPickups" or quest.challengeType == "Rainbows" then
 							LogMe("Switching ON Rainbow Pickups")
 							changeSetting("Checkmark", "Collect Drops", true, true)
 							changeSetting("Checkmark", "Rainbows", true, true)
+							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
 							changeSetting("Box", "Drop TimeOut", 30, true)
@@ -1327,7 +1327,6 @@ local startQuest = 	function(quest)
 									changeSetting("Checkmark", a, false, true)
 								end
 							end
-							_G.GrindKick = false
 						elseif quest.challengeType == "LegendaryPets" then
 							LogMe("Switch to Legendary Challenege")
 							if _G.oldeggs["Buy Mode"] == nil then
@@ -1426,7 +1425,7 @@ local doQuest = function()
 							
 								--local startTime = os.time()
 								local counter = 0
-								while _G["Atlantis Quest"] and wait(.1) and playerLibrary.Quests["Atlantis"].progress > 0 and playerLibrary.Quests["Atlantis"].progress <= b[playerLibrary.Quests["Atlantis"].stage].amount and currentstage <= playerLibrary.Quests["Atlantis"].stage do
+								while _G["Atlantis Quest"] and wait(.1) and playerLibrary.Quests["Atlantis"].progress >= 0 and playerLibrary.Quests["Atlantis"].progress <= b[playerLibrary.Quests["Atlantis"].stage].amount and currentstage <= playerLibrary.Quests["Atlantis"].stage do
 									counter++
 									if counter > 300 then
 										print((playerLibrary.Quests["Atlantis"].progress / b[playerLibrary.Quests["Atlantis"].stage].amount) * 100 .. "%" .. " of " .. b[playerLibrary.Quests["Atlantis"].stage].challengeType)
@@ -1758,6 +1757,8 @@ end
 
 local drop = wally:CreateWindow('Drops')
 	drop:Toggle('Collect Drops', {location = _G, flag = 'drops'})
+	drop:Toggle('Auto-Kick', {location = _G, flag = 'GrindKick'})
+	
 	drop:Box('Range', {location = _G,
         flag = "droprange",
         type = 'number'
