@@ -1442,7 +1442,7 @@ local doQuest = function()
 							
 								--local startTime = os.time()
 								local counter = 0
-								while _G["Atlantis Quest"] and wait(.1) and playerLibrary.Quests["Atlantis"].progress >= 0 and playerLibrary.Quests["Atlantis"].progress < b[playerLibrary.Quests["Atlantis"].stage].amount and currentstage <= playerLibrary.Quests["Atlantis"].stage do
+								while _G["Atlantis Quest"] and wait(.1) and playerLibrary.Quests["Atlantis"].progress >= 0 and playerLibrary.Quests["Atlantis"].progress < b[playerLibrary.Quests["Atlantis"].stage].amount and currentstage == playerLibrary.Quests["Atlantis"].stage do
 									counter++
 									if counter > 300 then
 										startQuest(b[currentstage])
