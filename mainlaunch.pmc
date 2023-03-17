@@ -1,0 +1,91 @@
+﻿[PMC Globals]|None||
+[PMC Code v5.4.1]|F3||1|Window,2,Fast,0,1,Input,-1,-1,1|1|Macro1
+Context=None|
+Groups=Start:1
+1|[Assign Variable]|Accounts := {1: {Name: "xyzzy1111111128", Link: "ext+container:name=xyzzy1111111128&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=35316759536568180309524278665896", Skip: false}, 2: {Name: "xyzzy1111111127", Link: "ext+container:name=xyzzy1111111127&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=00616089707743731044926423959248", Skip: false}, 3: {Name: "DadaRogueBlox", Link: "ext+container:name=DadaRogueBlox&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=35316759536568180309524278665896", Skip: false}, 4: {Name: "CheekyDeliverance", Link: "ext+container:name=CheekyDeliverance&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=35316759536568180309524278665896", Skip: false}, 5: {Name: "xyzzy1111111131", Link: "ext+container:name=xyzzy1111111131&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=00616089707743731044926423959248", Skip: true}, 6: {Name: "SnozzberrySurprise", Link: "ext+container:name=SnozzberrySurprise&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=35316759536568180309524278665896", Skip: false}, 7: {Name: "xyzzy1111111117", Link: "ext+container:name=xyzzy1111111117&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=35316759536568180309524278665896", Skip: false}, 8: {Name: "xyzzy1111111112", Link: "ext+container:name=xyzzy1111111112&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=35316759536568180309524278665896", Skip: true}, 9: {Name: "xyzzy1111111113", Link: "ext+container:name=xyzzy1111111113&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=00616089707743731044926423959248", Skip: true}, 10: {Name: "xyzzy1111111114", Link: "ext+container:name=xyzzy1111111114&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=00616089707743731044926423959248", Skip: true}, 11: {Name: "PardonMeFrenchie", Link: "ext+container:name=PardonMeFrenchie&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=00616089707743731044926423959248", Skip: true}, 12: {Name: "PorkiePieface", Link: "ext+container:name=PorkiePieface&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=00616089707743731044926423959248", Skip: true}, 13: {Name: "SneakyDank", Link: "ext+container:name=SneakyDank&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=00616089707743731044926423959248", Skip: true}, 14: {Name: "MoarCowball", Link: "ext+container:name=MoarCowball&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=00616089707743731044926423959248", Skip: true}, 15: {Name: "xyzzy1111111122", Link: "ext+container:name=xyzzy1111111122&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=00616089707743731044926423959248", Skip: true}, 16: {Name: "xyzzy1111111120", Link: "ext+container:name=xyzzy1111111120&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=35316759536568180309524278665896", Skip: false}, 17: {Name: "xyzzy1111111125", Link: "ext+container:name=xyzzy1111111125&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=35316759536568180309524278665896", Skip: false}, 18: {Name: "xyzzy1111111124", Link: "ext+container:name=xyzzy1111111124&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=35316759536568180309524278665896", Skip: false}, 19: {Name: "xyzzy1111111123", Link: "ext+container:name=xyzzy1111111123&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=35316759536568180309524278665896", Skip: false}, 20: {Name: "xyzzy1111111119", Link: "ext+container:name=xyzzy1111111119&url=https://www.roblox.com/games/11746859781/SEASON-Bubble-Gum-Clicker?privateServerLinkCode=35316759536568180309524278665896", Skip: false}}|1|0|Variable|Expression||||1|
+2|[LoopStart]|LoopStart|0|0|Loop|||||2|
+3|[LoopStart]|Accounts`, key`, value|1|0|For|||||4|
+4|[Assign Variable]|Link := value.Link|1|0|Variable|Expression||||6|
+5|[Assign Variable]|Name := value.Name|1|0|Variable|Expression||||7|
+6|[Assign Variable]|Skip := value.Skip|1|0|Variable|Expression||||8|
+7|Evaluate Expression|not Skip|1|0|If_Statement|||||9|
+8|[LoopStart]|LoopStart|0|0|Loop|||||11|
+9|[Assign Variable]|sendbreak := false|1|0|Variable|Expression||||13|
+10|[Assign Variable]|sendcontinue := false|1|0|Variable|Expression||||14|
+11|[LoopStart]|LoopStart|0|0|Loop|||||15|
+12|WinGet|WindowID, ID|1|0|WinGet||Firefox|||17|
+13|If Window Exist|ahk_id %WindowID%|1|0|If_Statement|||||18|
+14|[MsgBox]|Closing Firefox|1|1|MsgBox|0||||20|
+15|WinKill||1|333|WinKill||ahk_id %WindowID%|||21|
+16|[Pause]|NoRandom|1|2000|Sleep|||||23|
+17|[Else]|Else|1|0|If_Statement|||||24|
+018|[MsgBox]|No Firefox Windows|1|1|MsgBox|0||||27|
+19|Break||1|0|Break|||||29|
+20|[End If]|EndIf|1|0|If_Statement|||||31|
+21|[LoopEnd]|LoopEnd|1|0|Loop|||||32|
+22|[LoopStart]|LoopStart|0|0|Loop|||||33|
+23|WinGet|WindowID, ID|1|0|WinGet||Synapse X - Crash Reporter|||35|
+24|If Window Exist|ahk_id %WindowID%|1|0|If_Statement|||||36|
+25|[MsgBox]|Closing Synapse Crash|1|1|MsgBox|0||||38|
+26|WinKill||1|333|WinKill||ahk_id %WindowID%|||39|
+27|[Pause]|NoRandom|1|2000|Sleep|||||41|
+28|[Else]|Else|1|0|If_Statement|||||42|
+029|[MsgBox]|No Synapse Crash Windows|1|1|MsgBox|0||||45|
+30|Break||1|0|Break|||||47|
+31|[End If]|EndIf|1|0|If_Statement|||||49|
+32|[LoopEnd]|LoopEnd|1|0|Loop|||||50|
+33|[LoopStart]|LoopStart|0|0|Loop|||||51|
+34|WinGet|WindowID, ID|1|0|WinGet||Roblox, ,Firefox|||53|
+35|If Window Exist|ahk_id %WindowID%|1|0|If_Statement|||||54|
+36|[MsgBox]|Closing Unnamed Roblox|1|1|MsgBox|0||||56|
+37|WinKill||1|333|WinKill||ahk_id %WindowID%|||57|
+38|[Pause]|NoRandom|1|2000|Sleep|||||59|
+39|[Else]|Else|1|0|If_Statement|||||60|
+040|[MsgBox]|No Rogue Roblox Windows|1|1|MsgBox|0||||63|
+41|Break||1|0|Break|||||65|
+42|[End If]|EndIf|1|0|If_Statement|||||67|
+43|[LoopEnd]|LoopEnd|1|0|Loop|||||68|
+44|[LoopStart]|LoopStart|0|0|Loop|||||69|
+45|WinGet|WindowID, ID|1|0|WinGet||%Name%|||71|
+46|If Window Exist|ahk_id %WindowID%|1|0|If_Statement|||||72|
+47|WinMaximize||1|333|WinMaximize||%Name%|||74|
+48|WinActivate||1|333|WinActivate||%Name%|||76|
+49|[Pause]|NoRandom|1|3000|Sleep|||||78|
+50|OCR|113, 25, 509, 78, playername|1|0|ImageToText|eng|Screen|||79|
+051|[MsgBox]|%playername%|1|3|MsgBox|0||||80|
+52|Compare Variables|playername = Name|1|0|If_Statement|||||82|
+53|[MsgBox]|%Name% found|1|1|MsgBox|0||||85|
+54|[Assign Variable]|sendbreak := true|1|0|Variable|Expression||||86|
+55|Break||1|0|Break|||||87|
+56|[Else]|Else|1|0|If_Statement|||||88|
+57|[MsgBox]|%Name% Not found|1|1|MsgBox|0||||91|
+58|WinKill||1|333|WinKill||%Name%|||92|
+59|Break||1|0|Break|||||94|
+060|Continue||1|0|Continue|||||95|
+61|[End If]|EndIf|1|0|If_Statement|||||97|
+62|[Else]|Else|1|0|If_Statement|||||99|
+63|[Pause]|NoRandom|1|2000|Sleep|||||102|
+64|[MsgBox]|Opening %Name%|1|1|MsgBox|0||||103|
+65|Run|C:\Program Files\Mozilla Firefox\firefox.exe -new-tab %Link%|1|0|Run|||||104|
+66|[Pause]|NoRandom|1|45000|Sleep|||||105|
+067|WinWaitActive||1|333|WinWaitActive||Roblox — Mozilla Firefox|||106|
+68|WinWaitActive|60|1|333|WinWaitActive||Roblox, ,Firefox|||109|
+69|WinSetTitle|%Name%|1|333|WinSetTitle||Roblox, , Firefox|||112|
+70|[Pause]|NoRandom|1|30000|Sleep|||||114|
+071|[Assign Variable]|sendbreak := true|1|0|Variable|Expression||||115|
+072|Break||1|0|Break|||||117|
+073|[MsgBox]|% value.Name|1|3|MsgBox|0||||118|
+074|WinMaximize||1|333|WinMaximize||Roblox|||119|
+075|WinSetTitle||1|333|WinSetTitle||% value.Name%|||121|
+76|[End If]|EndIf|1|0|If_Statement|||||123|
+77|[LoopEnd]|LoopEnd|1|0|Loop|||||125|
+78|Evaluate Expression|sendbreak|1|0|If_Statement|||||126|
+079|[MsgBox]|Sending Break|1|1|MsgBox|0||||128|
+80|Break||1|0|Break|||||130|
+81|[End If]|EndIf|1|0|If_Statement|||||132|
+82|[LoopEnd]|LoopEnd|1|0|Loop|||||133|
+83|[End If]|EndIf|1|0|If_Statement|||||134|
+84|[LoopEnd]|LoopEnd|1|0|Loop|||||135|
+85|[Pause]|NoRandom|1|60000|Sleep|||||136|
+86|[LoopEnd]|LoopEnd|1|0|Loop|||||137|
+
