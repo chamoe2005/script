@@ -1,4 +1,4 @@
-print("Version 4.2")
+print("Version 4.2.1")
 					
 _G["PearlsMin"] = 750000000
 _G.highhigh = 99
@@ -1273,6 +1273,8 @@ function switchEggs(args, old, switch)
 	end
 end
 
+
+
 local startQuest = 	function(quest)
 
 						if quest.challengeType == "CoinPickups" or quest.challengeType == "Coins" then
@@ -1282,7 +1284,7 @@ local startQuest = 	function(quest)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
-							changeSetting("Box", "Drop TimeOut", 30, true)
+							changeSetting("Box", "Drop TimeOut", 180, true)
 							for a,b in pairs(currency) do
 								if a ~= "Coins" then
 									changeSetting("Checkmark", a, false, true)
@@ -1291,11 +1293,13 @@ local startQuest = 	function(quest)
 						elseif quest.challengeType == "DiamondPickups" or quest.challengeType == "Diamonds" then
 							LogMe("Switching ON Diamond Pickups")
 							changeSetting("Checkmark", "Collect Drops", true, true)
+							changeSetting("Checkmark", "Coins", true, true)
 							changeSetting("Checkmark", "Diamonds", true, true)
+							changeSetting("Checkmark", "Pearls", true, true)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
-							changeSetting("Box", "Drop TimeOut", 30, true)
+							changeSetting("Box", "Drop TimeOut", 240, true)
 							for a,b in pairs(currency) do
 								if a ~= "Diamonds" then
 									changeSetting("Checkmark", a, false, true)
@@ -1308,7 +1312,7 @@ local startQuest = 	function(quest)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
-							changeSetting("Box", "Drop TimeOut", 30, true)
+							changeSetting("Box", "Drop TimeOut", 180, true)
 							for a,b in pairs(currency) do
 								if a ~= "Pearls" then
 									changeSetting("Checkmark", a, false, true)
@@ -1318,10 +1322,12 @@ local startQuest = 	function(quest)
 							LogMe("Switching ON Rainbow Pickups")
 							changeSetting("Checkmark", "Collect Drops", true, true)
 							changeSetting("Checkmark", "Rainbows", true, true)
+							changeSetting("Checkmark", "Coins", true, true)
+							changeSetting("Checkmark", "Diamonds", true, true)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
-							changeSetting("Box", "Drop TimeOut", 30, true)
+							changeSetting("Box", "Drop TimeOut", 180, true)
 							for a,b in pairs(currency) do
 								if a ~= "Rainbows" then
 									changeSetting("Checkmark", a, false, true)
