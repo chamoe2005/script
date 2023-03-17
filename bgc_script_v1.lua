@@ -1,4 +1,4 @@
-print("Version 4.1.6")
+print("Version 4.2")
 					
 _G["PearlsMin"] = 750000000
 _G.highhigh = 99
