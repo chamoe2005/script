@@ -1,4 +1,4 @@
-print("Version 4.1.4")
+print("Version 4.1.6")
 					
 _G["PearlsMin"] = 750000000
 _G.highhigh = 99
@@ -1327,10 +1327,10 @@ local startQuest = 	function(quest)
 									changeSetting("Checkmark", a, false, true)
 								end
 							end
-						elseif quest.challengeType == "LegendaryPets" then
-							LogMe("Switch to Legendary Challenege")
+						elseif quest.challengeType == "EpicPets" then
+							LogMe("Switch to Epic Challenege")
 							if _G.oldeggs["Buy Mode"] == nil then
-								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Snail Egg", "Pineapple Egg", "Lantern Egg", "Magma Egg", "Common Egg"}}, {}, true)
+								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Pineapple Egg", "Safe Egg", "Common Egg"}}, {}, true)
 								LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
 								_G.oldeggs = oldeggs
 							else
@@ -1338,7 +1338,22 @@ local startQuest = 	function(quest)
 								for a,b in pairs(_G.oldeggs["Eggs"]) do
 									LogMe(b)
 								end
-								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Snail Egg", "Pineapple Egg", "Lantern Egg", "Magma Egg", "Common Egg"}}, _G.oldeggs, false)
+								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Pineapple Egg", "Safe Egg", "Common Egg"}}, _G.oldeggs, false)
+								--_G.oldeggs = oldeggs
+							end
+							--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}})
+						elseif quest.challengeType == "LegendaryPets" then
+							LogMe("Switch to Legendary Challenege")
+							if _G.oldeggs["Buy Mode"] == nil then
+								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Lantern Egg", "Magma Egg", "Common Egg"}}, {}, true)
+								LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+								_G.oldeggs = oldeggs
+							else
+								LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+								for a,b in pairs(_G.oldeggs["Eggs"]) do
+									LogMe(b)
+								end
+								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Goldfish Egg", "Lantern Egg", "Magma Egg", "Common Egg"}}, _G.oldeggs, false)
 								--_G.oldeggs = oldeggs
 							end
 							--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}})
@@ -1398,7 +1413,7 @@ local endQuest = 	function(quest)
 							changeSetting("Checkmark", "Collect Drops", false, true)
 							changeSetting("Checkmark", "Rainbows", false, true)
 							--changeSetting("Box", "Range", 0, true)
-						elseif quest.challengeType == "LegendaryPets" or quest.challengeType == "GodlyPets" or quest.challengeType == "SecretPets" then
+						elseif quest.challengeType == "EpicPets" or quest.challengeType == "LegendaryPets" or quest.challengeType == "GodlyPets" or quest.challengeType == "SecretPets" then
 							LogMe("Switch Back Eggs")
 							switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
 							_G.oldeggs = {}
@@ -1410,14 +1425,16 @@ local endQuest = 	function(quest)
 					end
 
 
+local questInProgress = false
 
 local doQuest = function()
 
 					local playerLibrary = library.Save.Get()
 					--local lastPrize = 0
 					for a,b in pairs(library.Directory.Quests) do
-						if _G["Atlantis Quest"] and a == "Atlantis" and playerLibrary.Quests["Atlantis"] then   -- _G.[World .. "Quest"]  ~= nil and then
+						if _G["Atlantis Quest"] and a == "Atlantis" and playerLibrary.Quests["Atlantis"] and not questInProgress then   -- _G.[World .. "Quest"]  ~= nil and then
 							print("Atlantis Quest Stage " .. playerLibrary.Quests["Atlantis"].stage .. " of " .. #library.Directory.Quests["Atlantis"])
+							questInProgress = true
 							while wait(.1) and _G["Atlantis Quest"] and playerLibrary.Quests["Atlantis"].stage <= #library.Directory.Quests["Atlantis"] do
 					
 								local currentstage = playerLibrary.Quests["Atlantis"].stage
@@ -1425,17 +1442,25 @@ local doQuest = function()
 							
 								--local startTime = os.time()
 								local counter = 0
-								while _G["Atlantis Quest"] and wait(.1) and playerLibrary.Quests["Atlantis"].progress >= 0 and playerLibrary.Quests["Atlantis"].progress <= b[playerLibrary.Quests["Atlantis"].stage].amount and currentstage <= playerLibrary.Quests["Atlantis"].stage do
+								while _G["Atlantis Quest"] and wait(.1) and playerLibrary.Quests["Atlantis"].progress >= 0 and playerLibrary.Quests["Atlantis"].progress < b[playerLibrary.Quests["Atlantis"].stage].amount and currentstage <= playerLibrary.Quests["Atlantis"].stage do
 									counter++
 									if counter > 300 then
+										startQuest(b[currentstage])
 										print((playerLibrary.Quests["Atlantis"].progress / b[playerLibrary.Quests["Atlantis"].stage].amount) * 100 .. "%" .. " of " .. b[playerLibrary.Quests["Atlantis"].stage].challengeType)
 										counter = 0
 									end
 								end
-								print("Stage " .. currentstage .. " finished.  Next Stage: " .. playerLibrary.Quests["Atlantis"].stage)
 								endQuest(b[currentstage])
-							
+								if currentstage == playerLibrary.Quests["Atlantis"].stage then
+									print("Stage " .. currentstage .. " aborted.")
+								elseif currentstage < playerLibrary.Quests["Atlantis"].stage then
+									print("Stage " .. currentstage .. " finished.  Next Stage: " .. playerLibrary.Quests["Atlantis"].stage)
+								end
+								
 							end
+							questInProgress = false
+						elseif questInProgress then
+							print("Quest is already in progress")
 						end
 					end
 
