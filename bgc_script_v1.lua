@@ -1,4 +1,4 @@
-print("Version 4.2.3.1")
+print("Version 4.2.3.3")
 					
 _G["PearlsMin"] = 750000000
 _G.highhigh = 99
@@ -1338,6 +1338,21 @@ local startQuest = 	function(quest)
 									changeSetting("Checkmark", a, false, true)
 								end
 							end
+						elseif quest.challengeType == "Eggs" then
+							LogMe("Switch to Eggs Challenege")
+							if _G.oldeggs["Buy Mode"] == nil then
+								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Snail Egg", "Goldfish Egg", "Common Egg"}}, {}, true)
+								LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+								_G.oldeggs = oldeggs
+							else
+								LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+								for a,b in pairs(_G.oldeggs["Eggs"]) do
+									LogMe(b)
+								end
+								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Snail Egg", "Goldfish Egg", "Common Egg"}}, _G.oldeggs, false)
+								--_G.oldeggs = oldeggs
+							end
+							--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}})
 						elseif quest.challengeType == "EpicPets" then
 							LogMe("Switch to Epic Challenege")
 							if _G.oldeggs["Buy Mode"] == nil then
@@ -1420,7 +1435,7 @@ local endQuest = 	function(quest)
 							LogMe("Switching OFF Rainbow Pickups")
 							changeSetting("Checkmark", "Collect Drops", false, true)
 							--changeSetting("Box", "Range", 0, true)
-						elseif quest.challengeType == "EpicPets" or quest.challengeType == "LegendaryPets" or quest.challengeType == "GodlyPets" or quest.challengeType == "SecretPets" then
+						elseif quest.challengeType == "Eggs" or quest.challengeType == "EpicPets" or quest.challengeType == "LegendaryPets" or quest.challengeType == "GodlyPets" or quest.challengeType == "SecretPets" then
 							LogMe("Switch Back Eggs")
 							switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
 							_G.oldeggs = {}
