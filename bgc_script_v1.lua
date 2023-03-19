@@ -1,4 +1,4 @@
-print("Version 4.2.3")
+print("Version 4.2.3.1")
 					
 _G["PearlsMin"] = 750000000
 _G.highhigh = 99
@@ -1287,10 +1287,10 @@ local startQuest = 	function(quest)
 							changeSetting("Box", "Drop Delay", 60, true)
 							changeSetting("Box", "Drop TimeOut", 180, true)
 							for a,b in pairs(currency) do
-								if a ~= "Coins" or a ~= "Diamonds" then
-									changeSetting("Checkmark", a, false, true)
-								else
+								if a == "Coins" or a == "Diamonds" then
 									changeSetting("Checkmark", a, true, true)
+								else
+									changeSetting("Checkmark", a, false, true)
 								end
 							end
 						elseif quest.challengeType == "DiamondPickups" or quest.challengeType == "Diamonds" then
@@ -1304,10 +1304,10 @@ local startQuest = 	function(quest)
 							changeSetting("Box", "Drop Delay", 60, true)
 							changeSetting("Box", "Drop TimeOut", 240, true)
 							for a,b in pairs(currency) do
-								if a ~= "Coins" or a ~= "Diamonds" or a ~= "Pearls" then
-									changeSetting("Checkmark", a, false, true)
-								else
+								if a == "Coins" or a == "Diamonds" or a == "Pearls" then
 									changeSetting("Checkmark", a, true, true)
+								else
+									changeSetting("Checkmark", a, false, true)
 								end
 							end
 						elseif quest.challengeType == "PearlPickups" or quest.challengeType == "Pearls" then
@@ -1318,10 +1318,10 @@ local startQuest = 	function(quest)
 							changeSetting("Box", "Drop Delay", 60, true)
 							changeSetting("Box", "Drop TimeOut", 180, true)
 							for a,b in pairs(currency) do
-								if a ~= "Diamonds" or a ~= "Pearls" then
-									changeSetting("Checkmark", a, false, true)
-								else
+								if a == "Diamonds" or a == "Pearls" then
 									changeSetting("Checkmark", a, true, true)
+								else
+									changeSetting("Checkmark", a, false, true)
 								end
 							end
 						elseif quest.challengeType == "RainbowPickups" or quest.challengeType == "Rainbows" then
@@ -1332,10 +1332,10 @@ local startQuest = 	function(quest)
 							changeSetting("Box", "Drop Delay", 60, true)
 							changeSetting("Box", "Drop TimeOut", 180, true)
 							for a,b in pairs(currency) do
-								if a ~= "Coins" or a ~= "Diamonds" or a ~= "Rainbows" then
-									changeSetting("Checkmark", a, false, true)
-								else
+								if a == "Coins" or a == "Diamonds" or a == "Rainbows" then
 									changeSetting("Checkmark", a, true, true)
+								else
+									changeSetting("Checkmark", a, false, true)
 								end
 							end
 						elseif quest.challengeType == "EpicPets" then
