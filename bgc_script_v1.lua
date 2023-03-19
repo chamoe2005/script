@@ -1,4 +1,4 @@
-print("Version 4.2.1")
+print("Version 4.2.2")
 					
 _G["PearlsMin"] = 750000000
 _G.highhigh = 99
@@ -1281,6 +1281,7 @@ local startQuest = 	function(quest)
 							LogMe("Switching ON Coin Pickups")
 							changeSetting("Checkmark", "Collect Drops", true, true)
 							changeSetting("Checkmark", "Coins", true, true)
+							changeSetting("Checkmark", "Diamonds", true, true)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
@@ -1309,6 +1310,7 @@ local startQuest = 	function(quest)
 							LogMe("Switching ON Pearl Pickups")
 							changeSetting("Checkmark", "Collect Drops", true, true)
 							changeSetting("Checkmark", "Pearls", true, true)
+							changeSetting("Checkmark", "Diamonds", true, true)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
@@ -1402,22 +1404,18 @@ local endQuest = 	function(quest)
 						if quest.challengeType == "CoinPickups" or quest.challengeType == "Coins" then
 							LogMe("Switching OFF Coin Pickups")
 							changeSetting("Checkmark", "Collect Drops", false, true)
-							changeSetting("Checkmark", "Coins", false, true)
 							--changeSetting("Box", "Range", 0, true)
 						elseif quest.challengeType == "DiamondPickups" or quest.challengeType == "Diamonds" then
 							LogMe("Switching OFF Diamond Pickups")
 							changeSetting("Checkmark", "Collect Drops", false, true)
-							changeSetting("Checkmark", "Diamonds", false, true)
 							--changeSetting("Box", "Range", 0, true)
 						elseif quest.challengeType == "PearlPickups" or quest.challengeType == "Pearls" then
 							LogMe("Switching OFF Pearl Pickups")
 							changeSetting("Checkmark", "Collect Drops", false, true)
-							changeSetting("Checkmark", "Pearls", false, true)
 							--changeSetting("Box", "Range", 0, true)
 						elseif quest.challengeType == "RainbowPickups" or quest.challengeType == "Rainbows" then
 							LogMe("Switching OFF Rainbow Pickups")
 							changeSetting("Checkmark", "Collect Drops", false, true)
-							changeSetting("Checkmark", "Rainbows", false, true)
 							--changeSetting("Box", "Range", 0, true)
 						elseif quest.challengeType == "EpicPets" or quest.challengeType == "LegendaryPets" or quest.challengeType == "GodlyPets" or quest.challengeType == "SecretPets" then
 							LogMe("Switch Back Eggs")
