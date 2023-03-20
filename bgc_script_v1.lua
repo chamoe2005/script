@@ -1,5 +1,8 @@
-print("Version 4.2.3.3")
-					
+print("Version 4.3")
+				
+_G.AutoUse1PetLevel = true
+_G.AutoUsePower1 = true
+				
 _G["PearlsMin"] = 750000000
 _G.highhigh = 99
 _G.lowhigh = 33
@@ -1273,12 +1276,31 @@ function switchEggs(args, old, switch)
 	end
 end
 
+local EquipTeam = function(team)
+							local playerLibrary = library.Save.Get()
+							
+							for c,d in pairs(playerLibrary.Teams) do
+								if d.name == team then
+									LogMe("Switching to " .. team .. " Team")	
+									local ohTable1 = {
+										[1] = {
+											[1] = d.uid
+										},
+										[2] = {
+											[1] = false
+										}
+									}
+									game:GetService("ReplicatedStorage").Remotes["equip team"]:FireServer(ohTable1)
+								end
+							end
 
+end
 
 local startQuest = 	function(quest)
 
 						if quest.challengeType == "CoinPickups" or quest.challengeType == "Coins" then
 							LogMe("Switching ON Coin Pickups")
+							EquipTeam("Coins")
 							changeSetting("Checkmark", "Collect Drops", true, true)
 							--changeSetting("Checkmark", "Coins", true, true)
 							--changeSetting("Checkmark", "Diamonds", true, true)
@@ -1293,8 +1315,10 @@ local startQuest = 	function(quest)
 									changeSetting("Checkmark", a, false, true)
 								end
 							end
+
 						elseif quest.challengeType == "DiamondPickups" or quest.challengeType == "Diamonds" then
 							LogMe("Switching ON Diamond Pickups")
+							EquipTeam("Diamonds")
 							changeSetting("Checkmark", "Collect Drops", true, true)
 							--changeSetting("Checkmark", "Coins", true, true)
 							--changeSetting("Checkmark", "Diamonds", true, true)
@@ -1312,6 +1336,7 @@ local startQuest = 	function(quest)
 							end
 						elseif quest.challengeType == "PearlPickups" or quest.challengeType == "Pearls" then
 							LogMe("Switching ON Pearl Pickups")
+							EquipTeam("Pearls")
 							changeSetting("Checkmark", "Collect Drops", true, true)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
@@ -1326,6 +1351,7 @@ local startQuest = 	function(quest)
 							end
 						elseif quest.challengeType == "RainbowPickups" or quest.challengeType == "Rainbows" then
 							LogMe("Switching ON Rainbow Pickups")
+							EquipTeam("Rainbows")
 							changeSetting("Checkmark", "Collect Drops", true, true)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
@@ -1421,18 +1447,22 @@ local endQuest = 	function(quest)
 
 						if quest.challengeType == "CoinPickups" or quest.challengeType == "Coins" then
 							LogMe("Switching OFF Coin Pickups")
+							EquipTeam("Bubbles")
 							changeSetting("Checkmark", "Collect Drops", false, true)
 							--changeSetting("Box", "Range", 0, true)
 						elseif quest.challengeType == "DiamondPickups" or quest.challengeType == "Diamonds" then
 							LogMe("Switching OFF Diamond Pickups")
+							EquipTeam("Bubbles")
 							changeSetting("Checkmark", "Collect Drops", false, true)
 							--changeSetting("Box", "Range", 0, true)
 						elseif quest.challengeType == "PearlPickups" or quest.challengeType == "Pearls" then
 							LogMe("Switching OFF Pearl Pickups")
+							EquipTeam("Bubbles")
 							changeSetting("Checkmark", "Collect Drops", false, true)
 							--changeSetting("Box", "Range", 0, true)
 						elseif quest.challengeType == "RainbowPickups" or quest.challengeType == "Rainbows" then
 							LogMe("Switching OFF Rainbow Pickups")
+							EquipTeam("Bubbles")
 							changeSetting("Checkmark", "Collect Drops", false, true)
 							--changeSetting("Box", "Range", 0, true)
 						elseif quest.challengeType == "Eggs" or quest.challengeType == "EpicPets" or quest.challengeType == "LegendaryPets" or quest.challengeType == "GodlyPets" or quest.challengeType == "SecretPets" then
@@ -2037,7 +2067,7 @@ local CollectChests = function()
 				
 				local startTime = os.time()
 				repeat
-					LogMe("TP to Chest")
+					LogMe("TP to " .. b.name)
 					local playerroot = GetPlayerRoot()
 					GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(chest.Position.X + math.random(8,20), chest.Position.Y + 10, chest.Position.Z + math.random(8,20)))
 					wait(_G.TeleportDelay)
@@ -3060,6 +3090,137 @@ spawn(function()
 end)
 ]]--
 
+
+
+local UsePotions = function()
+
+	if _G.AutoUse1PetLevel or _G.AutoUsePower1 then
+	
+		local library = require(game.ReplicatedStorage:WaitForChild("Nevermore"):WaitForChild("Library"))
+						
+		local playerLibrary = library.Save.Get()
+		
+		local petsTable = {}
+
+
+		for x,y in pairs(playerLibrary.Pets) do
+
+			local highestuid = 0
+			local highestbubbles = 0
+			local highestcoins = 0
+			local highestdiamonds = 0
+				
+			for a,b in pairs(playerLibrary.Pets) do
+				
+					local petFound = false
+					for i,v in pairs(petsTable) do
+						--print(b.uid,v)
+						if b.uid == v then
+							petFound = true
+							--print("Pet Found")
+						end
+					end
+						--print(lowestbubbles,library.Directory.Pets[b.id].buffs.Bubbles)
+						--print(lowestcoins,library.Directory.Pets[b.id].buffs.Coins)
+						--print(lowestdiamonds,library.Directory.Pets[b.id].buffs.Diamonds)
+					
+					local petBubbles = 0
+					local petCoins = 0
+					local petDiamonds = 0
+					
+					if b.s then
+						petBubbles = library.Directory.Pets[b.id].buffs.Bubbles * 2
+						petCoins = library.Directory.Pets[b.id].buffs.Coins * 2
+						petDiamonds = library.Directory.Pets[b.id].buffs.Diamonds * 2
+					else
+						petBubbles = library.Directory.Pets[b.id].buffs.Bubbles
+						petCoins = library.Directory.Pets[b.id].buffs.Coins
+						petDiamonds = library.Directory.Pets[b.id].buffs.Diamonds
+					end
+					
+				
+					if not petFound and (petBubbles > highestbubbles or 
+										 petCoins > highestcoins or 
+										 petDiamonds > highestdiamonds) then
+						highestuid = b.uid
+						highestbubbles = petBubbles
+						highestcoins = petCoins
+						highestdiamonds = petDiamonds
+					end
+			end
+
+			table.insert(petsTable,highestuid)
+		end
+		
+		for x,y in pairs(petsTable) do
+			local petIndex = nil
+				
+			for a,b in pairs(playerLibrary.Pets) do
+				if b.uid == y then
+					petIndex = a
+				end
+			end
+			
+			local sendbreak = false
+			
+			if petIndex ~= nil then	
+				if _G.AutoUse1PetLevel then
+					for idx,potions in pairs(playerLibrary.Potions) do
+						if potions.name == "Power 1" and playerLibrary.Pets[petIndex].power == nil then
+							print("Attempting to use Power 1 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+							local ohTable1 = {
+								[1] = {
+									[1] = potions.uid,
+									[2] = playerLibrary.Pets[petIndex].uid
+								},
+								[2] = {
+									[1] = false,
+									[2] = false
+								}
+							}
+								game:GetService("ReplicatedStorage").Remotes["use potion"]:FireServer(ohTable1)
+							wait(1)
+							sendbreak = true
+							break
+						end
+					end
+				end
+				
+				
+				if sendbreak then
+					break
+				elseif _G.AutoUsePower1 then
+					for idx,potions in pairs(playerLibrary.Potions) do
+						if potions.name == "1 Pet Level" and playerLibrary.Pets[petIndex].lvl < 25 then
+							print("Attempting to use 1 Pet Level " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+							local ohTable1 = {
+								[1] = {
+									[1] = potions.uid,
+									[2] = playerLibrary.Pets[petIndex].uid
+								},
+								[2] = {
+									[1] = false,
+									[2] = false
+								}
+							}
+
+							game:GetService("ReplicatedStorage").Remotes["use potion"]:FireServer(ohTable1)
+							wait(1)
+							sendbreak = true
+							break
+						end
+					end
+				end
+				
+				if sendbreak then break end
+			end
+		end
+	end
+end
+
+
+
+
 spawn(function()
 	while wait(15) do
 		if not library.Variables.LoadingWorld then
@@ -3180,6 +3341,8 @@ spawn(function()
 					
 				end
 			end
+			
+			UsePotions()
 		end
 	end
 end)
