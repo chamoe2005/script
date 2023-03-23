@@ -1,4 +1,4 @@
-print("Version 4.3")
+print("Version 4.3.1")
 				
 _G.AutoUse1PetLevel = true
 _G.AutoUsePower1 = true
@@ -1307,7 +1307,7 @@ local startQuest = 	function(quest)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
-							changeSetting("Box", "Drop TimeOut", 180, true)
+							changeSetting("Box", "Drop TimeOut", 30, true)
 							for a,b in pairs(currency) do
 								if a == "Coins" or a == "Diamonds" then
 									changeSetting("Checkmark", a, true, true)
@@ -1326,7 +1326,7 @@ local startQuest = 	function(quest)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
-							changeSetting("Box", "Drop TimeOut", 240, true)
+							changeSetting("Box", "Drop TimeOut", 30, true)
 							for a,b in pairs(currency) do
 								if a == "Coins" or a == "Diamonds" or a == "Pearls" then
 									changeSetting("Checkmark", a, true, true)
@@ -1341,7 +1341,7 @@ local startQuest = 	function(quest)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
-							changeSetting("Box", "Drop TimeOut", 180, true)
+							changeSetting("Box", "Drop TimeOut", 30, true)
 							for a,b in pairs(currency) do
 								if a == "Diamonds" or a == "Pearls" then
 									changeSetting("Checkmark", a, true, true)
@@ -1356,7 +1356,7 @@ local startQuest = 	function(quest)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
 							changeSetting("Box", "Drop Delay", 60, true)
-							changeSetting("Box", "Drop TimeOut", 180, true)
+							changeSetting("Box", "Drop TimeOut", 30, true)
 							for a,b in pairs(currency) do
 								if a == "Coins" or a == "Diamonds" or a == "Rainbows" then
 									changeSetting("Checkmark", a, true, true)
