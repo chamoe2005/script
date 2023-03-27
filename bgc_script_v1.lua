@@ -1,4 +1,4 @@
-print("Version 4.6.1")
+print("Version 4.6.2")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -1121,7 +1121,7 @@ end
 		--boosts:Toggle(a .. " ", {flag = a .. " Use"})
 	--end
 	for a,b in orderedPairs(library.Directory.Potions) do
-		if a == "1 Pet Level" or a == "Power 1" or a == "Power 2" then
+		if a == "Max Pet Level" or a == "1 Pet Level" or a == "Power 1" or a == "Power 2" then
 			boosts:Toggle(a .. " Use", {flag = a .. " Use"})
 		end
 	end
@@ -3278,7 +3278,7 @@ end)
 
 local UsePotions = function()
 
-	if boosts.flags["1 Pet Level Use"] or boosts.flags["Power 1 Use"] or boosts.flags["Power 2 Use"] then
+	if boosts.flags["Max Pet Level Use"] or boosts.flags["1 Pet Level Use"] or boosts.flags["Power 1 Use"] or boosts.flags["Power 2 Use"] then
 	
 		local library = require(game.ReplicatedStorage:WaitForChild("Nevermore"):WaitForChild("Library"))
 						
@@ -3348,34 +3348,11 @@ local UsePotions = function()
 			local sendbreak = false
 			
 			if petIndex ~= nil then	
-				if boosts.flags["Power 1 Use"] then
-					for idx,potions in pairs(playerLibrary.Potions) do
-						if potions.name == "Power 1" and playerLibrary.Pets[petIndex].power == nil then
-							print("Attempting to use Power 1 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
-							local ohTable1 = {
-								[1] = {
-									[1] = potions.uid,
-									[2] = playerLibrary.Pets[petIndex].uid
-								},
-								[2] = {
-									[1] = false,
-									[2] = false
-								}
-							}
-								game:GetService("ReplicatedStorage").Remotes["use potion"]:FireServer(ohTable1)
-							wait(1)
-							sendbreak = true
-							break
-						end
-					end
-				end
 				
-				if sendbreak then
-					break
-				elseif boosts.flags["Power 2 Use"] then
+				if boosts.flags["Max Pet Level Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
-						if potions.name == "Power 2" and (playerLibrary.Pets[petIndex].power == nil or playerLibrary.Pets[petIndex].power == "Power 1") then
-							print("Attempting to use Power 2 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+						if potions.name == "Max Pet Level" and playerLibrary.Pets[petIndex].lvl < 25 then
+							print("Attempting to use Max Pet Level " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
 							local ohTable1 = {
 								[1] = {
 									[1] = potions.uid,
@@ -3419,6 +3396,57 @@ local UsePotions = function()
 						end
 					end
 				end
+				
+				if sendbreak then
+					break
+				elseif boosts.flags["Power 2 Use"] then
+					for idx,potions in pairs(playerLibrary.Potions) do
+						if potions.name == "Power 2" and (playerLibrary.Pets[petIndex].power == nil or playerLibrary.Pets[petIndex].power == "Power 1") then
+							print("Attempting to use Power 2 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+							local ohTable1 = {
+								[1] = {
+									[1] = potions.uid,
+									[2] = playerLibrary.Pets[petIndex].uid
+								},
+								[2] = {
+									[1] = false,
+									[2] = false
+								}
+							}
+
+							game:GetService("ReplicatedStorage").Remotes["use potion"]:FireServer(ohTable1)
+							wait(1)
+							sendbreak = true
+							break
+						end
+					end
+				end
+				
+
+				if sendbreak then
+					break
+				elseif boosts.flags["Power 1 Use"] then
+					for idx,potions in pairs(playerLibrary.Potions) do
+						if potions.name == "Power 1" and playerLibrary.Pets[petIndex].power == nil then
+							print("Attempting to use Power 1 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+							local ohTable1 = {
+								[1] = {
+									[1] = potions.uid,
+									[2] = playerLibrary.Pets[petIndex].uid
+								},
+								[2] = {
+									[1] = false,
+									[2] = false
+								}
+							}
+								game:GetService("ReplicatedStorage").Remotes["use potion"]:FireServer(ohTable1)
+							wait(1)
+							sendbreak = true
+							break
+						end
+					end
+				end
+				
 				
 				if sendbreak then break end
 			end
