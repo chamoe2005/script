@@ -1,4 +1,4 @@
-print("Version 4.4.7")
+print("Version 4.4.8")
 				
 _G.AutoUse1PetLevel = true
 _G.AutoUsePower1 = true
@@ -1578,6 +1578,7 @@ end
 		farm:Toggle("Atlantis Egg Quests", {location = _G, flag = "Atlantis Egg Quests"})
 
 _G.eggQuests = {[1] = false, [2] = false, [3] = false}
+_G.oldeggs = {}
 
 spawn(function()
 				while wait(30) do
