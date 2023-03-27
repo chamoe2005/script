@@ -1,4 +1,4 @@
-print("Version 4.4.9")
+print("Version 4.5")
 				
 _G.AutoUse1PetLevel = true
 _G.AutoUsePower1 = true
@@ -1604,12 +1604,8 @@ spawn(function()
 									end
 									break
 								elseif b.progress >= b.goal and string.find(b.name, "Egg") then
-									print("Old Eggs: " .. _G.oldeggs)
-									if _G.oldeggs ~= {} and _G.oldeggs ~= nil then
-										LogMe("Switch Back Eggs")
-										switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
-										_G.oldeggs = {}
-									end
+									LogMe("Switch Back Eggs")
+									switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Coral Egg"}}, {}, true)
 									_G.eggQuests[a] = true
 								elseif b.progress < b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
 									LogMe("Switch to " .. b.name .. " Challenge")
@@ -1627,12 +1623,8 @@ spawn(function()
 									end
 									break
 								elseif b.progress >= b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
-									print("Old Eggs: " .. _G.oldeggs)
-									if _G.oldeggs ~= {} and _G.oldeggs ~= nil then
-										LogMe("Switch Back Eggs")
-										switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
-										_G.oldeggs = {}
-									end
+									LogMe("Switch Back Eggs")
+									switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Coral Egg"}}, {}, true)
 									_G.eggQuests[a] = true
 								elseif b.progress < b.goal and (b.name == "Diamonds" or b.name == "Pearls") then
 									startQuest({["challengeType"] = "Pearls"})
