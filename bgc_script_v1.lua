@@ -1,4 +1,4 @@
-print("Version 4.5.5")
+print("Version 4.5.6")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -3231,7 +3231,7 @@ end)
 
 local UsePotions = function()
 
-	if _G["1 Pet Level Use"] or _G["Power 1 Use"] or _G["Power 2 Use"] then
+	if boosts.flags["1 Pet Level Use"] or boosts.flags["Power 1 Use"] or boosts.flags["Power 2 Use"] then
 	
 		local library = require(game.ReplicatedStorage:WaitForChild("Nevermore"):WaitForChild("Library"))
 						
@@ -3301,7 +3301,7 @@ local UsePotions = function()
 			local sendbreak = false
 			
 			if petIndex ~= nil then	
-				if _G["Power 1 Use"] then
+				if boosts.flags["Power 1 Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
 						if potions.name == "Power 1" and playerLibrary.Pets[petIndex].power == nil then
 							print("Attempting to use Power 1 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
@@ -3325,7 +3325,7 @@ local UsePotions = function()
 				
 				if sendbreak then
 					break
-				elseif _G["Power 2 Use"] then
+				elseif boosts.flags["Power 2 Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
 						if potions.name == "Power 2" and (playerLibrary.Pets[petIndex].power == nil or playerLibrary.Pets[petIndex].power == 1) then
 							print("Attempting to use Power 2 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
@@ -3350,7 +3350,7 @@ local UsePotions = function()
 				
 				if sendbreak then
 					break
-				elseif _G["1 Pet Level Use"] then
+				elseif boosts.flags["1 Pet Level Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
 						if potions.name == "1 Pet Level" and playerLibrary.Pets[petIndex].lvl < 25 then
 							print("Attempting to use 1 Pet Level " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
