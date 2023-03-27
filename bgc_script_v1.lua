@@ -1,4 +1,4 @@
-print("Version 4.4.3")
+print("Version 4.4.4")
 				
 _G.AutoUse1PetLevel = true
 _G.AutoUsePower1 = true
@@ -1637,7 +1637,7 @@ spawn(function()
 							end
 						end
 						
-						for a,b in pairs(_G.eggQuests) Do
+						for a,b in pairs(_G.eggQuests) do
 							print(a,b)
 						end
 					end
