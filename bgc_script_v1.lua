@@ -1,4 +1,4 @@
-print("Version 4.5.2")
+print("Version 4.5.3")
 				
 _G.AutoUse1PetLevel = true
 _G.AutoUsePower1 = true
@@ -1137,6 +1137,7 @@ local function doDailyShop()
 
 			game:GetService("ReplicatedStorage").Remotes["buy daily shop item"]:InvokeServer(ohTable1)
 			wait(3)
+			updateBoosts()
 		elseif a == "Respect 2" and playerLibrary.DailyShop.RespectLevel >= 2 and boosts.flags[b.name .. " "] and b.amount > 0 and playerLibrary[b.currency] >= b.cost then
 			print("Buying Item " .. a)
 			local ohTable1 = {
@@ -1150,6 +1151,7 @@ local function doDailyShop()
 
 			game:GetService("ReplicatedStorage").Remotes["buy daily shop item"]:InvokeServer(ohTable1)
 			wait(3)
+			updateBoosts()
 		elseif a == "Respect 3" and playerLibrary.DailyShop.RespectLevel >= 3 and boosts.flags[b.name .. " "] and b.amount > 0 and playerLibrary[b.currency] >= b.cost then
 			print("Buying Item " .. a)
 			local ohTable1 = {
@@ -1163,6 +1165,7 @@ local function doDailyShop()
 
 			game:GetService("ReplicatedStorage").Remotes["buy daily shop item"]:InvokeServer(ohTable1)
 			wait(3)
+			updateBoosts()
 		end
 	end
 end
