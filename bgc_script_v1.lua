@@ -1,4 +1,4 @@
-print("Version 4.5.7")
+print("Version 4.5.8")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -1698,8 +1698,30 @@ spawn(function()
 							end
 						end
 						
+						local claimquest = true
+						
 						for a,b in pairs(_G.eggQuests) do
-							print(a,b)
+							if b == false then
+								claimquest = false
+							end
+						end
+						
+						if claimquest then
+							print("Claiming Egg Quest")
+						
+							local ohTable1 = {
+								[1] = {
+									[1] = false
+								},
+								[2] = {
+									[1] = 2
+								}
+							}
+
+							game:GetService("ReplicatedStorage").Remotes["claim egg quest prize"]:InvokeServer(ohTable1)
+							wait(3)
+							_G.eggQuests = {[1] = false, [2] = false, [3] = false}
+
 						end
 					end
 				end
