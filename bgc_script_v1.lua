@@ -1,4 +1,4 @@
-print("Version 4.6")
+print("Version 4.6.1")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -1630,115 +1630,125 @@ local doChallenge = function()
 		end
 
 end
+
+_G.eggQuests = {[1] = false, [2] = false, [3] = false}
+
+local doEggQuests = function()
+
+						if _G["Atlantis Egg Quests"] then
+							changeSetting("Box", "Auto Shiny Amount", 0, true)
+							changeSetting("Selection", "Delete Mode", "Custom Delete", true)
+							changeSetting("Box", "Delete at Pet #", 200, true)
+							local playerLibrary = library.Save.Get()
+							
+							for a,b in pairs(playerLibrary.EggQuests.Atlantis) do
+								if not _G.eggQuests[a] then
+									LogMe("Egg Quest #" .. a .. " " .. b.name .. " " .. b.progress / b.goal * 100 .. "%")
+									if b.progress < b.goal and string.find(b.name, "Egg") then
+										LogMe("Switch to " .. b.name .. " Challenge")
+										if _G.oldeggs["Buy Mode"] == nil then
+											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, {}, true)
+											LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+											_G.oldeggs = oldeggs
+										else
+											LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+											for a,b in pairs(_G.oldeggs["Eggs"]) do
+												LogMe(b)
+											end
+											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, _G.oldeggs, false)
+											--_G.oldeggs = oldeggs
+										end
+										break
+									elseif b.progress >= b.goal and string.find(b.name, "Egg") then
+										LogMe("Switch Back Eggs")
+										switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Coral Egg"}}, {}, true)
+										_G.eggQuests[a] = true
+									elseif b.progress < b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
+										LogMe("Switch to " .. b.name .. " Challenge")
+										if _G.oldeggs["Buy Mode"] == nil then
+											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Snail Egg"}}, {}, true)
+											LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+											_G.oldeggs = oldeggs
+										else
+											LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+											for a,b in pairs(_G.oldeggs["Eggs"]) do
+												LogMe(b)
+											end
+											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Snail Egg"}}, _G.oldeggs, false)
+											--_G.oldeggs = oldeggs
+										end
+										break
+									elseif b.progress >= b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
+										LogMe("Switch Back Eggs")
+										switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Coral Egg"}}, {}, true)
+										_G.eggQuests[a] = true
+									elseif b.progress < b.goal and (b.name == "Diamonds" or b.name == "Pearls") then
+										startQuest({["challengeType"] = "Pearls"})
+										break
+									elseif b.progress >= b.goal and (b.name == "Diamonds" or b.name == "Pearls") then
+										endQuest({["challengeType"] = "Pearls"})
+										_G.eggQuests[a] = true
+									elseif b.progress < b.goal and b.name == "ShinyLegendaryPets" then
+										changeSetting("Box", "Auto Shiny Amount", 6, true)
+										--startQuest({["challengeType"] = "Pearls"})
+										break
+									elseif b.progress >= b.goal and b.name == "ShinyLegendaryPets" then
+										changeSetting("Box", "Auto Shiny Amount", 0, true)
+										changeSetting("Selection", "Delete Mode", "Custom Delete", true)
+										changeSetting("Box", "Delete at Pet #", 50, true)
+										DeletePets()
+										wait(10)
+										changeSetting("Box", "Delete at Pet #", 200, true)
+										_G.eggQuests[a] = true
+									elseif b.progress >= b.goal then
+										_G.eggQuests[a] = true
+									end
+								end
+							end
+							
+							local claimquest = true
+							
+							for a,b in pairs(_G.eggQuests) do
+								if b == false then
+									claimquest = false
+								end
+							end
+							
+							if claimquest then
+								print("Claiming Egg Quest")
+							
+								local ohTable1 = {
+									[1] = {
+										[1] = false
+									},
+									[2] = {
+										[1] = 2
+									}
+								}
+
+								game:GetService("ReplicatedStorage").Remotes["claim egg quest prize"]:InvokeServer(ohTable1)
+								wait(3)
+								_G.eggQuests = {[1] = false, [2] = false, [3] = false}
+
+							end
+						end
+
+end
+
+
+
+
 		farm:Section("Quests")
 		farm:Toggle("Atlantis Quest", {location = _G, flag = "Atlantis Quest"}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doQuest() end) end)
 		if _G.ChallengeName ~= nil then
 			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doChallenge() end) end)
 		end
-		farm:Toggle("Atlantis Egg Quests", {location = _G, flag = "Atlantis Egg Quests"})
+		farm:Toggle("Atlantis Egg Quests", {location = _G, flag = "Atlantis Egg Quests"}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doEggQuests() end) end)
 
-_G.eggQuests = {[1] = false, [2] = false, [3] = false}
-_G.oldeggs = {}
 
 spawn(function()
 				while wait(30) do
-					if _G["Atlantis Egg Quests"] then
-						changeSetting("Box", "Auto Shiny Amount", 0, true)
-						changeSetting("Selection", "Delete Mode", "Custom Delete", true)
-						changeSetting("Box", "Delete at Pet #", 200, true)
-						local playerLibrary = library.Save.Get()
-						
-						for a,b in pairs(playerLibrary.EggQuests.Atlantis) do
-							if not _G.eggQuests[a] then
-								LogMe("Egg Quest #" .. a .. " " .. b.name .. " " .. b.progress / b.goal * 100 .. "%")
-								if b.progress < b.goal and string.find(b.name, "Egg") then
-									LogMe("Switch to " .. b.name .. " Challenge")
-									if _G.oldeggs["Buy Mode"] == nil then
-										local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, {}, true)
-										LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
-										_G.oldeggs = oldeggs
-									else
-										LogMe("Chal" .. _G.oldeggs["Buy Mode"])
-										for a,b in pairs(_G.oldeggs["Eggs"]) do
-											LogMe(b)
-										end
-										local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, _G.oldeggs, false)
-										--_G.oldeggs = oldeggs
-									end
-									break
-								elseif b.progress >= b.goal and string.find(b.name, "Egg") then
-									LogMe("Switch Back Eggs")
-									switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Coral Egg"}}, {}, true)
-									_G.eggQuests[a] = true
-								elseif b.progress < b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
-									LogMe("Switch to " .. b.name .. " Challenge")
-									if _G.oldeggs["Buy Mode"] == nil then
-										local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Snail Egg"}}, {}, true)
-										LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
-										_G.oldeggs = oldeggs
-									else
-										LogMe("Chal" .. _G.oldeggs["Buy Mode"])
-										for a,b in pairs(_G.oldeggs["Eggs"]) do
-											LogMe(b)
-										end
-										local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Snail Egg"}}, _G.oldeggs, false)
-										--_G.oldeggs = oldeggs
-									end
-									break
-								elseif b.progress >= b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
-									LogMe("Switch Back Eggs")
-									switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Coral Egg"}}, {}, true)
-									_G.eggQuests[a] = true
-								elseif b.progress < b.goal and (b.name == "Diamonds" or b.name == "Pearls") then
-									startQuest({["challengeType"] = "Pearls"})
-									break
-								elseif b.progress >= b.goal and (b.name == "Diamonds" or b.name == "Pearls") then
-									endQuest({["challengeType"] = "Pearls"})
-									_G.eggQuests[a] = true
-								elseif b.progress < b.goal and b.name == "ShinyLegendaryPets" then
-									changeSetting("Box", "Auto Shiny Amount", 6, true)
-									--startQuest({["challengeType"] = "Pearls"})
-									break
-								elseif b.progress >= b.goal and b.name == "ShinyLegendaryPets" then
-									changeSetting("Box", "Auto Shiny Amount", 0, true)
-									changeSetting("Selection", "Delete Mode", "Custom Delete", true)
-									changeSetting("Box", "Delete at Pet #", 50, true)
-									DeletePets()
-									wait(10)
-									changeSetting("Box", "Delete at Pet #", 200, true)
-									_G.eggQuests[a] = true
-								elseif b.progress >= b.goal then
-									_G.eggQuests[a] = true
-								end
-							end
-						end
-						
-						local claimquest = true
-						
-						for a,b in pairs(_G.eggQuests) do
-							if b == false then
-								claimquest = false
-							end
-						end
-						
-						if claimquest then
-							print("Claiming Egg Quest")
-						
-							local ohTable1 = {
-								[1] = {
-									[1] = false
-								},
-								[2] = {
-									[1] = 2
-								}
-							}
-
-							game:GetService("ReplicatedStorage").Remotes["claim egg quest prize"]:InvokeServer(ohTable1)
-							wait(3)
-							_G.eggQuests = {[1] = false, [2] = false, [3] = false}
-
-						end
-					end
+					doEggQuests()
 				end
 
 			end)
