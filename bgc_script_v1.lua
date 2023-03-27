@@ -1,4 +1,4 @@
-print("Version 4.5.1")
+print("Version 4.5.2")
 				
 _G.AutoUse1PetLevel = true
 _G.AutoUsePower1 = true
@@ -1109,7 +1109,7 @@ end
 
 	updateBoosts()
 
-	boosts:Section("Merchant Auto Buy")
+	boosts:Section("Auto Buy")
 	boosts:Toggle("Pet ", {flag = "Pet "})
 	for a,b in orderedPairs(library.Directory.Boosts) do
 		boosts:Toggle(a .. " ", {flag = a .. " "})
@@ -1117,6 +1117,55 @@ end
 	for a,b in orderedPairs(library.Directory.Potions) do
 		boosts:Toggle(a .. " ", {flag = a .. " "})
 	end
+	
+	
+local function doDailyShop()
+	local playerLibrary = library.Save.Get()
+	local dailyitems = playerLibrary.DailyShop.Items
+	print("Daily Shop Respect Level: " .. playerLibrary.DailyShop.RespectLevel)
+	for a,b in pairs(dailyitems) do
+		if a == "Respect 1" and boosts.flags[b.name .. " "] and b.amount > 0 and playerLibrary[b.currency] >= b.cost then
+			print("Buying Item " .. a)
+			local ohTable1 = {
+				[1] = {
+					[1] = "Respect 1"
+				},
+				[2] = {
+					[1] = false
+				}
+			}
+
+			game:GetService("ReplicatedStorage").Remotes["buy daily shop item"]:InvokeServer(ohTable1)
+			wait(3)
+		elseif a == "Respect 2" and playerLibrary.DailyShop.RespectLevel >= 2 and boosts.flags[b.name .. " "] and b.amount > 0 and playerLibrary[b.currency] >= b.cost then
+			print("Buying Item " .. a)
+			local ohTable1 = {
+				[1] = {
+					[1] = "Respect 2"
+				},
+				[2] = {
+					[1] = false
+				}
+			}
+
+			game:GetService("ReplicatedStorage").Remotes["buy daily shop item"]:InvokeServer(ohTable1)
+			wait(3)
+		elseif a == "Respect 3" and playerLibrary.DailyShop.RespectLevel >= 3 and boosts.flags[b.name .. " "] and b.amount > 0 and playerLibrary[b.currency] >= b.cost then
+			print("Buying Item " .. a)
+			local ohTable1 = {
+				[1] = {
+					[1] = "Respect 3"
+				},
+				[2] = {
+					[1] = false
+				}
+			}
+
+			game:GetService("ReplicatedStorage").Remotes["buy daily shop item"]:InvokeServer(ohTable1)
+			wait(3)
+		end
+	end
+end
 	
 local function doMerchant()
 	local ohTable1 = {
@@ -2873,6 +2922,7 @@ spawn(function()
 			SpinPrizeWheel()
 			--FreeEventWheel() 
 			doMerchant()
+			doDailyShop()
 			
 			local playerLibrary = library.Save.Get()
 			local newworld = nil
