@@ -1,4 +1,4 @@
-print("Version 4.5.9")
+print("Version 4.6")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -1698,7 +1698,7 @@ spawn(function()
 								elseif b.progress < b.goal and b.name == "ShinyLegendaryPets" then
 									changeSetting("Box", "Auto Shiny Amount", 6, true)
 									--startQuest({["challengeType"] = "Pearls"})
-									--break
+									break
 								elseif b.progress >= b.goal and b.name == "ShinyLegendaryPets" then
 									changeSetting("Box", "Auto Shiny Amount", 0, true)
 									changeSetting("Selection", "Delete Mode", "Custom Delete", true)
