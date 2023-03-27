@@ -1,4 +1,4 @@
-print("Version 4.4.1")
+print("Version 4.4.2")
 				
 _G.AutoUse1PetLevel = true
 _G.AutoUsePower1 = true
@@ -1584,7 +1584,7 @@ spawn(function()
 						local playerLibrary = library.Save.Get()
 						
 						for a,b in pairs(playerLibrary.EggQuests.Atlantis) do
-							if b.progress < b.goal and b.name.find("Egg") then
+							if b.progress < b.goal and string.find(b.name, "Egg") then
 								LogMe("Switch to " .. b.name .. " Challenge")
 								if _G.oldeggs["Buy Mode"] == nil then
 									local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, {}, true)
@@ -1598,6 +1598,32 @@ spawn(function()
 									local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, _G.oldeggs, false)
 									--_G.oldeggs = oldeggs
 								end
+							elseif b.progress >= b.goal and string.find(b.name, "Egg") then
+								LogMe("Switch Back Eggs")
+								switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
+								_G.oldeggs = {}
+							elseif b.progress < b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
+								LogMe("Switch to " .. b.name .. " Challenge")
+								if _G.oldeggs["Buy Mode"] == nil then
+									local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Snail Egg"}}, {}, true)
+									LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+									_G.oldeggs = oldeggs
+								else
+									LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+									for a,b in pairs(_G.oldeggs["Eggs"]) do
+										LogMe(b)
+									end
+									local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Snail Egg"}}, _G.oldeggs, false)
+									--_G.oldeggs = oldeggs
+								end
+							elseif b.progress >= b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
+								LogMe("Switch Back Eggs")
+								switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
+								_G.oldeggs = {}
+							elseif b.progress < b.goal and (b.name == "Diamonds" or b.name == "Pearls") then
+								startQuest({["challengeType"] = "Pearls"})
+							elseif b.progress >= b.goal and (b.name == "Diamonds" or b.name == "Pearls") then
+								endQuest({["challengeType"] = "Pearls"})
 							end
 						end
 					end
