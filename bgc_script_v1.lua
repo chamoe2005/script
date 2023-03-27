@@ -1,4 +1,4 @@
-print("Version 4.5.6")
+print("Version 4.5.7")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -3327,7 +3327,7 @@ local UsePotions = function()
 					break
 				elseif boosts.flags["Power 2 Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
-						if potions.name == "Power 2" and (playerLibrary.Pets[petIndex].power == nil or playerLibrary.Pets[petIndex].power == 1) then
+						if potions.name == "Power 2" and (playerLibrary.Pets[petIndex].power == nil or playerLibrary.Pets[petIndex].power == "Power 1") then
 							print("Attempting to use Power 2 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
 							local ohTable1 = {
 								[1] = {
