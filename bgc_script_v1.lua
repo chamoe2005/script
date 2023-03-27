@@ -1,4 +1,4 @@
-print("Version 4.4")
+print("Version 4.4.1")
 				
 _G.AutoUse1PetLevel = true
 _G.AutoUsePower1 = true
@@ -1583,7 +1583,7 @@ spawn(function()
 					if _G["Atlantis Egg Quests"] then
 						local playerLibrary = library.Save.Get()
 						
-						for a,b in pairs(playerlibrary.EggQuests.Atlantis) do
+						for a,b in pairs(playerLibrary.EggQuests.Atlantis) do
 							if b.progress < b.goal and b.name.find("Egg") then
 								LogMe("Switch to " .. b.name .. " Challenge")
 								if _G.oldeggs["Buy Mode"] == nil then
