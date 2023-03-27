@@ -1,4 +1,4 @@
-print("Version 4.5.8")
+print("Version 4.5.9")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -1643,6 +1643,9 @@ _G.oldeggs = {}
 spawn(function()
 				while wait(30) do
 					if _G["Atlantis Egg Quests"] then
+						changeSetting("Box", "Auto Shiny Amount", 0, true)
+						changeSetting("Selection", "Delete Mode", "Custom Delete", true)
+						changeSetting("Box", "Delete at Pet #", 200, true)
 						local playerLibrary = library.Save.Get()
 						
 						for a,b in pairs(playerLibrary.EggQuests.Atlantis) do
@@ -1691,6 +1694,18 @@ spawn(function()
 									break
 								elseif b.progress >= b.goal and (b.name == "Diamonds" or b.name == "Pearls") then
 									endQuest({["challengeType"] = "Pearls"})
+									_G.eggQuests[a] = true
+								elseif b.progress < b.goal and b.name == "ShinyLegendaryPets" then
+									changeSetting("Box", "Auto Shiny Amount", 6, true)
+									--startQuest({["challengeType"] = "Pearls"})
+									--break
+								elseif b.progress >= b.goal and b.name == "ShinyLegendaryPets" then
+									changeSetting("Box", "Auto Shiny Amount", 0, true)
+									changeSetting("Selection", "Delete Mode", "Custom Delete", true)
+									changeSetting("Box", "Delete at Pet #", 50, true)
+									DeletePets()
+									wait(10)
+									changeSetting("Box", "Delete at Pet #", 200, true)
 									_G.eggQuests[a] = true
 								elseif b.progress >= b.goal then
 									_G.eggQuests[a] = true
