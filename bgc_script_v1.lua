@@ -1,4 +1,4 @@
-print("Version 4.4.5")
+print("Version 4.4.6")
 				
 _G.AutoUse1PetLevel = true
 _G.AutoUsePower1 = true
@@ -1604,8 +1604,10 @@ spawn(function()
 									break
 								elseif b.progress >= b.goal and string.find(b.name, "Egg") then
 									LogMe("Switch Back Eggs")
-									switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
-									_G.oldeggs = {}
+									if _G.oldeggs ~= {} and _G.oldeggs ~= nil then
+										switchEggs({["Buy Mode"] = {}, ["Eggs"] = {}}, _G.oldeggs, true)
+										_G.oldeggs = {}
+									end
 									_G.eggQuests[a] = true
 								elseif b.progress < b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
 									LogMe("Switch to " .. b.name .. " Challenge")
