@@ -1,7 +1,5 @@
-print("Version 4.5.3")
+print("Version 4.5.5")
 				
-_G.AutoUse1PetLevel = true
-_G.AutoUsePower1 = true
 				
 _G["PearlsMin"] = 750000000
 _G.highhigh = 99
@@ -1118,6 +1116,16 @@ end
 		boosts:Toggle(a .. " ", {flag = a .. " "})
 	end
 	
+	boosts:Section("Auto Use")
+	--for a,b in orderedPairs(library.Directory.Boosts) do
+		--boosts:Toggle(a .. " ", {flag = a .. " Use"})
+	--end
+	for a,b in orderedPairs(library.Directory.Potions) do
+		if a == "1 Pet Level" or a == "Power 1" or a == "Power 2" then
+			boosts:Toggle(a .. " Use", {flag = a .. " Use"})
+		end
+	end
+	
 	
 local function doDailyShop()
 	local playerLibrary = library.Save.Get()
@@ -1125,7 +1133,7 @@ local function doDailyShop()
 	print("Daily Shop Respect Level: " .. playerLibrary.DailyShop.RespectLevel)
 	for a,b in pairs(dailyitems) do
 		if a == "Respect 1" and boosts.flags[b.name .. " "] and b.amount > 0 and playerLibrary[b.currency] >= b.cost then
-			print("Buying Item " .. a)
+			print("Buying Item " .. a .. ": " .. b.name)
 			local ohTable1 = {
 				[1] = {
 					[1] = "Respect 1"
@@ -1139,7 +1147,7 @@ local function doDailyShop()
 			wait(3)
 			updateBoosts()
 		elseif a == "Respect 2" and playerLibrary.DailyShop.RespectLevel >= 2 and boosts.flags[b.name .. " "] and b.amount > 0 and playerLibrary[b.currency] >= b.cost then
-			print("Buying Item " .. a)
+			print("Buying Item " .. a .. ": " .. b.name)
 			local ohTable1 = {
 				[1] = {
 					[1] = "Respect 2"
@@ -1153,7 +1161,7 @@ local function doDailyShop()
 			wait(3)
 			updateBoosts()
 		elseif a == "Respect 3" and playerLibrary.DailyShop.RespectLevel >= 3 and boosts.flags[b.name .. " "] and b.amount > 0 and playerLibrary[b.currency] >= b.cost then
-			print("Buying Item " .. a)
+			print("Buying Item " .. a .. ": " .. b.name)
 			local ohTable1 = {
 				[1] = {
 					[1] = "Respect 3"
@@ -3223,7 +3231,7 @@ end)
 
 local UsePotions = function()
 
-	if _G.AutoUse1PetLevel or _G.AutoUsePower1 then
+	if _G["1 Pet Level Use"] or _G["Power 1 Use"] or _G["Power 2 Use"] then
 	
 		local library = require(game.ReplicatedStorage:WaitForChild("Nevermore"):WaitForChild("Library"))
 						
@@ -3293,7 +3301,7 @@ local UsePotions = function()
 			local sendbreak = false
 			
 			if petIndex ~= nil then	
-				if _G.AutoUse1PetLevel then
+				if _G["Power 1 Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
 						if potions.name == "Power 1" and playerLibrary.Pets[petIndex].power == nil then
 							print("Attempting to use Power 1 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
@@ -3315,10 +3323,34 @@ local UsePotions = function()
 					end
 				end
 				
+				if sendbreak then
+					break
+				elseif _G["Power 2 Use"] then
+					for idx,potions in pairs(playerLibrary.Potions) do
+						if potions.name == "Power 2" and (playerLibrary.Pets[petIndex].power == nil or playerLibrary.Pets[petIndex].power == 1) then
+							print("Attempting to use Power 2 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+							local ohTable1 = {
+								[1] = {
+									[1] = potions.uid,
+									[2] = playerLibrary.Pets[petIndex].uid
+								},
+								[2] = {
+									[1] = false,
+									[2] = false
+								}
+							}
+
+							game:GetService("ReplicatedStorage").Remotes["use potion"]:FireServer(ohTable1)
+							wait(1)
+							sendbreak = true
+							break
+						end
+					end
+				end
 				
 				if sendbreak then
 					break
-				elseif _G.AutoUsePower1 then
+				elseif _G["1 Pet Level Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
 						if potions.name == "1 Pet Level" and playerLibrary.Pets[petIndex].lvl < 25 then
 							print("Attempting to use 1 Pet Level " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
