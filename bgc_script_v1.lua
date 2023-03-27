@@ -1,4 +1,4 @@
-print("Version 4.5")
+print("Version 4.5.1")
 				
 _G.AutoUse1PetLevel = true
 _G.AutoUsePower1 = true
@@ -24,8 +24,8 @@ _G["Drop Delay"] = 60
 _G.DropCoolOff = os.time() + _G["Drop Delay"]
 _G.playerCoins = 0
 
-_G.ChallengeName = "Event"
-_G.ChallengeRemote = "claim event prize"
+--_G.ChallengeName = "Event"
+--_G.ChallengeRemote = "claim event prize"
 
 --local dropdowns = {}
 --dropdowns.Bubblesell = {"No Sell", "Sell 1", "Sell 2"}
