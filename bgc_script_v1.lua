@@ -1,4 +1,4 @@
-print("Version 4.3.1")
+print("Version 4.4")
 				
 _G.AutoUse1PetLevel = true
 _G.AutoUsePower1 = true
@@ -504,6 +504,7 @@ end
 	farm:Section("Chests")
 	for a,b in orderedPairs(library.Directory.Chests) do
 		if a == "VIP Chest" and not VIP then
+		elseif a == "St. Patrick's Chest" then
 		else
 			farm:Toggle(a, {location = _G, flag = a})
 		end
@@ -747,6 +748,7 @@ end
 
 
 		farm:Toggle('Free Prize Wheel', {flag = 'FreePrizeWheel'}, function() spawn(function() SpinPrizeWheel() end) end)
+		--[[
 		farm:Toggle('Free Event Wheel', {flag = 'FreeEventWheel'}, function() spawn(function() 
 		
 																							local ohTable1 = {
@@ -771,7 +773,7 @@ end
 		
 		
 		farm:Toggle('St Pattys Wheel (Buy)', {location = _G, flag = 'StPattysWheel'})
-
+		]]--
 
 local Eggs = {}
 for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetChildren()) do
@@ -1477,6 +1479,7 @@ local endQuest = 	function(quest)
 					end
 
 
+
 local questInProgress = false
 
 local doQuest = function()
@@ -1572,6 +1575,36 @@ end
 		if _G.ChallengeName ~= nil then
 			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doChallenge() end) end)
 		end
+		farm:Toggle("Atlantis Egg Quests", {location = _G, flag = "Atlantis Egg Quests"})
+
+
+spawn(function()
+				while wait(30) do
+					if _G["Atlantis Egg Quests"] then
+						local playerLibrary = library.Save.Get()
+						
+						for a,b in pairs(playerlibrary.EggQuests.Atlantis) do
+							if b.progress < b.goal and b.name.find("Egg") then
+								LogMe("Switch to " .. b.name .. " Challenge")
+								if _G.oldeggs["Buy Mode"] == nil then
+									local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, {}, true)
+									LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+									_G.oldeggs = oldeggs
+								else
+									LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+									for a,b in pairs(_G.oldeggs["Eggs"]) do
+										LogMe(b)
+									end
+									local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, _G.oldeggs, false)
+									--_G.oldeggs = oldeggs
+								end
+							end
+						end
+					end
+				end
+
+			end)
+		
 		
 		
 _G.eggopened = false
@@ -2768,6 +2801,7 @@ spawn(function()
 	end
 end)
 
+--[[
 spawn(function()
 	while wait(5) do
 		if _G["StPattysWheel"] then
@@ -2785,6 +2819,7 @@ spawn(function()
 		end
 	end
 end)
+]]--
 	
 spawn(function()
 	while wait(60) do
@@ -2795,7 +2830,7 @@ spawn(function()
 			doBubblePass()
 			doChallenge()
 			SpinPrizeWheel()
-			FreeEventWheel() 
+			--FreeEventWheel() 
 			doMerchant()
 			
 			local playerLibrary = library.Save.Get()
@@ -3554,5 +3589,4 @@ if _G.autoloadsettings then
 else
 	_G.settingsloaded = true
 end
-
 
