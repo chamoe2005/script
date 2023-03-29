@@ -1,4 +1,4 @@
-print("Version 4.6.2")
+print("Version 4.6.4")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -1198,7 +1198,7 @@ local function doMerchant()
 					--for g,h in pairs(f)
 						LogMe("Merchant Item " .. e .. " - "  .. f.amount .. " " .. f.reward .. " " .. f.name .. " " .. f.cost .. " " .. f.currency)
 							
-						for x = 1, f.amount do
+						if f.amount > 0 then
 		
 							local buy = false
 							if f.reward == "Pet" and boosts.flags["Pet "] and playerLibrary[f.currency] >= f.cost then
@@ -1226,10 +1226,13 @@ local function doMerchant()
 								}
 								LogMe("Buying Item " .. e)
 								game:GetService("ReplicatedStorage").Remotes["buy merchant item"]:FireServer(ohTable1)
-								wait(.25)
+								wait(3)
 								
 								updateBoosts()
+								
+								break
 							end
+							
 						end
 					--end
 				end
@@ -1644,7 +1647,26 @@ local doEggQuests = function()
 							for a,b in pairs(playerLibrary.EggQuests.Atlantis) do
 								if not _G.eggQuests[a] then
 									LogMe("Egg Quest #" .. a .. " " .. b.name .. " " .. b.progress / b.goal * 100 .. "%")
-									if b.progress < b.goal and string.find(b.name, "Egg") then
+									if b.progress >= b.goal and string.find(b.name, "Egg") then
+										LogMe("Switch Back Eggs")
+										switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Coral Egg"}}, {}, true)
+										_G.eggQuests[a] = true									
+									elseif b.progress >= b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
+										LogMe("Switch Back Eggs")
+										switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Coral Egg"}}, {}, true)
+										_G.eggQuests[a] = true
+									elseif b.progress >= b.goal and (b.name == "Diamonds" or b.name == "Pearls") then
+										endQuest({["challengeType"] = "Pearls"})
+										_G.eggQuests[a] = true
+									elseif b.progress >= b.goal and b.name == "ShinyLegendaryPets" then
+										changeSetting("Box", "Auto Shiny Amount", 0, true)
+										changeSetting("Selection", "Delete Mode", "Custom Delete", true)
+										changeSetting("Box", "Delete at Pet #", 50, true)
+										DeletePets()
+										wait(10)
+										changeSetting("Box", "Delete at Pet #", 200, true)
+										_G.eggQuests[a] = true
+									elseif b.progress < b.goal and string.find(b.name, "Egg") then
 										LogMe("Switch to " .. b.name .. " Challenge")
 										if _G.oldeggs["Buy Mode"] == nil then
 											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, {}, true)
@@ -1659,10 +1681,6 @@ local doEggQuests = function()
 											--_G.oldeggs = oldeggs
 										end
 										break
-									elseif b.progress >= b.goal and string.find(b.name, "Egg") then
-										LogMe("Switch Back Eggs")
-										switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Coral Egg"}}, {}, true)
-										_G.eggQuests[a] = true
 									elseif b.progress < b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
 										LogMe("Switch to " .. b.name .. " Challenge")
 										if _G.oldeggs["Buy Mode"] == nil then
@@ -1678,28 +1696,13 @@ local doEggQuests = function()
 											--_G.oldeggs = oldeggs
 										end
 										break
-									elseif b.progress >= b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
-										LogMe("Switch Back Eggs")
-										switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Coral Egg"}}, {}, true)
-										_G.eggQuests[a] = true
 									elseif b.progress < b.goal and (b.name == "Diamonds" or b.name == "Pearls") then
 										startQuest({["challengeType"] = "Pearls"})
 										break
-									elseif b.progress >= b.goal and (b.name == "Diamonds" or b.name == "Pearls") then
-										endQuest({["challengeType"] = "Pearls"})
-										_G.eggQuests[a] = true
 									elseif b.progress < b.goal and b.name == "ShinyLegendaryPets" then
 										changeSetting("Box", "Auto Shiny Amount", 6, true)
 										--startQuest({["challengeType"] = "Pearls"})
 										break
-									elseif b.progress >= b.goal and b.name == "ShinyLegendaryPets" then
-										changeSetting("Box", "Auto Shiny Amount", 0, true)
-										changeSetting("Selection", "Delete Mode", "Custom Delete", true)
-										changeSetting("Box", "Delete at Pet #", 50, true)
-										DeletePets()
-										wait(10)
-										changeSetting("Box", "Delete at Pet #", 200, true)
-										_G.eggQuests[a] = true
 									elseif b.progress >= b.goal then
 										_G.eggQuests[a] = true
 									end
