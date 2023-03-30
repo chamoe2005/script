@@ -1,4 +1,4 @@
-print("Version 4.6.4")
+print("Version 4.7")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -697,6 +697,95 @@ end
     type = 'number'
     })
 
+_G.ClaimingMail = false	
+	
+local ClaimMail = 	function()
+						_G.ClaimingMail = true
+						repeat
+							local mail = library.Network.Invoke("Get Incoming Mail")
+							if mail ~= nil then
+								for a,b in pairs(mail) do
+									--if library.Directory.Pets[b.id].name == "Sea Horse" then
+										local pass, fail = library.Network.Invoke("Claim Mail", tostring(b.uid))
+										if pass then
+											print(library.Directory.Pets[b.id].name .. " received sucessfully")
+										elseif fail then
+											print(library.Directory.Pets[b.id].name .. " receieve failed")
+										end
+										break
+									--end
+								end
+								wait(5)
+							end
+						until mail == nil or #mail == 0
+						_G.ClaimingMail = false
+					end
+					
+
+	
+	
+	pet:Section("Mailbox")
+	pet:Toggle("Auto Claim", {flag = "AutoClaimMail"})
+	pet:Button("Claim All Mail", function() spawn(function() if not _G.ClaimingMail then ClaimMail() end end) end)
+	pet:Box("Recipient", {flag = "MailRecipient"})
+	pet:Box("Gift Pet", {flag = "MailGiftPet"})
+	pet:Box("Num To Send", {flag = "MailGiftPetNum", type = 'number'})
+	
+_G.SendingMail = false
+					
+local SendMail = 	function()
+						_G.SendingMail = true
+						if pet.flags.MailGiftPetNum ~= nil and pet.flags.MailRecipient ~= nil and pet.flags.MailGiftPet ~= nil and tonumber(pet.flags.MailGiftPetNum) > 0 and pet.flags.MailRecipient ~= "" and pet.flags.MailGiftPet ~= "" then
+							local sendnum = tonumber(pet.flags.MailGiftPetNum)
+							--print(sendnum)
+							for x = 1, sendnum do
+								local playerLibrary = library.Save.Get()
+								local petfound = false
+								for a,b in pairs(playerLibrary.Pets) do
+									if b.nk == pet.flags.MailGiftPet then
+										petfound = true
+										local pass, fail = library.Network.Invoke("Send Mail Gift", pet.flags.MailRecipient, "Message", b.uid)
+										if pass then
+											print(b.nk .. " sent sucessfully")
+										elseif fail then
+											print(b.nk .. " failed")
+										end
+										wait(5)
+										break
+									end
+								end
+								wait(.1)
+								if not petfound then
+									break
+								end
+							end
+						end
+						_G.SendingMail = false
+
+					end	
+	
+	
+	pet:Button("Send Mail", function() spawn(function() if not _G.SendingMail then SendMail() end end) end)
+	--pet:Button("Send All", function() end)
+	pet:Toggle("Auto Send", {flag = "AutoSendMail"})
+	
+	
+spawn(function()
+
+		while wait(60) do
+		
+			if pet.flags.AutoClaimMail then
+				ClaimMail()
+			end
+			if pet.flags.AutoSendMail then
+				SendMail()
+			end
+		
+		end
+
+
+	end)
+
 
 local SpinPrizeWheel = function()
 		local playerLibrary = library.Save.Get()
@@ -1120,11 +1209,41 @@ end
 	--for a,b in orderedPairs(library.Directory.Boosts) do
 		--boosts:Toggle(a .. " ", {flag = a .. " Use"})
 	--end
+	for a,b in orderedPairs(library.Directory.Boosts) do
+		boosts:Toggle(a .. " Use", {flag = a .. " Use"})
+	end
 	for a,b in orderedPairs(library.Directory.Potions) do
 		if a == "Max Pet Level" or a == "1 Pet Level" or a == "Power 1" or a == "Power 2" then
 			boosts:Toggle(a .. " Use", {flag = a .. " Use"})
 		end
 	end
+	
+	
+spawn(function()
+
+		while wait(60) do
+		
+			for a,b in orderedPairs(library.Directory.Boosts) do
+				local playerLibrary = library.Save.Get()
+				if a ~= "Mega Luck" and boosts.flags[a .. " Use"] and (playerLibrary.Boosts[a] == nil or playerLibrary.Boosts[a] < 90) and playerLibrary.BoostsInventory[a] and playerLibrary.BoostsInventory[a] > 0 then
+					local ohTable1 = {
+						[1] = {
+							[1] = a
+						},
+						[2] = {
+							[1] = false
+						}
+					}
+
+					game:GetService("ReplicatedStorage").Remotes["activate boost"]:FireServer(ohTable1)
+				end
+				wait(1)
+				updateBoosts()
+			end
+		
+		end
+
+end)
 	
 	
 local function doDailyShop()
@@ -1248,7 +1367,19 @@ end
 	spawn(function() doMerchant() end)
 	
 GetLocalPlayer().PlayerGui.Alert.ChildAdded:Connect(function(this)
-	print("Alert: " .. this.Text)
+	local playerLibrary = library.Save.Get()
+	LogMe("Alert: " .. this.Text)
+	if this.Text == "You've got mail!" and pet.flags.AutoClaimMail then
+		ClaimMail()
+	end
+	if this.Text == "Server Event Super Lucky has started for 10 minutes!" and boosts.flags["Mega Luck Use"] and playerLibrary.BoostsInventory["Mega Luck"] > 0 then
+		for x = 1, playerLibrary.BoostsInventory["Mega Luck"] do
+			LogMe("Use Mega Luck Boost")
+			wait(1)
+		end
+		
+		updateBoosts()
+	end
 end)
 	
 library.Signal.Fired("Merchant Active"):Connect(function()
