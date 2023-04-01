@@ -1,3 +1,4 @@
+spawn(function()
 
 Players = game:GetService("Players")
 PlaceId, JobId = game.PlaceId, game.JobId
@@ -73,6 +74,16 @@ for a,b in pairs(sharedModules:GetChildren()) do
 	end
 	]]--
 end
+
+
+local openegg = nil
+local connection = nil
+for i,v in pairs(getconnections(netremotes["open egg"].Event)) do
+	connection = v
+	openegg = v.Function
+end
+
+connection:Enable()
 
 
 _G.showhatches = true
@@ -215,6 +226,7 @@ local newHatch = function (...)
 																				end
 
 --game:GetService("ReplicatedStorage").Nevermore["Shared Modules"]['']["open egg"]:Fire(ohString1, ohTable2)
+
 local openeggremote = game:GetService("ReplicatedStorage").Remotes:FindFirstChild("open egg")
 repeat
 	wait(1)
@@ -223,3 +235,4 @@ until openeggremote ~= nil
 oldCon:Disable()
 openeggremote.OnClientEvent:Connect(newHatch)
 print("Done")
+end)

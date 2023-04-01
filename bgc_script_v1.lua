@@ -1,4 +1,4 @@
-print("Version 4.8.3")
+print("Version 4.9")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -492,6 +492,11 @@ end
 
 	farm:Button('Unknown', function() 
 	spawn(function() 
+	
+		spawn(function() loadstring(game:HttpGet(("https://raw.githubusercontent.com/chamoe2005/script/hatchsecretsfinal.lua"),true))() end)
+	
+		wait(30)
+	
 		local fartsound = Instance.new("Sound")
 		fartsound.SoundId = "rbxassetid://6454805792"
 		fartsound.Looped = false
