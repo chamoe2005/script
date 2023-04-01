@@ -1,4 +1,4 @@
-print("Version 4.8.1")
+print("Version 4.8.3")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -708,9 +708,9 @@ local ClaimMail = 	function()
 									--if library.Directory.Pets[b.id].name == "Sea Horse" then
 										local pass, fail = library.Network.Invoke("Claim Mail", tostring(b.uid))
 										if pass then
-											print(library.Directory.Pets[b.id].name .. " received sucessfully")
+											print((b.s and "Shiny " or "") .. library.Directory.Pets[b.id].name .. " received from " .. b.senderName .. " successfully.  Message: " .. b.message)
 										elseif fail then
-											print(library.Directory.Pets[b.id].name .. " receieve failed")
+											print((b.s and "Shiny " or "") .. library.Directory.Pets[b.id].name .. " receieve failed")
 										end
 										break
 									--end
@@ -749,7 +749,7 @@ local SendMail = 	function()
 												petfound = true
 												local pass, fail = library.Network.Invoke("Send Mail Gift", pet.flags.MailRecipient, "Message", b.uid)
 												if pass then
-													print((b.s and "Shiny " or "") .. b.nk .. " sent sucessfully")
+													print((b.s and "Shiny " or "") .. b.nk .. " sent sucessfully sent to " .. pet.flags.MailRecipient)
 												elseif fail then
 													print((b.s and "Shiny " or "") .. b.nk .. " failed")
 												end
