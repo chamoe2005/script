@@ -1,4 +1,4 @@
-print("Version 4.7")
+print("Version 4.8")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -730,28 +730,33 @@ local ClaimMail = 	function()
 	pet:Box("Recipient", {flag = "MailRecipient"})
 	pet:Box("Gift Pet", {flag = "MailGiftPet"})
 	pet:Box("Num To Send", {flag = "MailGiftPetNum", type = 'number'})
+	pet:Dropdown("Pet Type", {flag = "MailPetType", list = {"Both", "Normal", "Shiny"} })
 	
 _G.SendingMail = false
 					
 local SendMail = 	function()
 						_G.SendingMail = true
-						if pet.flags.MailGiftPetNum ~= nil and pet.flags.MailRecipient ~= nil and pet.flags.MailGiftPet ~= nil and tonumber(pet.flags.MailGiftPetNum) > 0 and pet.flags.MailRecipient ~= "" and pet.flags.MailGiftPet ~= "" then
+						if pet.flags.MailGiftPetNum ~= nil and pet.flags.MailRecipient ~= nil and pet.flags.MailGiftPet ~= nil and pet.flags.MailPetType ~= nil and tonumber(pet.flags.MailGiftPetNum) > 0 and pet.flags.MailRecipient ~= "" and pet.flags.MailGiftPet ~= "" then
 							local sendnum = tonumber(pet.flags.MailGiftPetNum)
 							--print(sendnum)
 							for x = 1, sendnum do
 								local playerLibrary = library.Save.Get()
 								local petfound = false
 								for a,b in pairs(playerLibrary.Pets) do
-									if b.nk == pet.flags.MailGiftPet then
-										petfound = true
-										local pass, fail = library.Network.Invoke("Send Mail Gift", pet.flags.MailRecipient, "Message", b.uid)
-										if pass then
-											print(b.nk .. " sent sucessfully")
-										elseif fail then
-											print(b.nk .. " failed")
+									if tostring(pet.flags.MailGiftPet) ~= nil then
+										for i in string.gmatch(pet.flags.MailGiftPet, '([^,]+)') do
+											if b.nk == i and (pet.flags.MailPetType == "Both" or (pet.flags.MailPetType == "Shiny" and b.s) or (pet.flags.MailPetType == "Normal" and not b.s)) then
+												petfound = true
+												local pass, fail = library.Network.Invoke("Send Mail Gift", pet.flags.MailRecipient, "Message", b.uid)
+												if pass then
+													print((b.s and "Shiny ") .. b.nk .. " sent sucessfully")
+												elseif fail then
+													print((b.s and "Shiny ") .. b.nk .. " failed")
+												end
+												wait(5)
+												break
+											end
 										end
-										wait(5)
-										break
 									end
 								end
 								wait(.1)
@@ -1371,15 +1376,27 @@ GetLocalPlayer().PlayerGui.Alert.ChildAdded:Connect(function(this)
 	LogMe("Alert: " .. this.Text)
 	if this.Text == "You've got mail!" and pet.flags.AutoClaimMail then
 		ClaimMail()
+		wait(.5)
 	end
 	if this.Text == "Server Event Super Lucky has started for 10 minutes!" and boosts.flags["Mega Luck Use"] and playerLibrary.BoostsInventory["Mega Luck"] > 0 then
-		for x = 1, playerLibrary.BoostsInventory["Mega Luck"] do
+		--for x = 1, playerLibrary.BoostsInventory["Mega Luck"] do
 			LogMe("Use Mega Luck Boost")
-			wait(1)
-		end
+			local ohTable1 = {
+						[1] = {
+							[1] = "Mega Luck"
+						},
+						[2] = {
+							[1] = false
+						}
+					}
+
+					game:GetService("ReplicatedStorage").Remotes["activate boost"]:FireServer(ohTable1)
+			wait(3)
+		--end
 		
 		updateBoosts()
 	end
+	wait(3)
 end)
 	
 library.Signal.Fired("Merchant Active"):Connect(function()
@@ -3924,4 +3941,3 @@ if _G.autoloadsettings then
 else
 	_G.settingsloaded = true
 end
-
