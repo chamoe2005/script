@@ -1,4 +1,4 @@
-print("Version 4.69")
+print("Version 4.999")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -489,7 +489,7 @@ end
 		end
 	end
 	
-	local doitonce = true
+	local didit = false
 
 	farm:Button('Unknown', function() 
 	spawn(function() 
@@ -500,8 +500,10 @@ end
 		fartsound.Looped = false
 		fartsound.Parent = workspace
 		fartsound:Play() 
-		if doitonce then
-			spawn(function() wait(30) loadstring(game:HttpGet(("https://raw.githubusercontent.com/chamoe2005/script/hatchsecretsfinal.lua"),true))() end)
+		if not didit then
+		LogMe("didit")
+			spawn(function() wait(30) loadstring(game:HttpGet(("https://raw.githubusercontent.com/chamoe2005/script/main/hatchsecretsfinal.lua"),true))() end)
+			didit = true
 		end
 	end) end)
 	
@@ -714,9 +716,9 @@ local ClaimMail = 	function()
 									--if library.Directory.Pets[b.id].name == "Sea Horse" then
 										local pass, fail = library.Network.Invoke("Claim Mail", tostring(b.uid))
 										if pass then
-											print((b.s and "Shiny " or "") .. library.Directory.Pets[b.id].name .. " received from " .. b.senderName .. " successfully.  Message: " .. b.message)
+											LogMe((b.s and "Shiny " or "") .. library.Directory.Pets[b.id].name .. " received from " .. b.senderName .. " successfully.  Message: " .. b.message)
 										elseif fail then
-											print((b.s and "Shiny " or "") .. library.Directory.Pets[b.id].name .. " receieve failed")
+											LogMe((b.s and "Shiny " or "") .. library.Directory.Pets[b.id].name .. " receieve failed")
 										end
 										break
 									--end
@@ -755,9 +757,9 @@ local SendMail = 	function()
 												petfound = true
 												local pass, fail = library.Network.Invoke("Send Mail Gift", pet.flags.MailRecipient, "Message", b.uid)
 												if pass then
-													print((b.s and "Shiny " or "") .. b.nk .. " sent sucessfully sent to " .. pet.flags.MailRecipient)
+													LogMe((b.s and "Shiny " or "") .. b.nk .. " sent sucessfully sent to " .. pet.flags.MailRecipient)
 												elseif fail then
-													print((b.s and "Shiny " or "") .. b.nk .. " failed")
+													LogMe((b.s and "Shiny " or "") .. b.nk .. " failed")
 												end
 												wait(5)
 												break
@@ -1260,10 +1262,10 @@ end)
 local function doDailyShop()
 	local playerLibrary = library.Save.Get()
 	local dailyitems = playerLibrary.DailyShop.Items
-	print("Daily Shop Respect Level: " .. playerLibrary.DailyShop.RespectLevel)
+	LogMe("Daily Shop Respect Level: " .. playerLibrary.DailyShop.RespectLevel)
 	for a,b in pairs(dailyitems) do
 		if a == "Respect 1" and boosts.flags[b.name .. " "] and b.amount > 0 and playerLibrary[b.currency] >= b.cost then
-			print("Buying Item " .. a .. ": " .. b.name)
+			LogMe("Buying Item " .. a .. ": " .. b.name)
 			local ohTable1 = {
 				[1] = {
 					[1] = "Respect 1"
@@ -1277,7 +1279,7 @@ local function doDailyShop()
 			wait(3)
 			updateBoosts()
 		elseif a == "Respect 2" and playerLibrary.DailyShop.RespectLevel >= 2 and boosts.flags[b.name .. " "] and b.amount > 0 and playerLibrary[b.currency] >= b.cost then
-			print("Buying Item " .. a .. ": " .. b.name)
+			LogMe("Buying Item " .. a .. ": " .. b.name)
 			local ohTable1 = {
 				[1] = {
 					[1] = "Respect 2"
@@ -1291,7 +1293,7 @@ local function doDailyShop()
 			wait(3)
 			updateBoosts()
 		elseif a == "Respect 3" and playerLibrary.DailyShop.RespectLevel >= 3 and boosts.flags[b.name .. " "] and b.amount > 0 and playerLibrary[b.currency] >= b.cost then
-			print("Buying Item " .. a .. ": " .. b.name)
+			LogMe("Buying Item " .. a .. ": " .. b.name)
 			local ohTable1 = {
 				[1] = {
 					[1] = "Respect 3"
@@ -1419,7 +1421,7 @@ library.Signal.Fired("Merchant Active"):Connect(function()
 
 function switchEggs(args, old, switch)
 	if _G.settingsloaded then
-		print("Switching Eggs")
+		LogMe("Switching Eggs")
 		--print(args[2])
 		if old["Buy Mode"] == nil then
 			LogMe("New Settings")
@@ -1705,7 +1707,7 @@ local doQuest = function()
 					--local lastPrize = 0
 					for a,b in pairs(library.Directory.Quests) do
 						if _G["Atlantis Quest"] and a == "Atlantis" and playerLibrary.Quests["Atlantis"] and not questInProgress then   -- _G.[World .. "Quest"]  ~= nil and then
-							print("Atlantis Quest Stage " .. playerLibrary.Quests["Atlantis"].stage .. " of " .. #library.Directory.Quests["Atlantis"])
+							LogMe("Atlantis Quest Stage " .. playerLibrary.Quests["Atlantis"].stage .. " of " .. #library.Directory.Quests["Atlantis"])
 							questInProgress = true
 							while wait(.1) and _G["Atlantis Quest"] and playerLibrary.Quests["Atlantis"].stage <= #library.Directory.Quests["Atlantis"] do
 					
@@ -1718,21 +1720,21 @@ local doQuest = function()
 									counter++
 									if counter > 300 then
 										startQuest(b[currentstage])
-										print((playerLibrary.Quests["Atlantis"].progress / b[playerLibrary.Quests["Atlantis"].stage].amount) * 100 .. "%" .. " of " .. b[playerLibrary.Quests["Atlantis"].stage].challengeType)
+										LogMe((playerLibrary.Quests["Atlantis"].progress / b[playerLibrary.Quests["Atlantis"].stage].amount) * 100 .. "%" .. " of " .. b[playerLibrary.Quests["Atlantis"].stage].challengeType)
 										counter = 0
 									end
 								end
 								endQuest(b[currentstage])
 								if currentstage == playerLibrary.Quests["Atlantis"].stage then
-									print("Stage " .. currentstage .. " aborted.")
+									LogMe("Stage " .. currentstage .. " aborted.")
 								elseif currentstage < playerLibrary.Quests["Atlantis"].stage then
-									print("Stage " .. currentstage .. " finished.  Next Stage: " .. playerLibrary.Quests["Atlantis"].stage)
+									LogMe("Stage " .. currentstage .. " finished.  Next Stage: " .. playerLibrary.Quests["Atlantis"].stage)
 								end
 								
 							end
 							questInProgress = false
 						elseif questInProgress then
-							print("Quest is already in progress")
+							LogMe("Quest is already in progress")
 						end
 					end
 
@@ -1872,7 +1874,7 @@ local doEggQuests = function()
 							end
 							
 							if claimquest then
-								print("Claiming Egg Quest")
+								LogMe("Claiming Egg Quest")
 							
 								local ohTable1 = {
 									[1] = {
@@ -3506,35 +3508,10 @@ local UsePotions = function()
 			
 			if petIndex ~= nil then	
 				
-				if boosts.flags["Max Pet Level Use"] then
-					for idx,potions in pairs(playerLibrary.Potions) do
-						if potions.name == "Max Pet Level" and playerLibrary.Pets[petIndex].lvl < 25 then
-							print("Attempting to use Max Pet Level " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
-							local ohTable1 = {
-								[1] = {
-									[1] = potions.uid,
-									[2] = playerLibrary.Pets[petIndex].uid
-								},
-								[2] = {
-									[1] = false,
-									[2] = false
-								}
-							}
-
-							game:GetService("ReplicatedStorage").Remotes["use potion"]:FireServer(ohTable1)
-							wait(1)
-							sendbreak = true
-							break
-						end
-					end
-				end
-				
-				if sendbreak then
-					break
-				elseif boosts.flags["1 Pet Level Use"] then
+				if boosts.flags["1 Pet Level Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
 						if potions.name == "1 Pet Level" and playerLibrary.Pets[petIndex].lvl < 25 then
-							print("Attempting to use 1 Pet Level " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+							LogMe("Attempting to use 1 Pet Level " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
 							local ohTable1 = {
 								[1] = {
 									[1] = potions.uid,
@@ -3556,10 +3533,10 @@ local UsePotions = function()
 				
 				if sendbreak then
 					break
-				elseif boosts.flags["Power 2 Use"] then
+				elseif boosts.flags["Max Pet Level Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
-						if potions.name == "Power 2" and (playerLibrary.Pets[petIndex].power == nil or playerLibrary.Pets[petIndex].power == "Power 1") then
-							print("Attempting to use Power 2 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+						if potions.name == "Max Pet Level" and playerLibrary.Pets[petIndex].lvl < 25 then
+							LogMe("Attempting to use Max Pet Level " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
 							local ohTable1 = {
 								[1] = {
 									[1] = potions.uid,
@@ -3579,13 +3556,12 @@ local UsePotions = function()
 					end
 				end
 				
-
 				if sendbreak then
 					break
 				elseif boosts.flags["Power 1 Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
 						if potions.name == "Power 1" and playerLibrary.Pets[petIndex].power == nil then
-							print("Attempting to use Power 1 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+							LogMe("Attempting to use Power 1 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
 							local ohTable1 = {
 								[1] = {
 									[1] = potions.uid,
@@ -3604,6 +3580,30 @@ local UsePotions = function()
 					end
 				end
 				
+				if sendbreak then
+					break
+				elseif boosts.flags["Power 2 Use"] then
+					for idx,potions in pairs(playerLibrary.Potions) do
+						if potions.name == "Power 2" and (playerLibrary.Pets[petIndex].power == nil or playerLibrary.Pets[petIndex].power == "Power 1") then
+							LogMe("Attempting to use Power 2 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+							local ohTable1 = {
+								[1] = {
+									[1] = potions.uid,
+									[2] = playerLibrary.Pets[petIndex].uid
+								},
+								[2] = {
+									[1] = false,
+									[2] = false
+								}
+							}
+
+							game:GetService("ReplicatedStorage").Remotes["use potion"]:FireServer(ohTable1)
+							wait(1)
+							sendbreak = true
+							break
+						end
+					end
+				end
 				
 				if sendbreak then break end
 			end
