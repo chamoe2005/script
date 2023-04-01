@@ -1,4 +1,4 @@
-print("Version 4.8")
+print("Version 4.8.1")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -749,9 +749,9 @@ local SendMail = 	function()
 												petfound = true
 												local pass, fail = library.Network.Invoke("Send Mail Gift", pet.flags.MailRecipient, "Message", b.uid)
 												if pass then
-													print((b.s and "Shiny ") .. b.nk .. " sent sucessfully")
+													print((b.s and "Shiny " or "") .. b.nk .. " sent sucessfully")
 												elseif fail then
-													print((b.s and "Shiny ") .. b.nk .. " failed")
+													print((b.s and "Shiny " or "") .. b.nk .. " failed")
 												end
 												wait(5)
 												break
