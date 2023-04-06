@@ -1,4 +1,4 @@
-print("Version 5.0")
+print("Version 5.0.1")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -801,6 +801,7 @@ spawn(function()
 
 spawn(function()
 	while wait(600) do
+		local lb = library.Network.Invoke("Get Season Leaderboard")
 		local foundplayer = false
 		for a,b in pairs(lb) do
 			if tonumber(b.key) == tonumber(game.Players.LocalPlayer.userId) then
