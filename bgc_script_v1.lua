@@ -1,4 +1,4 @@
-print("Version 4.999")
+print("Version 5.0")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -799,6 +799,22 @@ spawn(function()
 
 	end)
 
+spawn(function()
+	while wait(600) do
+		local foundplayer = false
+		for a,b in pairs(lb) do
+			if tonumber(b.key) == tonumber(game.Players.LocalPlayer.userId) then
+				LogMe(game.Players.LocalPlayer.Name .. " is #" .. a .. " on Season Leaderboard")
+				foundplayer = true
+			end
+				
+			wait()
+		end
+		if not foundplayer then
+			LogMe(game.Players.LocalPlayer.Name .. " is not on Season Leaderboard")
+		end
+	end
+end)
 
 local SpinPrizeWheel = function()
 		local playerLibrary = library.Save.Get()
@@ -1386,7 +1402,7 @@ GetLocalPlayer().PlayerGui.Alert.ChildAdded:Connect(function(this)
 		ClaimMail()
 		wait(.5)
 	end
-	if this.Text == "Server Event Super Lucky has started for 10 minutes!" and boosts.flags["Mega Luck Use"] and playerLibrary.BoostsInventory["Mega Luck"] > 0 then
+	if string.find(string.lower(this.Text), "super lucky") and string.find(string.lower(this.Text), "started") and boosts.flags["Mega Luck Use"] and playerLibrary.BoostsInventory["Mega Luck"] > 0 then
 		--for x = 1, playerLibrary.BoostsInventory["Mega Luck"] do
 			LogMe("Use Mega Luck Boost")
 			local ohTable1 = {
