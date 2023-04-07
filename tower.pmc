@@ -1,0 +1,95 @@
+﻿[PMC Globals]|None||
+[PMC Code v5.4.1]|F3||1|Window,2,Fast,0,1,Input,-1,-1,1|1|Macro1
+Context=None|
+Groups=Start:1
+1|[Assign Variable]|Accounts := {1: {Name: "xyzzy1111111136", Link: "ext+container:name=xyzzy1111111136&url=https://www.roblox.com/games/3260590327/BUFFS-Tower-Defense-Simulator", Skip: false}, 2: {Name: "xyzzy1111111137", Link: "ext+container:name=xyzzy1111111137&url=https://www.roblox.com/games/3260590327/BUFFS-Tower-Defense-Simulator", Skip: false}, 3: {Name: "xyzzy1111111138", Link: "ext+container:name=xyzzy1111111138&url=https://www.roblox.com/games/3260590327/BUFFS-Tower-Defense-Simulator", Skip: false}, 4: {Name: "xyzzy1111111139", Link: "ext+container:name=xyzzy1111111139&url=https://www.roblox.com/games/3260590327/BUFFS-Tower-Defense-Simulator", Skip: false}}|1|0|Variable|Expression||||1|
+2|[LoopStart]|LoopStart|0|0|Loop|||||2|
+3|[LoopStart]|Accounts`, key`, value|1|0|For|||||4|
+4|[Assign Variable]|Link := value.Link|1|0|Variable|Expression||||6|
+5|[Assign Variable]|Name := value.Name|1|0|Variable|Expression||||7|
+6|[Assign Variable]|Skip := value.Skip|1|0|Variable|Expression||||8|
+7|Evaluate Expression|not Skip|1|0|If_Statement|||||9|
+8|[LoopStart]|LoopStart|0|0|Loop|||||11|
+9|[Assign Variable]|sendbreak := false|1|0|Variable|Expression||||13|
+10|[Assign Variable]|sendcontinue := false|1|0|Variable|Expression||||14|
+11|[LoopStart]|LoopStart|0|0|Loop|||||15|
+12|WinGet|WindowID, ID|1|0|WinGet||Firefox|||17|
+13|If Window Exist|ahk_id %WindowID%|1|0|If_Statement|||||18|
+14|[MsgBox]|Closing Firefox|1|1|MsgBox|0||||20|
+15|WinKill||1|333|WinKill||ahk_id %WindowID%|||21|
+16|[Pause]|NoRandom|1|2000|Sleep|||||23|
+17|[Else]|Else|1|0|If_Statement|||||24|
+018|[MsgBox]|No Firefox Windows|1|1|MsgBox|0||||27|
+19|Break||1|0|Break|||||29|
+20|[End If]|EndIf|1|0|If_Statement|||||31|
+21|[LoopEnd]|LoopEnd|1|0|Loop|||||32|
+22|[LoopStart]|LoopStart|0|0|Loop|||||33|
+23|WinGet|WindowID, ID|1|0|WinGet||Synapse X - Crash Reporter|||35|
+24|If Window Exist|ahk_id %WindowID%|1|0|If_Statement|||||36|
+25|[MsgBox]|Closing Synapse Crash|1|1|MsgBox|0||||38|
+26|WinKill||1|333|WinKill||ahk_id %WindowID%|||39|
+27|[Pause]|NoRandom|1|2000|Sleep|||||41|
+28|[Else]|Else|1|0|If_Statement|||||42|
+029|[MsgBox]|No Synapse Crash Windows|1|1|MsgBox|0||||45|
+30|Break||1|0|Break|||||47|
+31|[End If]|EndIf|1|0|If_Statement|||||49|
+32|[LoopEnd]|LoopEnd|1|0|Loop|||||50|
+33|[LoopStart]|LoopStart|0|0|Loop|||||51|
+34|WinGet|WindowID, ID|1|0|WinGet||Roblox, ,Firefox|||53|
+35|If Window Exist|ahk_id %WindowID%|1|0|If_Statement|||||54|
+36|[MsgBox]|Closing Unnamed Roblox|1|1|MsgBox|0||||56|
+37|WinKill||1|333|WinKill||ahk_id %WindowID%|||57|
+38|[Pause]|NoRandom|1|2000|Sleep|||||59|
+39|[Else]|Else|1|0|If_Statement|||||60|
+040|[MsgBox]|No Rogue Roblox Windows|1|1|MsgBox|0||||63|
+41|Break||1|0|Break|||||65|
+42|[End If]|EndIf|1|0|If_Statement|||||67|
+43|[LoopEnd]|LoopEnd|1|0|Loop|||||68|
+44|[LoopStart]|LoopStart|0|0|Loop|||||69|
+45|WinGet|WindowID, ID|1|0|WinGet||%Name%|||71|
+46|If Window Exist|ahk_id %WindowID%|1|0|If_Statement|||||72|
+047|WinMaximize||1|333|WinMaximize||%Name%|||74|
+048|WinActivate||1|333|WinActivate||%Name%|||77|
+049|[Pause]|NoRandom|1|3000|Sleep|||||79|
+050|OCR|113, 25, 509, 78, playername|1|0|ImageToText|eng|Screen|||80|
+051|[MsgBox]|%playername%|1|3|MsgBox|0||||81|
+052|Compare Variables|playername = Name|1|0|If_Statement|||||82|
+53|[MsgBox]|%Name% found|1|1|MsgBox|0||||84|
+54|[Assign Variable]|sendbreak := true|1|0|Variable|Expression||||86|
+55|Break||1|0|Break|||||87|
+056|[Else]|Else|1|0|If_Statement|||||88|
+057|[MsgBox]|%Name% Not found|1|1|MsgBox|0||||92|
+058|WinKill||1|333|WinKill||%Name%|||93|
+059|Break||1|0|Break|||||95|
+060|Continue||1|0|Continue|||||96|
+061|[End If]|EndIf|1|0|If_Statement|||||97|
+62|[Else]|Else|1|0|If_Statement|||||98|
+63|[Pause]|NoRandom|1|2000|Sleep|||||102|
+64|[MsgBox]|Opening %Name%|1|1|MsgBox|0||||103|
+65|Run|C:\Program Files\Mozilla Firefox\firefox.exe -new-tab %Link%|1|0|Run|||||104|
+66|WinWaitActive||1|333|WinWaitActive||Firefox|||105|
+67|WinGet|WindowID, ID|1|0|WinGet||Firefox|||107|
+68|WinActivate||1|333|WinActivate||ahk_id %WindowID%|||108|
+69|[Pause]|NoRandom|1|15000|Sleep|||||110|
+70|Left Click, Continue, FoundX, FoundY, 0|0, 0, 1920, 1080, C:\Users\User\AppData\Roaming\MacroCreator\Screenshots\Screen_20230322123503.png|1|0|ImageSearch||Window|||111|
+71|[Pause]|NoRandom|1|45000|Sleep|||||115|
+72|WinWaitActive|60|1|333|WinWaitActive||Roblox, ,Firefox|||116|
+73|WinSetTitle|%Name%|1|333|WinSetTitle||Roblox, , Firefox|||118|
+74|[Pause]|NoRandom|1|30000|Sleep|||||120|
+075|[Assign Variable]|sendbreak := true|1|0|Variable|Expression||||121|
+076|Break||1|0|Break|||||123|
+077|[MsgBox]|% value.Name|1|3|MsgBox|0||||124|
+078|WinMaximize||1|333|WinMaximize||Roblox|||125|
+079|WinSetTitle||1|333|WinSetTitle||% value.Name%|||127|
+80|[End If]|EndIf|1|0|If_Statement|||||129|
+81|[LoopEnd]|LoopEnd|1|0|Loop|||||131|
+82|Evaluate Expression|sendbreak|1|0|If_Statement|||||132|
+083|[MsgBox]|Sending Break|1|1|MsgBox|0||||134|
+84|Break||1|0|Break|||||136|
+85|[End If]|EndIf|1|0|If_Statement|||||138|
+86|[LoopEnd]|LoopEnd|1|0|Loop|||||139|
+87|[End If]|EndIf|1|0|If_Statement|||||140|
+88|[LoopEnd]|LoopEnd|1|0|Loop|||||141|
+89|[Pause]|NoRandom|1|60000|Sleep|||||142|
+90|[LoopEnd]|LoopEnd|1|0|Loop|||||143|
+
