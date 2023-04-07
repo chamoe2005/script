@@ -1,4 +1,4 @@
-print("Version 5.0.1")
+print("Version 5.0.2")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -723,7 +723,7 @@ local ClaimMail = 	function()
 										break
 									--end
 								end
-								wait(5)
+								wait(10)
 							end
 						until mail == nil or #mail == 0
 						_G.ClaimingMail = false
@@ -753,7 +753,7 @@ local SendMail = 	function()
 								for a,b in pairs(playerLibrary.Pets) do
 									if tostring(pet.flags.MailGiftPet) ~= nil then
 										for i in string.gmatch(pet.flags.MailGiftPet, '([^,]+)') do
-											if b.nk == i and (pet.flags.MailPetType == "Both" or (pet.flags.MailPetType == "Shiny" and b.s) or (pet.flags.MailPetType == "Normal" and not b.s)) then
+											if (b.nk == i or i == "Any") and (pet.flags.MailPetType == "Both" or (pet.flags.MailPetType == "Shiny" and b.s) or (pet.flags.MailPetType == "Normal" and not b.s)) and not b.lock then
 												petfound = true
 												local pass, fail = library.Network.Invoke("Send Mail Gift", pet.flags.MailRecipient, "Message", b.uid)
 												if pass then
@@ -761,13 +761,13 @@ local SendMail = 	function()
 												elseif fail then
 													LogMe((b.s and "Shiny " or "") .. b.nk .. " failed")
 												end
-												wait(5)
+												wait(10)
 												break
 											end
 										end
 									end
+									wait(.1)
 								end
-								wait(.1)
 								if not petfound then
 									break
 								end
