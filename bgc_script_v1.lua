@@ -1,4 +1,4 @@
-print("Version 5.0.2")
+print("Version 5.0.4")
 				
 				
 _G["PearlsMin"] = 750000000
@@ -2124,6 +2124,7 @@ end
 local egg = wally:CreateWindow('Eggs')
 	egg:Toggle('Hide Animation', {flag = "HideAnimation"}, function() spawn(function() if egg.flags.HideAnimation then connection:Disable() else connection:Enable() end end) end)
 	egg:Toggle('Kick on Zero Eggs', {flag = "KickZeroEggs"})
+	egg:Toggle('Open Exclusive Eggs', {flag = "OpenExEggs"})
 	egg:Section('Select Eggs')
 	egg:Dropdown("Buy Mode", {location = _G, flag = "BuyEggMode", list = {"None", "Best", "Any"} })
 	
@@ -2138,6 +2139,43 @@ local egg = wally:CreateWindow('Eggs')
 --local pickups = {"Coins Present", "Coins Bag", "Large Coin", "Medium Coin", "Small Coin", "Large Diamonds", "Small Diamond", "Orb"}
 local library = require(game:GetService("ReplicatedStorage").Nevermore.Library)
 local pickupsLib = library.Network.Invoke("Get Pickups")
+
+spawn(function()
+
+		while wait(60) do
+		
+			if egg.flags.OpenExEggs then
+			
+				local playerLibrary = library.Save.Get()
+				local exeggs = playerLibrary.ExclusiveEggs
+
+				if exeggs ~= nil and #exeggs > 0 then
+					repeat
+						for a,b in pairs(exeggs) do
+							local ohTable1 = {
+							[1] = {
+								[1] = b.uid
+							},
+							[2] = {
+								[1] = false
+							}}
+
+							game:GetService("ReplicatedStorage").Remotes["open exclusive egg"]:InvokeServer(ohTable1)
+							wait(3)
+							exeggs = playerLibrary.ExclusiveEggs
+
+							break
+
+						end
+					until exeggs == nil or #exeggs < 1
+				end
+			
+			end
+		
+		end
+
+end)
+
 
 for i,world in pairs(library.Game.Pickups:GetChildren()) do
 
@@ -3650,7 +3688,7 @@ spawn(function()
 					}
 				}
 				for i,v in pairs(playerLibrary.Pets) do
-					if not v.s then
+					if not v.s and not v.lock then
 						if Pets[v.nk] then
 							Pets[v.nk] ++
 						else
