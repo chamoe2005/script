@@ -1,5 +1,6 @@
-print("Version 5.0.4")
+print("Version 5.0.5")
 				
+_G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
 				
 _G["PearlsMin"] = 750000000
 _G.highhigh = 99
@@ -552,9 +553,7 @@ end
 	
 local RedeemTwitterCodes = function()
 	
-	local TwitterCodes = {"gofast", "secrets", "season1", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky"} --"happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
-
-	for i,v in pairs(TwitterCodes) do
+	for i,v in pairs(_G.TwitterCodes) do
 		local ohTable1 = {
 			[1] = {
 				[1] = v
@@ -565,7 +564,7 @@ local RedeemTwitterCodes = function()
 		}
 		LogMe("Redeeming " .. v)
 		game:GetService("ReplicatedStorage").Remotes["redeem twitter code"]:InvokeServer(ohTable1)
-		wait(2)
+		wait(5)
 
 		--local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
 		--local timeout = 3
