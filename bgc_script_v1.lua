@@ -1,4 +1,4 @@
-print("Version 5.0.9")
+print("Version 5.1")
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
 				
@@ -2589,7 +2589,7 @@ spawn(function()
 				
 					local newworldfound = false
 					
-					if v.World == "Spawn World" then
+					if v.World == "Spawn World" or v.World == "Easter Island" then
 						newworldfound = true
 					end
 			
