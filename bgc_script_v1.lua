@@ -1,4 +1,4 @@
-print("Version 5.0.7")
+print("Version 5.0.8")
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
 				
@@ -16,7 +16,7 @@ _G.droptimeout = .25
 _G.TeleportDelay = 2
 _G.LastEgg = os.time()
 _G.lastBest = {}
-_G.EggTimeout = 10
+_G.EggTimeout = 2
 _G.oldeggs = {}
 _G["Drop TimeOut"] = 10
 _G["Drop Delay"] = 60
@@ -2044,7 +2044,7 @@ function openEgg(egg)
 	local ohTable2 = {
 		[1] = {
 			[1] = egg,
-			[2] = 4
+			[2] = 3
 		},
 		[2] = {
 			[1] = false,
@@ -2068,6 +2068,8 @@ function openEgg(egg)
 			end
 			
 		end
+		game:GetService("ReplicatedStorage").Remotes["buy egg"]:InvokeServer(ohTable2)
+		
 		_G.eggopened = false
 		_G.nomoney = false
 		start = os.time()
