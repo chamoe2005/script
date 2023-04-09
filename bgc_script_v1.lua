@@ -1,4 +1,4 @@
-print("Version 5.0.6")
+print("Version 5.0.7")
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
 				
@@ -2094,8 +2094,8 @@ function openEgg(egg)
 	end
 			
 		--library.Variables.OpeningEgg = false
-		game:GetService("ReplicatedStorage").Remotes["buy egg"]:InvokeServer(ohTable2)
-		_G.LastEgg = os.time()
+		--game:GetService("ReplicatedStorage").Remotes["buy egg"]:InvokeServer(ohTable2)
+		--_G.LastEgg = os.time()
 	--end
 end
 
