@@ -1,4 +1,4 @@
-print("Version 5.0.8")
+print("Version 5.0.9")
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
 				
@@ -902,7 +902,11 @@ for a,b in pairs(game:GetService("ReplicatedStorage")["Game Objects"].Eggs:GetCh
 		end
 		if require(d[d.Name]).currency and require(d[d.Name]).cost and not require(d[d.Name]).disabled and not disabled then
 			Eggs[d.Name] = {}
-			Eggs[d.Name]["World"] = b.Name
+			if d.Name == "Bunny Egg" or d.Name == "Chocolate Egg" or d.Name == "Ducky Egg" then
+				Eggs[d.Name]["World"] = "Easter Island"
+			else
+				Eggs[d.Name]["World"] = b.Name
+			end
 			Eggs[d.Name]["Currency"] = require(d[d.Name]).currency
 			Eggs[d.Name]["Cost"] = require(d[d.Name]).cost
 		end
@@ -1969,12 +1973,35 @@ local changeWorld = function(old, new)
 					oldworldfound = true
 				end
 			end
+			
+			if new == "Easter Island" then
+				newworldfound = true
+			end
+			if old == "Easter Island" then
+				oldworldfound = true
+			end
 
 			if old == "Spawn World" and new == "Atlantis" and newworldfound then
 				game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
 				wait(10)
 				while library.Variables.LoadingWorld do
 					LogMe("TPing to Atlantis")
+					wait(1)
+				end
+			elseif old == "Spawn World" and new == "Easter Island" and newworldfound then
+				if game:GetService("Workspace").MAP:FindFirstChild("Cave") ~= nil then
+					game:GetService("Workspace").MAP.Cave.Host.Activated:Fire()
+					wait(10)
+					while library.Variables.LoadingWorld do
+						LogMe("TPing to Easter Island")
+						wait(1)
+					end
+				end
+			elseif game:GetService("Workspace").MAP:FindFirstChild("Portal") ~= nil and new == "Spawn World" and oldworldfound then
+				game:GetService("Workspace").MAP.Portal.Portal.Interact.Activated:Fire()
+				wait(10)
+				while library.Variables.LoadingWorld do
+					LogMe("TPing to Spawn World")
 					wait(1)
 				end
 			elseif old == "Atlantis" and new == "Spawn World" and oldworldfound then
@@ -2058,9 +2085,9 @@ function openEgg(egg)
 	local eggmap = GetMap().Eggs:FindFirstChild(egg)
 	
 	if eggmap ~= nil then
-		if not library.Variables.AutoHatchEnabled or not library.Variables.AutoHatchEggId or library.Variables.AutoHatchEggId ~= egg or (GetPlayerRoot().Position-eggmap.EGG.Position).magnitude > 10 then
+		if not library.Variables.AutoHatchEnabled or not library.Variables.AutoHatchEggId or library.Variables.AutoHatchEggId ~= egg or (GetPlayerRoot().Position-eggmap.PrimaryPart.Position).magnitude > 10 then
 			if GetPlayerChar() then
-				GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(eggmap.EGG.Position + Vector3.new(3,-5,-3)))
+				GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(eggmap.PrimaryPart.Position + Vector3.new(3,-5,-3)))
 				wait(.1)
 				library.Variables.AutoHatchEnabled = true
 				library.Variables.AutoHatchEggId = egg
