@@ -1,4 +1,4 @@
-print("Version 5.2.6")
+print("Version 5.2.8")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3715,7 +3715,7 @@ local GetEasterEgg = function(egg)
 			
 				local starttime = os.time()
 				repeat
-					if game:GetService("Workspace").Stuff.Eggs:FindFirstChild(b.name) ~= nil and b ~= nil then
+					if game:GetService("Workspace").Stuff.Eggs:FindFirstChild(b.name) ~= nil and b ~= nil and b:FindFirstChild("POS") ~= nil then
 						toTarget(GetPlayerRoot().Position,b.POS.Position,b.POS.CFrame)
 						wait()
 
@@ -3778,7 +3778,7 @@ local GetEasterEgg = function(egg)
 				
 					local starttime = os.time()
 					repeat
-						if game:GetService("Workspace").Stuff.Eggs:FindFirstChild(b.name) ~= nil and b ~= nil then
+						if game:GetService("Workspace").Stuff.Eggs:FindFirstChild(b.name) ~= nil and b ~= nil and b:FindFirstChild("POS") ~= nil then
 							toTarget(GetPlayerRoot().Position,b.POS.Position,b.POS.CFrame)
 							wait()
 
@@ -3971,6 +3971,7 @@ spawn(function()
 												wait()
 												if d ~= nil and d:FindFirstChild("Activated") ~= nil then
 													d.Activated:Fire()
+													library.Network.Fire("Take Shard", b)
 												end
 												wait()
 											until d == nil or d:FindFirstChild("Activated") == nil or os.time() > starttime + 5
