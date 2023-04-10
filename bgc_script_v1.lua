@@ -1,4 +1,5 @@
-print("Version 5.1")
+print("Version 5.1.3")
+_G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
 				
@@ -23,8 +24,8 @@ _G["Drop Delay"] = 60
 _G.DropCoolOff = os.time() + _G["Drop Delay"]
 _G.playerCoins = 0
 
---_G.ChallengeName = "Event"
---_G.ChallengeRemote = "claim event prize"
+--_G.ChallengeName = "Easter"
+--_G.ChallengeRemote = "claim easter prize"
 
 --local dropdowns = {}
 --dropdowns.Bubblesell = {"No Sell", "Sell 1", "Sell 2"}
@@ -1441,10 +1442,10 @@ library.Signal.Fired("Merchant Active"):Connect(function()
 
 function switchEggs(args, old, switch)
 	if _G.settingsloaded then
-		LogMe("Switching Eggs")
+		--LogMe("Switching Eggs")
 		--print(args[2])
 		if old["Buy Mode"] == nil then
-			LogMe("New Settings")
+			--LogMe("New Settings")
 			old = {["Buy Mode"] = _G.BuyEggMode}
 		elseif switch then
 			args = old
@@ -1454,18 +1455,18 @@ function switchEggs(args, old, switch)
 		if old["Buy Mode"] == nil then
 			old = {["Buy Mode"] = _G.BuyEggMode}
 		else
-			LogMe("old",old["Buy Mode"])
+			--LogMe("old",old["Buy Mode"])
 		end
 		if old["Eggs"] == nil then
-			LogMe("New Settings")
+			--LogMe("New Settings")
 		else
 			for a,b in pairs(old["Eggs"]) do
-				LogMe("old",b)
+				--LogMe("old",b)
 			end
 		end
-		LogMe("new",args["Buy Mode"])
+		--LogMe("new",args["Buy Mode"])
 		for a,b in pairs(args["Eggs"]) do
-			LogMe("new",b)
+			--LogMe("new",b)
 		end
 		
 		local oldeggs = {}
@@ -1474,7 +1475,7 @@ function switchEggs(args, old, switch)
 	
 			if old["Eggs"] == nil then
 				if _G[a] then
-					LogMe("Insert Egg")
+					--LogMe("Insert Egg")
 					table.insert(oldeggs, a)
 				end
 			end
@@ -1483,7 +1484,7 @@ function switchEggs(args, old, switch)
 			for c,d in pairs(args["Eggs"]) do
 				if a == d then
 					enabled = true
-					LogMe(a, enabled)
+					--LogMe(a, enabled)
 				end
 			end
 			
@@ -1495,8 +1496,8 @@ function switchEggs(args, old, switch)
 
 		changeSetting("Selection", "Buy Mode", args["Buy Mode"], true)
 		
-		LogMe("Old Eggs")
-		LogMe(old["Buy Mode"])
+		--LogMe("Old Eggs")
+		--LogMe(old["Buy Mode"])
 		--old["Eggs"] = {}
 		if old["Eggs"] == nil then
 			old["Eggs"] = {}
@@ -1504,10 +1505,10 @@ function switchEggs(args, old, switch)
 				table.insert(old["Eggs"], b)
 			end
 			for a,b in pairs(old["Eggs"]) do
-				LogMe(b)
+				--LogMe(b)
 			end
 		else
-			LogMe("Old Settings")
+			--LogMe("Old Settings")
 		end	
 		
 		return old
@@ -1535,6 +1536,35 @@ local EquipTeam = function(team)
 								end
 							end
 
+end
+
+local GetEasterEgg = function(num, egg)		
+	for x = 1, num do
+		for a,b in pairs(game:GetService("Workspace").Stuff.Eggs:GetChildren()) do
+			if b:FindFirstChild(egg) then
+				toTarget(GetPlayerRoot().Position,b.POS.Position,b.POS.CFrame)
+				wait(3)
+
+				local ohTable1 = {
+					[1] = {
+						[1] = b.Name
+					},
+					[2] = {
+						[1] = false
+					}
+				}
+
+				game:GetService("ReplicatedStorage").Remotes["collect egg"]:FireServer(ohTable1)
+				wait(.5)
+				local sellarea = game:GetService("Workspace").MAP.Activations["Bunny"]
+				GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
+				wait(.5)
+				toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
+				break
+			end
+		end
+		wait(1)
+	end
 end
 
 local startQuest = 	function(quest)
@@ -1605,8 +1635,12 @@ local startQuest = 	function(quest)
 									changeSetting("Checkmark", a, false, true)
 								end
 							end
-						elseif quest.challengeType == "Eggs" then
-							LogMe("Switch to Eggs Challenege")
+						elseif string.find(quest.challengeType, "Egg") then
+							changeWorld("Easter Island", "Spawn World")
+							LogMe("Switch to " .. quest.challengeType .. " Challenege")
+							GetEasterEgg(quest.amount, quest.challengeType)
+							
+							--[[
 							if _G.oldeggs["Buy Mode"] == nil then
 								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Snail Egg", "Goldfish Egg", "Common Egg"}}, {}, true)
 								LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
@@ -1619,6 +1653,7 @@ local startQuest = 	function(quest)
 								local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Snail Egg", "Goldfish Egg", "Common Egg"}}, _G.oldeggs, false)
 								--_G.oldeggs = oldeggs
 							end
+							]]--
 							--switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Magma Egg", "Common Egg"}})
 						elseif quest.challengeType == "EpicPets" then
 							LogMe("Switch to Epic Challenege")
@@ -1772,7 +1807,7 @@ local doChallenge = function()
 
 			local lastPrize = 0
 
-			for a,b in pairs(library.Directory[_G.ChallengeName]) do
+			for a,b in pairs(library.Directory[_G.ChallengeName .. "Quests"]) do
 				if a > lastPrize then
 					lastPrize = a
 				end
@@ -1923,6 +1958,7 @@ end
 			farm:Toggle(_G.ChallengeName .. " Challenge", {flag = _G.ChallengeName}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doChallenge() end) end)
 		end
 		farm:Toggle("Atlantis Egg Quests", {location = _G, flag = "Atlantis Egg Quests"}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doEggQuests() end) end)
+		farm:Toggle("Easter Quests", {location = _G, flag = "EasterQuests"})
 
 
 spawn(function()
@@ -3698,6 +3734,201 @@ local UsePotions = function()
 end
 
 
+local GetEasterEgg = function(egg)		
+	--for x = 1, num do
+	local eggfound = false
+		for a,b in pairs(game:GetService("Workspace").Stuff.Eggs:GetChildren()) do
+			if b:FindFirstChild(egg) then
+				toTarget(GetPlayerRoot().Position,b.POS.Position,b.POS.CFrame)
+				wait(5)
+
+				local ohTable1 = {
+					[1] = {
+						[1] = b.Name
+					},
+					[2] = {
+						[1] = false
+					}
+				}
+
+				game:GetService("ReplicatedStorage").Remotes["collect egg"]:FireServer(ohTable1)
+				wait(.5)
+				local sellarea = game:GetService("Workspace").MAP.Activations["Bunny"]
+				GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
+				wait(.5)
+				toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
+				eggfound = true
+				break
+			end
+		end
+		if not eggfound then
+		
+			for a,b in pairs(game:GetService("Workspace").Stuff.Eggs:GetChildren()) do
+			if b:FindFirstChild("Common Egg") then
+				toTarget(GetPlayerRoot().Position,b.POS.Position,b.POS.CFrame)
+				wait(3)
+
+				local ohTable1 = {
+					[1] = {
+						[1] = b.Name
+					},
+					[2] = {
+						[1] = false
+					}
+				}
+
+				game:GetService("ReplicatedStorage").Remotes["collect egg"]:FireServer(ohTable1)
+				wait(.5)
+				local sellarea = game:GetService("Workspace").MAP.Activations["Bunny"]
+				GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
+				wait(.5)
+				toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
+				eggfound = true
+				break
+			end
+		end
+		
+		end
+		
+		
+		wait(1)
+	--end
+
+end
+
+local ClaimPrize = function()
+
+local ohTable1 = {
+						[1] = {
+							[1] = false
+						},
+						[2] = {
+							[1] = 2
+						}
+					}
+
+					game:GetService("ReplicatedStorage").Remotes["claim easter prize"]:FireServer(ohTable1)
+
+end
+
+spawn(function()
+	while wait(5) do
+
+		if _G.EasterQuests then
+			local library = require(game:GetService("ReplicatedStorage").Nevermore.Library)
+
+			local playerLibrary = library.Save.Get()
+
+					if playerLibrary["Easter"] ~= nil and playerLibrary["Easter"].Claimed ~= nil then
+						local lastPrize = 0
+
+						for a,b in pairs(library.Directory["EasterQuests"]) do
+							if a > lastPrize then
+								lastPrize = a
+							end
+							
+							if a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Egg") and string.find(b.title, "Return") and (playerLibrary["Easter"].Progress.EggCount[b.challengeType] == nil or playerLibrary["Easter"].Progress.EggCount[b.challengeType] < b.amount) then
+								if playerLibrary["Easter"].Progress.EggCount[b.challengeType] == nil then
+									print((b.amount - 0) .. " " .. b.challengeType .. " remaining to claim Easter " .. a)
+								else
+									print((b.amount - playerLibrary["Easter"].Progress.EggCount[b.challengeType]) .. " " .. b.challengeType .. " remaining to claim Easter " .. a)
+								end
+								changeSetting("Selection", "Buy Mode", "None", true)
+								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
+								GetEasterEgg(b.challengeType)
+							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Egg") and string.find(b.title, "Return") and playerLibrary["Easter"].Progress.EggCount[b.challengeType] >= b.amount then
+								print("Claiming Easter Prize " .. a)
+								ClaimPrize()
+							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Key") then
+								changeSetting("Selection", "Buy Mode", "None", true)
+								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
+								toTarget(GetPlayerRoot().Position,game:GetService("Workspace").MAP.KEY.Position,game:GetService("Workspace").MAP.KEY.CFrame)
+								wait(.5)
+								local ohTable1 = {
+									[1] = {
+										[1] = false
+									},
+									[2] = {
+										[1] = 2
+									}
+								}
+
+								game:GetService("ReplicatedStorage").Remotes["take key"]:FireServer(ohTable1)
+								wait(1)
+								local sellarea = game:GetService("Workspace").MAP.Activations["Bunny"]
+								GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
+								wait(.5)
+								toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
+								wait(1)
+								ClaimPrize()
+							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Castle") then
+								changeSetting("Selection", "Buy Mode", "None", true)
+								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
+								toTarget(GetPlayerRoot().Position,game:GetService("Workspace").MAP.Models["Wizard Tower"].Blocked.DOOR.Main.Position,game:GetService("Workspace").MAP.Models["Wizard Tower"].Blocked.DOOR.Main.CFrame)
+								wait(.5)
+								game:GetService("Workspace").MAP.Models["Wizard Tower"].Blocked.DOOR.Main.Activated:Fire()
+								wait(1)
+								local sellarea = game:GetService("Workspace").MAP.Activations["Bunny"]
+								GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
+								wait(.5)
+								toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
+								wait(1)
+								ClaimPrize()
+							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Shard") and playerLibrary["Easter"].Progress.Shards < b.amount then
+								changeSetting("Selection", "Buy Mode", "None", true)
+								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
+								for a,b in pairs(game:GetService("Workspace").MAP.Shards:GetChildren()) do
+									for c,d in pairs(b:GetChildren()) do
+										if d:FindFirstChild("Activated") then
+											repeat
+												toTarget(GetPlayerRoot().Position,b.PrimaryPart.Position + Vector3.new(1,1,10),b.PrimaryPart.CFrame + Vector3.new(1,1,10))
+												wait(.1)
+												if d ~= nil and d:FindFirstChild("Activated") ~= nil then
+													d.Activated:Fire()
+												end
+												wait(.1)
+											until d == nil or d:FindFirstChild("Activated") == nil
+											wait(1)
+											break
+										end
+									end
+								end
+								ClaimPrize()
+							elseif a == (playerLibrary["Easter"].Claimed + 1) and (b.challengeType == "EpicPets" or b.challengeType == "LegendaryPets" or b.challengeType == "Eggs") and playerLibrary["Easter"].Progress[b.challengeType] < b.amount then
+								if playerLibrary["Easter"].Progress[b.challengeType] ~= nil then
+									print((b.amount - playerLibrary["Easter"].Progress[b.challengeType]) .. " " .. b.challengeType .. " remaining to claim Easter " .. a)
+								end
+								if _G.oldeggs["Buy Mode"] == nil then
+									local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Bunny Egg", "Common Egg"}}, {}, true)
+									LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+									_G.oldeggs = oldeggs
+								else
+									LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+									for a,b in pairs(_G.oldeggs["Eggs"]) do
+										LogMe(b)
+									end
+									local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Bunny Egg", "Common Egg"}}, _G.oldeggs, false)
+									--_G.oldeggs = oldeggs
+								end
+							elseif a == (playerLibrary["Easter"].Claimed + 1) and (b.challengeType == "EpicPets" or b.challengeType == "LegendaryPets" or b.challengeType == "Eggs") and playerLibrary["Easter"].Progress[b.challengeType] >= b.amount then
+								ClaimPrize()
+							elseif a == (playerLibrary["Easter"].Claimed + 1) and b.challengeType == "EggsFound" then
+								changeSetting("Selection", "Buy Mode", "None", true)
+								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
+								
+								for a,b in pairs(library.Directory.EasterEggs) do
+									GetEasterEgg(a)
+									wait(5)
+								end
+								wait(1)
+								ClaimPrize()
+							end
+							
+						end
+					end
+		end
+	end				
+end)
 
 
 spawn(function()
