@@ -1,4 +1,4 @@
-print("Version 5.2.3")
+print("Version 5.2.4")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3890,7 +3890,7 @@ spawn(function()
 									end
 									
 								end
-								if not eggfound then
+								if not eggfound and not _G.CollectCommon then
 									
 										if _G.oldeggs["Buy Mode"] == nil then
 											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Bunny Egg", "Common Egg"}}, {}, true)
@@ -3904,6 +3904,13 @@ spawn(function()
 											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Bunny Egg", "Common Egg"}}, _G.oldeggs, false)
 											--_G.oldeggs = oldeggs
 										end
+								else
+								
+									changeSetting("Selection", "Buy Mode", "None", true)
+									changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
+									GetEasterEgg(b.challengeType)
+										
+								
 								end
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Egg") and string.find(b.title, "Return") and playerLibrary["Easter"].Progress.EggCount[b.challengeType] >= b.amount then
 								print("Claiming Easter Prize " .. a)
