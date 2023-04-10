@@ -1,4 +1,4 @@
-print("Version 5.2.1")
+print("Version 5.2.3")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1931,6 +1931,7 @@ end
 		end
 		farm:Toggle("Atlantis Egg Quests", {location = _G, flag = "Atlantis Egg Quests"}, function() spawn(function() while not _G.settingsloaded do LogMe("Settings not loaded") wait(1) end _G.oldeggs = {} doEggQuests() end) end)
 		farm:Toggle("Easter Quests", {location = _G, flag = "EasterQuests"})
+		farm:Toggle("Default Collect Common", {location = _G, flag = "CollectCommon"})
 
 
 spawn(function()
@@ -3711,6 +3712,37 @@ local GetEasterEgg = function(egg)
 	local eggfound = false
 		for a,b in pairs(game:GetService("Workspace").Stuff.Eggs:GetChildren()) do
 			if b:FindFirstChild(egg) then
+			
+				local starttime = os.time()
+				repeat
+					if game:GetService("Workspace").Stuff.Eggs:FindFirstChild(b.name) ~= nil and b ~= nil then
+						toTarget(GetPlayerRoot().Position,b.POS.Position,b.POS.CFrame)
+						wait()
+
+						local ohTable1 = {
+							[1] = {
+								[1] = b.Name
+							},
+							[2] = {
+								[1] = false
+							}
+						}
+
+						game:GetService("ReplicatedStorage").Remotes["collect egg"]:FireServer(ohTable1)
+					end
+				until b == nil or library.LocalPlayer.Character:FindFirstChild("__EGG") or os.time() > starttime + 5
+				wait(1)
+				if library.LocalPlayer.Character:FindFirstChild("__EGG") then
+					local sellarea = game:GetService("Workspace").MAP.Activations["Bunny"]
+					GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
+					wait(.5)
+					toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
+					
+					eggfound = true
+					break
+				end
+			
+				--[[
 				toTarget(GetPlayerRoot().Position,b.POS.Position,b.POS.CFrame)
 				wait(5)
 
@@ -3734,14 +3766,48 @@ local GetEasterEgg = function(egg)
 					--eggfound = true
 					break
 				end
+				]]--
 			end
 		end
 		
-		--[[
-		if not eggfound then
+		
+		if not eggfound and _G.CollectCommon then
 		
 			for a,b in pairs(game:GetService("Workspace").Stuff.Eggs:GetChildren()) do
 				if b:FindFirstChild("Common Egg") then
+				
+					local starttime = os.time()
+					repeat
+						if game:GetService("Workspace").Stuff.Eggs:FindFirstChild(b.name) ~= nil and b ~= nil then
+							toTarget(GetPlayerRoot().Position,b.POS.Position,b.POS.CFrame)
+							wait()
+
+							local ohTable1 = {
+								[1] = {
+									[1] = b.Name
+								},
+								[2] = {
+									[1] = false
+								}
+							}
+
+							game:GetService("ReplicatedStorage").Remotes["collect egg"]:FireServer(ohTable1)
+						end
+					until b == nil or library.LocalPlayer.Character:FindFirstChild("__EGG") or os.time() > starttime + 5
+					wait(1)
+					if library.LocalPlayer.Character:FindFirstChild("__EGG") then
+						local sellarea = game:GetService("Workspace").MAP.Activations["Bunny"]
+						GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
+						wait(.5)
+						toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
+						
+						eggfound = true
+						break
+					end
+				
+				
+					--[[
+				
 					toTarget(GetPlayerRoot().Position,b.POS.Position,b.POS.CFrame)
 					wait(3)
 
@@ -3762,11 +3828,13 @@ local GetEasterEgg = function(egg)
 					toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
 					eggfound = true
 					break
+					
+					]]--
+					
 				end
 			end
 
 		end
-				]]--
 		
 		
 		wait(1)
