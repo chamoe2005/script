@@ -1,4 +1,4 @@
-print("Version 5.2.9")
+print("Version 5.3")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3980,6 +3980,7 @@ spawn(function()
 											wait(1)
 											break
 										end
+										break
 									end
 								end
 								ClaimPrize()
