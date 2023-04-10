@@ -1,4 +1,4 @@
-print("Version 5.2.4")
+print("Version 5.2.5")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3958,24 +3958,29 @@ spawn(function()
 								changeSetting("Selection", "Buy Mode", "None", true)
 								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
 								changeWorld("Spawn World", "Easter Island")
+								if playerLibrary["Easter"].Progress.Shards ~= nil then
+									print((b.amount - playerLibrary["Easter"].Progress.Shards) .. " Shards remaining to claim Easter " .. a)
+								end
 								
 								for a,b in pairs(game:GetService("Workspace").MAP.Shards:GetChildren()) do
 									for c,d in pairs(b:GetChildren()) do
 										if d:FindFirstChild("Activated") then
 										local starttime = os.time()
 											repeat
-												toTarget(GetPlayerRoot().Position,b.PrimaryPart.Position + Vector3.new(1,1,10),b.PrimaryPart.CFrame + Vector3.new(1,1,10))
-												wait(.1)
+												toTarget(GetPlayerRoot().Position,b.PrimaryPart.Position,b.PrimaryPart.CFrame)
+												wait()
 												if d ~= nil and d:FindFirstChild("Activated") ~= nil then
 													d.Activated:Fire()
 												end
-												wait(.1)
-											until d == nil or d:FindFirstChild("Activated") == nil or os.time() > starttime + 10
+												wait()
+											until d == nil or d:FindFirstChild("Activated") == nil or os.time() > starttime + 5
 											wait(1)
 											break
 										end
 									end
 								end
+								ClaimPrize()
+							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Shard") and playerLibrary["Easter"].Progress.Shards >= b.amount then
 								ClaimPrize()
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and (b.challengeType == "EpicPets" or b.challengeType == "LegendaryPets" or b.challengeType == "Eggs") and playerLibrary["Easter"].Progress[b.challengeType] < b.amount then
 								
