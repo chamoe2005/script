@@ -1,4 +1,4 @@
-print("Version 5.2.5")
+print("Version 5.2.6")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -4017,7 +4017,6 @@ spawn(function()
 											changeSetting("Selection", "Buy Mode", "None", true)
 											changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
 											GetEasterEgg(a)
-											wait(5)
 										end
 									end
 								end
