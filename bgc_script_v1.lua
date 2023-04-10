@@ -1,4 +1,4 @@
-print("Version 5.3")
+print("Version 5.3.1")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3730,7 +3730,8 @@ local GetEasterEgg = function(egg)
 
 						game:GetService("ReplicatedStorage").Remotes["collect egg"]:FireServer(ohTable1)
 					end
-				until b == nil or library.LocalPlayer.Character:FindFirstChild("__EGG") or os.time() > starttime + 5
+					wait(.5)
+				until game:GetService("Workspace").Stuff.Eggs:FindFirstChild(b.name) == nil or b:FindFirstChild("POS") == nil or b == nil or library.LocalPlayer.Character:FindFirstChild("__EGG") or os.time() > starttime + 5
 				wait(1)
 				if library.LocalPlayer.Character:FindFirstChild("__EGG") then
 					local sellarea = game:GetService("Workspace").MAP.Activations["Bunny"]
@@ -3793,7 +3794,8 @@ local GetEasterEgg = function(egg)
 
 							game:GetService("ReplicatedStorage").Remotes["collect egg"]:FireServer(ohTable1)
 						end
-					until b == nil or library.LocalPlayer.Character:FindFirstChild("__EGG") or os.time() > starttime + 5
+						wait(.5)
+					until game:GetService("Workspace").Stuff.Eggs:FindFirstChild(b.name) == nil or b:FindFirstChild("POS") == nil or b == nil or library.LocalPlayer.Character:FindFirstChild("__EGG") or os.time() > starttime + 5
 					wait(1)
 					if library.LocalPlayer.Character:FindFirstChild("__EGG") then
 						local sellarea = game:GetService("Workspace").MAP.Activations["Bunny"]
