@@ -1,4 +1,4 @@
-print("Version 5.1.7")
+print("Version 5.1.8")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3812,8 +3812,8 @@ spawn(function()
 									print((b.amount - playerLibrary["Easter"].Progress.EggCount[b.challengeType]) .. " " .. b.challengeType .. " remaining to claim Easter " .. a)
 								end
 								local eggfound = false
-								for a,b in pairs(game:GetService("Workspace").Stuff.Eggs:GetChildren()) do
-									if b:FindFirstChild(b.challengeType) then
+								for c,d in pairs(game:GetService("Workspace").Stuff.Eggs:GetChildren()) do
+									if d:FindFirstChild(b.challengeType) then
 										changeSetting("Selection", "Buy Mode", "None", true)
 										changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
 										GetEasterEgg(b.challengeType)
