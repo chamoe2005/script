@@ -1,4 +1,4 @@
-print("Version 5.2")
+print("Version 5.2.1")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3887,6 +3887,7 @@ spawn(function()
 								for a,b in pairs(game:GetService("Workspace").MAP.Shards:GetChildren()) do
 									for c,d in pairs(b:GetChildren()) do
 										if d:FindFirstChild("Activated") then
+										local starttime = os.time()
 											repeat
 												toTarget(GetPlayerRoot().Position,b.PrimaryPart.Position + Vector3.new(1,1,10),b.PrimaryPart.CFrame + Vector3.new(1,1,10))
 												wait(.1)
@@ -3894,7 +3895,7 @@ spawn(function()
 													d.Activated:Fire()
 												end
 												wait(.1)
-											until d == nil or d:FindFirstChild("Activated") == nil
+											until d == nil or d:FindFirstChild("Activated") == nil or os.time() > starttime + 10
 											wait(1)
 											break
 										end
