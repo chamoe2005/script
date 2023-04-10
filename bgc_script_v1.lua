@@ -1,4 +1,4 @@
-print("Version 5.2.8")
+print("Version 5.2.9")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3964,17 +3964,19 @@ spawn(function()
 								
 								for a,b in pairs(game:GetService("Workspace").MAP.Shards:GetChildren()) do
 									for c,d in pairs(b:GetChildren()) do
-										if d:FindFirstChild("Activated") then
+										if game:GetService("Workspace").MAP.Shards:FindFirstChild(b.Name) ~= nil and b ~= nil and b:FindFirstChild(d.Name) ~= nil and d ~= nil and d:FindFirstChild("Activated") then
 										local starttime = os.time()
 											repeat
-												toTarget(GetPlayerRoot().Position,b.PrimaryPart.Position,b.PrimaryPart.CFrame)
-												wait()
-												if d ~= nil and d:FindFirstChild("Activated") ~= nil then
-													d.Activated:Fire()
-													library.Network.Fire("Take Shard", b)
+												if game:GetService("Workspace").MAP.Shards:FindFirstChild(b.Name) ~= nil and b ~= nil and b:FindFirstChild(d.Name) ~= nil and d ~= nil and d:FindFirstChild("Activated") then
+													toTarget(GetPlayerRoot().Position,b.PrimaryPart.Position,b.PrimaryPart.CFrame)
+													wait()
+													if d ~= nil and d:FindFirstChild("Activated") ~= nil then
+														d.Activated:Fire()
+														--library.Network.Fire("Take Shard", b)
+													end
+													wait()
 												end
-												wait()
-											until d == nil or d:FindFirstChild("Activated") == nil or os.time() > starttime + 5
+											until game:GetService("Workspace").MAP.Shards:FindFirstChild(b.Name) == nil or b == nil or b:FindFirstChild(d.Name) == nil or d == nil or d:FindFirstChild("Activated") == nil or os.time() > starttime + 5
 											wait(1)
 											break
 										end
