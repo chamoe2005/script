@@ -1,4 +1,4 @@
-print("Version 5.1.8")
+print("Version 5.1.9")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3812,6 +3812,7 @@ spawn(function()
 									print((b.amount - playerLibrary["Easter"].Progress.EggCount[b.challengeType]) .. " " .. b.challengeType .. " remaining to claim Easter " .. a)
 								end
 								local eggfound = false
+								changeWorld("Easter Island", "Spawn World")
 								for c,d in pairs(game:GetService("Workspace").Stuff.Eggs:GetChildren()) do
 									if d:FindFirstChild(b.challengeType) then
 										changeSetting("Selection", "Buy Mode", "None", true)
@@ -3842,6 +3843,8 @@ spawn(function()
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Key") then
 								changeSetting("Selection", "Buy Mode", "None", true)
 								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
+								changeWorld("Easter Island", "Spawn World")
+								
 								toTarget(GetPlayerRoot().Position,game:GetService("Workspace").MAP.KEY.Position,game:GetService("Workspace").MAP.KEY.CFrame)
 								wait(.5)
 								local ohTable1 = {
@@ -3864,6 +3867,8 @@ spawn(function()
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Castle") then
 								changeSetting("Selection", "Buy Mode", "None", true)
 								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
+								changeWorld("Easter Island", "Spawn World")
+								
 								toTarget(GetPlayerRoot().Position,game:GetService("Workspace").MAP.Models["Wizard Tower"].Blocked.DOOR.Main.Position,game:GetService("Workspace").MAP.Models["Wizard Tower"].Blocked.DOOR.Main.CFrame)
 								wait(.5)
 								game:GetService("Workspace").MAP.Models["Wizard Tower"].Blocked.DOOR.Main.Activated:Fire()
@@ -3877,6 +3882,8 @@ spawn(function()
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Shard") and playerLibrary["Easter"].Progress.Shards < b.amount then
 								changeSetting("Selection", "Buy Mode", "None", true)
 								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
+								changeWorld("Easter Island", "Spawn World")
+								
 								for a,b in pairs(game:GetService("Workspace").MAP.Shards:GetChildren()) do
 									for c,d in pairs(b:GetChildren()) do
 										if d:FindFirstChild("Activated") then
@@ -3895,6 +3902,7 @@ spawn(function()
 								end
 								ClaimPrize()
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and (b.challengeType == "EpicPets" or b.challengeType == "LegendaryPets" or b.challengeType == "Eggs") and playerLibrary["Easter"].Progress[b.challengeType] < b.amount then
+								
 								if playerLibrary["Easter"].Progress[b.challengeType] ~= nil then
 									print((b.amount - playerLibrary["Easter"].Progress[b.challengeType]) .. " " .. b.challengeType .. " remaining to claim Easter " .. a)
 								end
@@ -3917,8 +3925,20 @@ spawn(function()
 								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
 								
 								for a,b in pairs(library.Directory.EasterEggs) do
-									GetEasterEgg(a)
-									wait(5)
+									if playerLibrary["Easter"].Progress.EggCount[a] == nil then
+										changeWorld("Easter Island", "Spawn World")
+										for c,d in pairs(game:GetService("Workspace").Stuff.Eggs:GetChildren()) do
+											if d:FindFirstChild(a) then
+												eggfound = true
+											end
+										end
+										if eggfound then	
+											changeSetting("Selection", "Buy Mode", "None", true)
+											changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
+											GetEasterEgg(a)
+											wait(5)
+										end
+									end
 								end
 								wait(1)
 								ClaimPrize()
