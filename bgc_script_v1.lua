@@ -1,4 +1,4 @@
-print("Version 5.3.6")
+print("Version 5.3.8")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3885,6 +3885,8 @@ spawn(function()
 							end
 							
 							if a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Egg") and string.find(b.title, "Return") and (playerLibrary["Easter"].Progress.EggCount[b.challengeType] == nil or playerLibrary["Easter"].Progress.EggCount[b.challengeType] < b.amount) then
+								changeWorld("Spawn World", "Easter Island")
+										
 								if playerLibrary["Easter"].Progress.EggCount[b.challengeType] == nil then
 									print((b.amount - 0) .. " " .. b.challengeType .. " remaining to claim Easter " .. a)
 								else
@@ -3927,6 +3929,8 @@ spawn(function()
 								print("Claiming Easter Prize " .. a)
 								ClaimPrize()
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Key") then
+								changeWorld("Spawn World", "Easter Island")
+										
 								changeSetting("Selection", "Buy Mode", "None", true)
 								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
 								changeWorld("Spawn World", "Easter Island")
@@ -3951,6 +3955,8 @@ spawn(function()
 								wait(1)
 								ClaimPrize()
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Castle") then
+								changeWorld("Spawn World", "Easter Island")
+										
 								changeSetting("Selection", "Buy Mode", "None", true)
 								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
 								changeWorld("Spawn World", "Easter Island")
@@ -3966,6 +3972,8 @@ spawn(function()
 								wait(1)
 								ClaimPrize()
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Shard") and playerLibrary["Easter"].Progress.Shards < b.amount then
+								changeWorld("Spawn World", "Easter Island")
+										
 								changeSetting("Selection", "Buy Mode", "None", true)
 								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
 								changeWorld("Spawn World", "Easter Island")
@@ -3998,7 +4006,8 @@ spawn(function()
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Shard") and playerLibrary["Easter"].Progress.Shards >= b.amount then
 								ClaimPrize()
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and (b.challengeType == "EpicPets" or b.challengeType == "LegendaryPets" or b.challengeType == "Eggs") and playerLibrary["Easter"].Progress[b.challengeType] < b.amount then
-								
+								changeWorld("Spawn World", "Easter Island")
+										
 								if playerLibrary["Easter"].Progress[b.challengeType] ~= nil then
 									print((b.amount - playerLibrary["Easter"].Progress[b.challengeType]) .. " " .. b.challengeType .. " remaining to claim Easter " .. a)
 								end
@@ -4017,21 +4026,23 @@ spawn(function()
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and (b.challengeType == "EpicPets" or b.challengeType == "LegendaryPets" or b.challengeType == "Eggs") and playerLibrary["Easter"].Progress[b.challengeType] >= b.amount then
 								ClaimPrize()
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and b.challengeType == "EggsFound" then
-								changeSetting("Selection", "Buy Mode", "None", true)
-								changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
-								
+								changeWorld("Spawn World", "Easter Island")
+										
 								for a,b in pairs(library.Directory.EasterEggs) do
 									if playerLibrary["Easter"].Progress.EggCount[a] == nil then
-										changeWorld("Spawn World", "Easter Island")
 										for c,d in pairs(game:GetService("Workspace").Stuff.Eggs:GetChildren()) do
 											if d:FindFirstChild(a) then
 												eggfound = true
 											end
 										end
 										if eggfound then	
+										
 											changeSetting("Selection", "Buy Mode", "None", true)
 											changeSetting("Checkmark", "Kick on Zero Eggs", disabled, true)
 											GetEasterEgg(a)
+											changeSetting("Selection", "Buy Mode", "Best", true)
+						
+								
 										end
 									end
 								end
