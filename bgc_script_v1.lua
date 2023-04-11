@@ -1,4 +1,4 @@
-print("Version 5.3.5")
+print("Version 5.3.6")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3991,8 +3991,8 @@ spawn(function()
 											wait(1)
 											break
 										end
-										break
 									end
+									break
 								end
 								ClaimPrize()
 							elseif a == (playerLibrary["Easter"].Claimed + 1) and string.find(b.challengeType, "Shard") and playerLibrary["Easter"].Progress.Shards >= b.amount then
