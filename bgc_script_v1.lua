@@ -1,4 +1,4 @@
-print("Version 5.3.4")
+print("Version 5.3.5")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -2015,7 +2015,7 @@ local changeWorld = function(old, new)
 						wait(1)
 					end
 				end
-			elseif game:GetService("Workspace").MAP:FindFirstChild("Portal") ~= nil and new == "Spawn World" and oldworldfound then
+			elseif game:GetService("Workspace").MAP:FindFirstChild("Portal") ~= nil and game:GetService("Workspace").MAP.Portal:FindFirstChild("Portal") ~= nil and new == "Spawn World" and oldworldfound then
 				game:GetService("Workspace").MAP.Portal.Portal.Interact.Activated:Fire()
 				wait(10)
 				while library.Variables.LoadingWorld do
