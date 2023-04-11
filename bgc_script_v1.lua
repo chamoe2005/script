@@ -1,4 +1,4 @@
-print("Version 5.3.1")
+print("Version 5.3.2")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3241,7 +3241,7 @@ spawn(function()
 			
 					
 			for a,b in pairs(library.Directory.Worlds) do
-				if a ~= "Spawn World" then
+				if a ~= "Spawn World" and a ~= "Easter Island" then
 					local worldfound = false
 					for c,d in pairs(playerLibrary.Worlds) do
 						if d == a then
