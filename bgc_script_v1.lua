@@ -1,4 +1,4 @@
-print("Version 5.3.2")
+print("Version 5.3.4")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -464,13 +464,17 @@ end
 	--farm:Toggle("Sell Bubbles", {location = _G, flag = "Sell Bubbles"}, function() spawn(function() doSellBubbles() end) end)
 	--_G.SellBubbleArea = "No Sell"
     
-	local sellareas = {"No Sell"}
+	local sellareas = {"No Sell", "Sell 1", "Sell 2"}
+	
+	--[[
 	
 	for a,b in pairs(GetMap().Activations:GetChildren()) do
 		if string.find(b.Name, "Sell") then
 			table.insert(sellareas, b.Name)
 		end
 	end
+	
+	]]--
 	
 	farm:Dropdown("Sell Bubble Area", {location = _G, flag = "SellBubbleArea", list = sellareas})
 	
@@ -750,6 +754,7 @@ local SendMail = 	function()
 							for x = 1, sendnum do
 								local playerLibrary = library.Save.Get()
 								local petfound = false
+								local sendbreak = false
 								for a,b in pairs(playerLibrary.Pets) do
 									if tostring(pet.flags.MailGiftPet) ~= nil then
 										for i in string.gmatch(pet.flags.MailGiftPet, '([^,]+)') do
@@ -758,6 +763,7 @@ local SendMail = 	function()
 												local pass, fail = library.Network.Invoke("Send Mail Gift", pet.flags.MailRecipient, "Message", b.uid)
 												if pass then
 													LogMe((b.s and "Shiny " or "") .. b.nk .. " sent sucessfully sent to " .. pet.flags.MailRecipient)
+													sendbreak = true
 												elseif fail then
 													LogMe((b.s and "Shiny " or "") .. b.nk .. " failed")
 												end
@@ -765,6 +771,9 @@ local SendMail = 	function()
 												break
 											end
 										end
+									end
+									if sendbreak then
+										break
 									end
 									wait(.1)
 								end
