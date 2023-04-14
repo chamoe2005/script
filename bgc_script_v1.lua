@@ -1,4 +1,4 @@
-print("Version 5.3.8")
+print("Version 5.3.9")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -2015,11 +2015,25 @@ local changeWorld = function(old, new)
 						wait(1)
 					end
 				end
-			elseif game:GetService("Workspace").MAP:FindFirstChild("Portal") ~= nil and game:GetService("Workspace").MAP.Portal:FindFirstChild("Portal") ~= nil and new == "Spawn World" and oldworldfound then
+			elseif game:GetService("Workspace").MAP:FindFirstChild("Portal") ~= nil and game:GetService("Workspace").MAP.Portal:FindFirstChild("Portal") ~= nil and game:GetService("Workspace").MAP.Portal.Portal:FindFirstChild("Interact") ~= nil and new == "Spawn World" and oldworldfound then
 				game:GetService("Workspace").MAP.Portal.Portal.Interact.Activated:Fire()
 				wait(10)
 				while library.Variables.LoadingWorld do
 					LogMe("TPing to Spawn World")
+					wait(1)
+				end
+			elseif game:GetService("Workspace").MAP:FindFirstChild("Portal") ~= nil and game:GetService("Workspace").MAP.Portal:FindFirstChild("Portal") ~= nil and game:GetService("Workspace").MAP.Portal.Portal:FindFirstChild("Interact") ~= nil and new == "Atlantis" and newworldfound then
+				game:GetService("Workspace").MAP.Portal.Portal.Interact.Activated:Fire()
+				wait(10)
+				while library.Variables.LoadingWorld do
+					LogMe("TPing to Spawn World")
+					wait(1)
+				end
+				wait(1)
+				game:GetService("Workspace").MAP["Eggs/Portals"].Portal.Interact.Activated:Fire()
+				wait(10)
+				while library.Variables.LoadingWorld do
+					LogMe("TPing to Atlantis")
 					wait(1)
 				end
 			elseif old == "Atlantis" and new == "Spawn World" and oldworldfound then
@@ -2028,6 +2042,22 @@ local changeWorld = function(old, new)
 				while library.Variables.LoadingWorld do
 					LogMe("TPing to Spawn World")
 					wait(1)
+				end
+			elseif old == "Atlantis" and new == "Easter Island" and oldworldfound then
+				game:GetService("Workspace").MAP.Portal.Interact.Activated:Fire()
+				wait(10)
+				while library.Variables.LoadingWorld do
+					LogMe("TPing to Spawn World")
+					wait(1)
+				end
+				wait(1)
+				if game:GetService("Workspace").MAP:FindFirstChild("Cave") ~= nil then
+					game:GetService("Workspace").MAP.Cave.Host.Activated:Fire()
+					wait(10)
+					while library.Variables.LoadingWorld do
+						LogMe("TPing to Easter Island")
+						wait(1)
+					end
 				end
 			elseif new == "Atlantis" and not newworldfound and playerLibrary[library.Directory.Worlds[new].cost.currency] >= library.Directory.Worlds[new].cost.amount then
 				LogMe("Purchasing " .. new .. " for " .. library.Functions.NumberShorten(library.Directory.Worlds[new].cost.amount) .. " " .. library.Directory.Worlds[new].cost.currency)
