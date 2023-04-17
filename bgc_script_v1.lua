@@ -1,4 +1,4 @@
-print("Version 5.4.5")
+print("Version 5.4.6")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -436,7 +436,7 @@ local doSellBubbles = function()
 				
 	if sellarea ~= nil then
 		if tonumber(_G.SellBubbleDelay) > 0 and os.time() > (_G.LastSell + _G.SellBubbleDelay + _G.TeleportDelay) then
-			if _G.SellBubbleArea ~= "No Sell" and library.Save.Get().Settings.SellBubbles == 1 then
+			if _G.SellBubbleArea ~= "No Sell" and library.Save.Get().Settings.SellBubbles == 1 and GetPlayerRoot() ~= nil then
 				LogMe("Sell Bubble")
 				local sellarea = game:GetService("Workspace").MAP.Activations[_G.SellBubbleArea]
 				--local playerLibrary = library.Save.Get()
@@ -531,7 +531,7 @@ local doGroupRewards = function()
 
 		if _G["Group Rewards"] and GetMap().Activations:FindFirstChild("Group Rewards") ~= nil then
 			local playerLibrary = library.Save.Get()
-			if GetLocalPlayer():IsInGroup(13004189) and (not playerLibrary.GroupReward or (os.time() - (playerLibrary.GroupReward + (6 * 60 * 60)) > 0)) then
+			if GetPlayerRoot() ~= nil and GetLocalPlayer():IsInGroup(13004189) and (not playerLibrary.GroupReward or (os.time() - (playerLibrary.GroupReward + (6 * 60 * 60)) > 0)) then
 				local grouprewards = game:GetService("Workspace").MAP.Activations["Group Rewards"]
 				local startTime = os.time()
 				repeat
@@ -984,7 +984,7 @@ local closest = nil
 						local startTime = os.time()
 						repeat
 							closest = v:FindFirstChildWhichIsA("MeshPart")
-							if closest ~= nil then
+							if closest ~= nil and GetPlayerRoot() ~= nil then
 								LogMe("TP to Lootbag " .. v.Name)
 								local playerroot = GetPlayerRoot()
 								GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(closest.Position.X+8, closest.Position.Y + 2, closest.Position.Z+10))
@@ -1014,7 +1014,7 @@ function doFreeLoot()
 						found = true
 					end
 				end
-				if playerLibrary.FreeGiftsTime > b.waitTime and not found then
+				if playerLibrary.FreeGiftsTime > b.waitTime and not found and GetPlayerRoot() ~= nil then
 					--repeat
 						GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position))
 						toTarget(root.Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").Position,game:GetService("Workspace").MAP.PlayerSpawns:FindFirstChild("Part").CFrame)
@@ -2286,7 +2286,7 @@ function openEgg(egg)
 	
 	if eggmap ~= nil then
 		if not library.Variables.AutoHatchEnabled or not library.Variables.AutoHatchEggId or library.Variables.AutoHatchEggId ~= egg or (GetPlayerRoot().Position-eggmap.PrimaryPart.Position).magnitude > 10 then
-			if GetPlayerChar() then
+			if GetPlayerChar() and GetPlayerRoot() ~= nil then
 				GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(eggmap.PrimaryPart.Position + Vector3.new(3,-5,-3)))
 				wait(.1)
 				library.Variables.AutoHatchEnabled = true
@@ -3939,7 +3939,7 @@ local GetEasterEgg = function(egg)
 					wait(.5)
 				until game:GetService("Workspace").Stuff.Eggs:FindFirstChild(b.name) == nil or b:FindFirstChild("POS") == nil or b == nil or library.LocalPlayer.Character:FindFirstChild("__EGG") or os.time() > starttime + 5
 				wait(1)
-				if library.LocalPlayer.Character:FindFirstChild("__EGG") then
+				if library.LocalPlayer.Character:FindFirstChild("__EGG") and GetPlayerRoot() ~= nil then
 					local sellarea = game:GetService("Workspace").MAP.Activations["Bunny"]
 					GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
 					wait(.5)
@@ -4003,7 +4003,7 @@ local GetEasterEgg = function(egg)
 						wait(.5)
 					until game:GetService("Workspace").Stuff.Eggs:FindFirstChild(b.name) == nil or b:FindFirstChild("POS") == nil or b == nil or library.LocalPlayer.Character:FindFirstChild("__EGG") or os.time() > starttime + 5
 					wait(1)
-					if library.LocalPlayer.Character:FindFirstChild("__EGG") then
+					if library.LocalPlayer.Character:FindFirstChild("__EGG") and GetPlayerRoot() ~= nil then
 						local sellarea = game:GetService("Workspace").MAP.Activations["Bunny"]
 						GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
 						wait(.5)
@@ -4146,6 +4146,7 @@ spawn(function()
 								game:GetService("ReplicatedStorage").Remotes["take key"]:FireServer(ohTable1)
 								wait(1)
 								local sellarea = game:GetService("Workspace").MAP.Activations["Bunny"]
+								local playerroot = GetPlayerRoot()
 								GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
 								wait(.5)
 								toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
@@ -4163,6 +4164,7 @@ spawn(function()
 								game:GetService("Workspace").MAP.Models["Wizard Tower"].Blocked.DOOR.Main.Activated:Fire()
 								wait(1)
 								local sellarea = game:GetService("Workspace").MAP.Activations["Bunny"]
+								local playerroot = GetPlayerRoot()
 								GetPlayerChar():SetPrimaryPartCFrame(CFrame.new(sellarea.Position.X+10, sellarea.Position.Y + 2, sellarea.Position.Z+8))
 								wait(.5)
 								toTarget(GetPlayerRoot().Position,sellarea.Position + Vector3.new(0,2,0),sellarea.CFrame + Vector3.new(0,0,0))
