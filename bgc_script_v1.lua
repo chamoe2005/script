@@ -1,4 +1,4 @@
-print("Version 5.5.3")
+print("Version 5.5.4")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1924,7 +1924,6 @@ local doEggQuests = function()
 											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, _G.oldeggs, false)
 											--_G.oldeggs = oldeggs
 										end
-										break
 									elseif b.progress < b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
 										LogMe("Switch to " .. b.name .. " Challenge")
 										if _G.oldeggs["Buy Mode"] == nil then
@@ -1946,15 +1945,6 @@ local doEggQuests = function()
 											changeSetting("Checkmark", "Super Lucky Use", true, true)
 										end
 										changeSetting("Checkmark", "Fast Hatch Use", true, true)
-										break
-									elseif b.progress < b.goal and (b.name == "Coins") then
-										LogMe("Switch to " .. b.name .. " Challenge")
-										startQuest({["challengeType"] = "Coins"})
-										break
-									elseif b.progress < b.goal and (b.name == "Diamonds") then
-										LogMe("Switch to " .. b.name .. " Challenge")
-										startQuest({["challengeType"] = "Diamonds"})
-										break
 									elseif b.progress < b.goal and b.name == "ShinyLegendaryPets" then
 										LogMe("Switch to " .. b.name .. " Challenge")
 										if _G.oldeggs["Buy Mode"] == nil then
@@ -1977,6 +1967,12 @@ local doEggQuests = function()
 										changeSetting("Checkmark", "Fast Hatch Use", true, true)
 										--startQuest({["challengeType"] = "Pearls"})
 										break
+									elseif b.progress < b.goal and (b.name == "Coins") then
+										LogMe("Switch to " .. b.name .. " Challenge")
+										startQuest({["challengeType"] = "Coins"})
+									elseif b.progress < b.goal and (b.name == "Diamonds") then
+										LogMe("Switch to " .. b.name .. " Challenge")
+										startQuest({["challengeType"] = "Diamonds"})
 									elseif b.progress >= b.goal then
 										_G.eggQuests["Spawn World"][a] = true
 									end
