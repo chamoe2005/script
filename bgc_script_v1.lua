@@ -1,4 +1,4 @@
-print("Version 5.3.9")
+print("Version 5.4")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -2361,37 +2361,44 @@ function toTarget(pos, targetPos, targetCFrame)
 	if not tween then return err end
 end
 
-local saveSettings = function()
+local saveSettings = function(preset)
 
+	local playername = plr.Name
 	local update = {}
 	local counter = 1
+
+	if preset and preset == 1 then
+		playername = "Preset1"
+	end
+
 	
 	if isfile("bgcsettings.txt") then
 		update = game:GetService("HttpService"):JSONDecode(readfile("bgcsettings.txt"))
 	end
 	
-	if update[plr.Name] == nil then
-		update[plr.Name] = {}
+	if update[playername] == nil then
+		update[playername] = {}
 	end
+	
 	
 	
 	for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
 	
 			if b.Name == "Checkmark" and b.Text == utf8.char(10003) then
 			
-				update[plr.Name][b.Parent.name] = true
+				update[playername][b.Parent.name] = true
 				
 			elseif b.Name == "Checkmark" and b.Text ~= utf8.char(10003) then
 			
-				update[plr.Name][b.Parent.name] = false
+				update[playername][b.Parent.name] = false
 
 			elseif b.Name == "Box" and b.Text ~= nil and b.Text ~= "" and b.Text ~= 0 and not library.Directory.Boosts[b.Parent.Name] then
 			
-				update[plr.Name][b.Parent.name] = b.Text
+				update[playername][b.Parent.name] = b.Text
 				
 			elseif b.Name == "Box" and (b.Text == nil or b.Text == "" or b.Text == 0) and not library.Directory.Boosts[b.Parent.Name] then
 				
-				update[plr.Name][b.Parent.name] = 0
+				update[playername][b.Parent.name] = 0
 				--print(b.Parent.Name)
 
 			elseif b.Name == "Selection" then
@@ -2402,7 +2409,7 @@ local saveSettings = function()
 					v:Fire()
 				end
 				wait(.5)
-				update[plr.Name][b.Text] = currentsetting
+				update[playername][b.Text] = currentsetting
 				for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
 					if v.Name == "TextButton" and v.Text == currentsetting then
 						for x,y in pairs(getconnections(v.MouseButton1Click)) do
@@ -2428,12 +2435,17 @@ local saveSettings = function()
 
 end
 
-local loadSettings = function()
+local loadSettings = function(preset)
 
 		if isfile("bgcsettings.txt") then
 
 			local json = game:GetService("HttpService"):JSONDecode(readfile("bgcsettings.txt"))
+			
 			local playername = plr.Name
+			
+			if preset and preset == 1 then
+				playername = "Preset1"
+			end
 			
 			--if json[playername] == nil then
 				--playername = "newuser"
@@ -2575,6 +2587,9 @@ end
 local settingsGUI = wally:CreateWindow('Settings')
 settingsGUI:Button('Load Settings', function() loadSettings() end)
 settingsGUI:Button('Save Settings', function() saveSettings() end)
+settingsGUI:Section("Presets")
+settingsGUI:Button('Load Preset 1', function() loadSettings(1) end)
+settingsGUI:Button('Save Preset 1', function() saveSettings(1) end)
 
 local playernamewindow = wally:CreateWindow(GetLocalPlayer().name)
 game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].window_toggle:Destroy()
@@ -3645,10 +3660,10 @@ local UsePotions = function()
 				if boosts.flags["1 Pet Level Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
 						if potions.name == "1 Pet Level" and playerLibrary.Pets[petIndex].lvl < 25 then
-							LogMe("Attempting to use 1 Pet Level " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+							LogMe("Attempting to use 1 Pet Level on " .. playerLibrary.Pets[petIndex].nk)
 							local ohTable1 = {
 								[1] = {
-									[1] = potions.uid,
+									[1] = potions.name,
 									[2] = playerLibrary.Pets[petIndex].uid
 								},
 								[2] = {
@@ -3670,10 +3685,10 @@ local UsePotions = function()
 				elseif boosts.flags["Max Pet Level Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
 						if potions.name == "Max Pet Level" and playerLibrary.Pets[petIndex].lvl < 25 then
-							LogMe("Attempting to use Max Pet Level " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+							LogMe("Attempting to use Max Pet Level on " .. playerLibrary.Pets[petIndex].nk)
 							local ohTable1 = {
 								[1] = {
-									[1] = potions.uid,
+									[1] = potions.name,
 									[2] = playerLibrary.Pets[petIndex].uid
 								},
 								[2] = {
@@ -3695,10 +3710,10 @@ local UsePotions = function()
 				elseif boosts.flags["Power 1 Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
 						if potions.name == "Power 1" and playerLibrary.Pets[petIndex].power == nil then
-							LogMe("Attempting to use Power 1 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+							LogMe("Attempting to use Power 1 on " .. playerLibrary.Pets[petIndex].nk)
 							local ohTable1 = {
 								[1] = {
-									[1] = potions.uid,
+									[1] = potions.name,
 									[2] = playerLibrary.Pets[petIndex].uid
 								},
 								[2] = {
@@ -3719,10 +3734,10 @@ local UsePotions = function()
 				elseif boosts.flags["Power 2 Use"] then
 					for idx,potions in pairs(playerLibrary.Potions) do
 						if potions.name == "Power 2" and (playerLibrary.Pets[petIndex].power == nil or playerLibrary.Pets[petIndex].power == "Power 1") then
-							LogMe("Attempting to use Power 2 " .. potions.uid .. " on " .. playerLibrary.Pets[petIndex].nk)
+							LogMe("Attempting to use Power 2 on " .. playerLibrary.Pets[petIndex].nk)
 							local ohTable1 = {
 								[1] = {
-									[1] = potions.uid,
+									[1] = potions.name,
 									[2] = playerLibrary.Pets[petIndex].uid
 								},
 								[2] = {
