@@ -1,4 +1,4 @@
-print("Version 5.7")
+print("Version 5.8")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -961,16 +961,21 @@ spawn(function()
 	while wait(600) do
 		local lb = library.Network.Invoke("Get Season Leaderboard")
 		local foundplayer = false
-		for a,b in pairs(lb) do
-			if tonumber(b.key) == tonumber(game.Players.LocalPlayer.userId) then
-				LogMe(game.Players.LocalPlayer.Name .. " is #" .. a .. " on Season Leaderboard")
-				foundplayer = true
+		if lb ~= nil then
+			for a,b in pairs(lb) do
+				if tonumber(b.key) == tonumber(game.Players.LocalPlayer.userId) then
+					LogMe(game.Players.LocalPlayer.Name .. " is #" .. a .. " on Season Leaderboard")
+					foundplayer = true
+				end
+					
+				wait()
 			end
+			local playerLibrary = library.Save.Get()
 				
-			wait()
-		end
-		if not foundplayer then
-			LogMe(game.Players.LocalPlayer.Name .. " is not on Season Leaderboard")
+			if not foundplayer and playerLibrary.BubblePass ~= nil and playerLibrary.BubblePass.TotalEggs ~= nil then
+				--LogMe(game.Players.LocalPlayer.Name .. " is not on Season Leaderboard")
+				print(lb[100].value - playerLibrary.BubblePass.TotalEggs .. " between you and Leaderboard #100")
+			end
 		end
 	end
 end)
