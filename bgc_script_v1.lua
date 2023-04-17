@@ -1,4 +1,4 @@
-print("Version 5.5.5.5.5")
+print("Version 5.6")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -615,6 +615,123 @@ local EquipBestPets = function()
 		}
 		game:GetService("ReplicatedStorage").Remotes["equip best pets"]:FireServer(ohTable3)
 	end
+end
+
+function ShinyPets()
+
+			if _G.AutoShinyNum > 0 and _G.AutoShinyNum <= 6 then
+				local playerLibrary = library.Save.Get()
+				local Pets = {}
+				local ohTable1 = {
+					[1] = {
+						[1] = {}
+					},
+					[2] = {
+						[1] = false
+					}
+				}
+				for i,v in pairs(playerLibrary.Pets) do
+					if not v.s and not v.lock then
+						if Pets[v.nk] then
+							Pets[v.nk] ++
+						else
+							Pets[v.nk] = 1
+						end
+					end
+				end
+				
+				local sortedPets = {}
+				
+					--print("Unsorted Pets")
+					
+				
+				for j,k in pairs(Pets) do
+					
+					--print(j,k)
+				
+					local bestpetid = 0
+					local bestbubble = 0
+					local bestcoin = 0
+					local bestdiamond = 0
+					
+					for i,v in pairs(Pets) do
+					
+					local petFound = false
+					
+						for a,b in pairs(sortedPets) do
+							for this,that in pairs(b) do
+								if i == this then
+									petFound = true
+								end
+							end
+						end
+					local petid = 0
+					for x,y in pairs(library.Directory.Pets) do
+						if i == y.name then
+							petid = x
+						end
+					end
+					local petDir = library.Directory.Pets
+					
+						if petid ~= 0 and v >= _G.AutoShinyNum and not petFound and (petDir[petid].buffs.Bubbles > bestbubble or petDir[petid].buffs.Coins > bestcoin or petDir[petid].buffs.Diamonds > bestdiamond) then 
+							bestbubble = petDir[petid].buffs.Bubbles
+							bestcoin = petDir[petid].buffs.Coins
+							bestdiamond = petDir[petid].buffs.Diamonds
+							bestpetid = i
+						end
+					end
+					
+					table.insert(sortedPets, {[bestpetid] = Pets[bestpetid]})
+				end
+
+				--print("Pets to Shiny")					
+
+				for this,that in ipairs(sortedPets) do
+				
+					for i,v in pairs(that) do
+				
+						--if v >= _G.AutoShinyNum then
+							LogMe(i .. " " .. v)
+						--end
+					
+						local petid = 0
+					
+						for x,y in pairs(library.Directory.Pets) do
+							if i == y.name then 
+								petid = x
+							end
+						end
+					
+							
+						if petid ~= 0 and v >= _G.AutoShinyNum and (playerLibrary["Diamonds"] > library.Shared.ShinyCost(petid, _G.AutoShinyNum)) then
+						
+							local counter = 1
+							for a,b in pairs(playerLibrary.Pets) do
+								if counter <= _G.AutoShinyNum and b.nk == i and not b.s and not b.lock then
+									ohTable1[1][1][counter] = b.uid
+									counter++
+								end
+							end
+							
+							LogMe("Attempting Shiny " .. i)
+							LogMe("Shiny Cost " .. library.Shared.ShinyCost(petid, _G.AutoShinyNum))
+							
+							for c,d in pairs(ohTable1[1][1]) do
+								LogMe(c .. " " .. d)
+							end
+							
+							game:GetService("ReplicatedStorage").Remotes["make pets shiny"]:InvokeServer(ohTable1)
+							wait(5)
+							
+						end
+						
+						break
+					end
+					
+					break
+					
+				end
+			end
 end
 
 function DeletePets()
@@ -1866,7 +1983,7 @@ local doEggQuests = function()
 						if _G["Spawn World Egg Quests"] then
 							changeSetting("Box", "Auto Shiny Amount", 0, true)
 							changeSetting("Selection", "Delete Mode", "Custom Delete", true)
-							changeSetting("Box", "Delete at Pet #", 200, true)
+							changeSetting("Box", "Delete at Pet #", 100, true)
 							changeSetting("Selection", "Delete Pet Type", "Shiny", true)
 							
 							changeSetting("Checkmark", "Sky Chest", false, true)
@@ -1918,7 +2035,7 @@ local doEggQuests = function()
 										DeletePets()
 										wait(10)
 										changeSetting("Selection", "Delete Mode", "Custom Delete", true)
-										changeSetting("Box", "Delete at Pet #", 200, true)
+										changeSetting("Box", "Delete at Pet #", 100, true)
 										changeSetting("Checkmark", "Godly Luck Use", false, true)
 										changeSetting("Checkmark", "Mega Luck Use", false, true)
 										changeSetting("Checkmark", "Super Lucky Use", false, true)
@@ -2159,6 +2276,8 @@ end
 
 spawn(function()
 				while wait(30) do
+					DeletePets()
+					ShinyPets()
 					doEggQuests()
 				end
 
@@ -4324,120 +4443,7 @@ spawn(function()
 
 			DeletePets()
 
-		
-			if _G.AutoShinyNum > 0 and _G.AutoShinyNum <= 6 then
-				local playerLibrary = library.Save.Get()
-				local Pets = {}
-				local ohTable1 = {
-					[1] = {
-						[1] = {}
-					},
-					[2] = {
-						[1] = false
-					}
-				}
-				for i,v in pairs(playerLibrary.Pets) do
-					if not v.s and not v.lock then
-						if Pets[v.nk] then
-							Pets[v.nk] ++
-						else
-							Pets[v.nk] = 1
-						end
-					end
-				end
-				
-				local sortedPets = {}
-				
-					--print("Unsorted Pets")
-					
-				
-				for j,k in pairs(Pets) do
-					
-					--print(j,k)
-				
-					local bestpetid = 0
-					local bestbubble = 0
-					local bestcoin = 0
-					local bestdiamond = 0
-					
-					for i,v in pairs(Pets) do
-					
-					local petFound = false
-					
-						for a,b in pairs(sortedPets) do
-							for this,that in pairs(b) do
-								if i == this then
-									petFound = true
-								end
-							end
-						end
-					local petid = 0
-					for x,y in pairs(library.Directory.Pets) do
-						if i == y.name then
-							petid = x
-						end
-					end
-					local petDir = library.Directory.Pets
-					
-						if petid ~= 0 and v >= _G.AutoShinyNum and not petFound and (petDir[petid].buffs.Bubbles > bestbubble or petDir[petid].buffs.Coins > bestcoin or petDir[petid].buffs.Diamonds > bestdiamond) then 
-							bestbubble = petDir[petid].buffs.Bubbles
-							bestcoin = petDir[petid].buffs.Coins
-							bestdiamond = petDir[petid].buffs.Diamonds
-							bestpetid = i
-						end
-					end
-					
-					table.insert(sortedPets, {[bestpetid] = Pets[bestpetid]})
-				end
-
-				--print("Pets to Shiny")					
-
-				for this,that in ipairs(sortedPets) do
-				
-					for i,v in pairs(that) do
-				
-						--if v >= _G.AutoShinyNum then
-							LogMe(i .. " " .. v)
-						--end
-					
-						local petid = 0
-					
-						for x,y in pairs(library.Directory.Pets) do
-							if i == y.name then 
-								petid = x
-							end
-						end
-					
-							
-						if petid ~= 0 and v >= _G.AutoShinyNum and (playerLibrary["Diamonds"] > library.Shared.ShinyCost(petid, _G.AutoShinyNum)) then
-						
-							local counter = 1
-							for a,b in pairs(playerLibrary.Pets) do
-								if counter <= _G.AutoShinyNum and b.nk == i and not b.s and not b.lock then
-									ohTable1[1][1][counter] = b.uid
-									counter++
-								end
-							end
-							
-							LogMe("Attempting Shiny " .. i)
-							LogMe("Shiny Cost " .. library.Shared.ShinyCost(petid, _G.AutoShinyNum))
-							
-							for c,d in pairs(ohTable1[1][1]) do
-								LogMe(c .. " " .. d)
-							end
-							
-							game:GetService("ReplicatedStorage").Remotes["make pets shiny"]:InvokeServer(ohTable1)
-							wait(5)
-							
-						end
-						
-						break
-					end
-					
-					break
-					
-				end
-			end
+			ShinyPets()
 			
 			UsePotions()
 		end
