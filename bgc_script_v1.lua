@@ -1,7 +1,7 @@
-print("Version 5.4.6")
+print("Version 5.4.9")
 _G.DoChall = true
 				
-_G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
+_G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
 				
 _G["PearlsMin"] = 750000000
 _G.highhigh = 99
@@ -569,7 +569,7 @@ local RedeemTwitterCodes = function()
 		}
 		LogMe("Redeeming " .. v)
 		game:GetService("ReplicatedStorage").Remotes["redeem twitter code"]:InvokeServer(ohTable1)
-		wait(5)
+		wait(10)
 
 		--local NewItemWindow = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("New Item")
 		--local timeout = 3
@@ -1300,7 +1300,7 @@ spawn(function()
 		
 			for a,b in orderedPairs(library.Directory.Boosts) do
 				local playerLibrary = library.Save.Get()
-				if a ~= "Mega Luck" and boosts.flags[a .. " Use"] and (playerLibrary.Boosts[a] == nil or playerLibrary.Boosts[a] < 90) and playerLibrary.BoostsInventory[a] and playerLibrary.BoostsInventory[a] > 0 then
+				if boosts.flags[a .. " Use"] and (playerLibrary.Boosts[a] == nil or playerLibrary.Boosts[a] < 90) and playerLibrary.BoostsInventory[a] and playerLibrary.BoostsInventory[a] > 0 then
 					local ohTable1 = {
 						[1] = {
 							[1] = a
@@ -1448,7 +1448,7 @@ GetLocalPlayer().PlayerGui.Alert.ChildAdded:Connect(function(this)
 		ClaimMail()
 		wait(.5)
 	end
-	if string.find(string.lower(this.Text), "super lucky") and string.find(string.lower(this.Text), "started") and boosts.flags["Mega Luck Use"] and playerLibrary.BoostsInventory["Mega Luck"] > 0 then
+	if string.find(string.lower(this.Text), "super lucky") and string.find(string.lower(this.Text), "started") and playerLibrary.BoostsInventory["Mega Luck"] > 0 then
 		--for x = 1, playerLibrary.BoostsInventory["Mega Luck"] do
 			LogMe("Use Mega Luck Boost")
 			local ohTable1 = {
@@ -1878,6 +1878,7 @@ local doEggQuests = function()
 										_G.eggQuests["Spawn World"][a] = true									
 									elseif b.progress >= b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
 										LogMe("Switch Back Eggs")
+										changeSetting("Checkmark", "Mega Luck Use", false, true)
 										switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, {}, true)
 										_G.eggQuests["Spawn World"][a] = true
 									elseif b.progress >= b.goal and (b.name == "Coins") then
@@ -1923,6 +1924,9 @@ local doEggQuests = function()
 											end
 											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, _G.oldeggs, false)
 											--_G.oldeggs = oldeggs
+										end
+										if b.name == "GodlyPets" then
+											changeSetting("Checkmark", "Mega Luck Use", true, true)
 										end
 										break
 									elseif b.progress < b.goal and (b.name == "Coins") then
