@@ -1,4 +1,4 @@
-print("Version 5.4.9")
+print("Version 5.5")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1890,6 +1890,7 @@ local doEggQuests = function()
 									elseif b.progress >= b.goal and b.name == "ShinyLegendaryPets" then
 										changeSetting("Box", "Auto Shiny Amount", 0, true)
 										changeSetting("Selection", "Delete Mode", "List of Names", true)
+										changeSetting("Selection", "Delete Pet Type", "Shiny", true)
 										changeSetting("Box", "Pet Names", "Void Hydra,Reaper,Scorpion,Void Overlord", true)
 										DeletePets()
 										wait(10)
@@ -1952,6 +1953,9 @@ local doEggQuests = function()
 											--_G.oldeggs = oldeggs
 										end
 										changeSetting("Box", "Auto Shiny Amount", 6, true)
+										changeSetting("Selection", "Delete Mode", "List of Names", true)
+										changeSetting("Selection", "Delete Pet Type", "Shiny", true)
+										changeSetting("Box", "Pet Names", "Void Hydra,Reaper,Scorpion,Void Overlord", true)
 										--startQuest({["challengeType"] = "Pearls"})
 										break
 									elseif b.progress >= b.goal then
