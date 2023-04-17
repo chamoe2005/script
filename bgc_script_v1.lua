@@ -1,4 +1,4 @@
-print("Version 5.8")
+print("Version 5.9")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -2046,21 +2046,6 @@ local doEggQuests = function()
 										changeSetting("Checkmark", "Super Lucky Use", false, true)
 										changeSetting("Checkmark", "Fast Hatch Use", false, true)
 										_G.eggQuests["Spawn World"][a] = true
-									elseif b.progress < b.goal and string.find(b.name, "Egg") then
-										LogMe("Switch to " .. b.name .. " Challenge")
-										changeSetting("Checkmark", "Fast Hatch Use", true, true)
-										if _G.oldeggs["Buy Mode"] == nil then
-											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, {}, true)
-											LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
-											_G.oldeggs = oldeggs
-										else
-											LogMe("Chal" .. _G.oldeggs["Buy Mode"])
-											for a,b in pairs(_G.oldeggs["Eggs"]) do
-												LogMe(b)
-											end
-											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, _G.oldeggs, false)
-											--_G.oldeggs = oldeggs
-										end
 									elseif b.progress < b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
 										LogMe("Switch to " .. b.name .. " Challenge")
 										if b.name ~= "EpicPets" then
@@ -2097,6 +2082,21 @@ local doEggQuests = function()
 											changeSetting("Checkmark", "Super Lucky Use", true, true)
 										end
 										changeSetting("Checkmark", "Fast Hatch Use", true, true)
+									elseif b.progress < b.goal and string.find(b.name, "Egg") then
+										LogMe("Switch to " .. b.name .. " Challenge")
+										changeSetting("Checkmark", "Fast Hatch Use", true, true)
+										if _G.oldeggs["Buy Mode"] == nil then
+											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, {}, true)
+											LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+											_G.oldeggs = oldeggs
+										else
+											LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+											for a,b in pairs(_G.oldeggs["Eggs"]) do
+												LogMe(b)
+											end
+											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, _G.oldeggs, false)
+											--_G.oldeggs = oldeggs
+										end
 									elseif b.progress < b.goal and b.name == "ShinyLegendaryPets" then
 										LogMe("Switch to " .. b.name .. " Challenge")
 										--[[
