@@ -1,4 +1,4 @@
-print("Version 5.5.5")
+print("Version 5.5.5.5")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1926,17 +1926,32 @@ local doEggQuests = function()
 										end
 									elseif b.progress < b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
 										LogMe("Switch to " .. b.name .. " Challenge")
-										if _G.oldeggs["Buy Mode"] == nil then
-											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, {}, true)
-											LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
-											_G.oldeggs = oldeggs
-										else
-											LogMe("Chal" .. _G.oldeggs["Buy Mode"])
-											for a,b in pairs(_G.oldeggs["Eggs"]) do
-												LogMe(b)
+										if b.name ~= "EpicPets" then
+											if _G.oldeggs["Buy Mode"] == nil then
+												local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, {}, true)
+												LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+												_G.oldeggs = oldeggs
+											else
+												LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+												for a,b in pairs(_G.oldeggs["Eggs"]) do
+													LogMe(b)
+												end
+												local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, _G.oldeggs, false)
+												--_G.oldeggs = oldeggs
 											end
-											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, _G.oldeggs, false)
-											--_G.oldeggs = oldeggs
+										else
+											if _G.oldeggs["Buy Mode"] == nil then
+												local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Spotted Egg"}}, {}, true)
+												LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
+												_G.oldeggs = oldeggs
+											else
+												LogMe("Chal" .. _G.oldeggs["Buy Mode"])
+												for a,b in pairs(_G.oldeggs["Eggs"]) do
+													LogMe(b)
+												end
+												local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Spotted Egg"}}, _G.oldeggs, false)
+												--_G.oldeggs = oldeggs
+											end
 										end
 										if b.name == "GodlyPets" then
 											changeSetting("Checkmark", "Godly Luck Use", true, true)
