@@ -1,4 +1,4 @@
-print("Version 5.4")
+print("Version 5.4.1")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -697,17 +697,47 @@ function DeletePets()
 	elseif _G["DeletePetMode"] == "Custom Delete" and pet.flags["KeepOnlyNum"] ~= nil and pet.flags["KeepOnlyNum"] ~= "" and tonumber(pet.flags["KeepOnlyNum"]) > 0 and table.getn(playerLibrary.Pets) < pet.flags["KeepOnlyNum"] then
 
 		LogMe((pet.flags["KeepOnlyNum"] - table.getn(playerLibrary.Pets)) .. " Pet Slots Left until Auto Delete")
-
+	
+	elseif _G["DeletePetMode"] == "List of Names" and pet.flags["DeleteNames"] ~= nil and pet.flags["DeleteNames"] ~= "" then
+		local sendbreak = false
+		local ohTable2 = {
+							[1] = {
+									[1] = {}
+							},
+							[2] = {
+									[1] = false
+								}
+							}
+		for a,b in pairs(playerLibrary.Pets) do
+			if tostring(pet.flags["DeleteNames"]) ~= nil then
+				for i in string.gmatch(pet.flags["DeleteNames"], '([^,]+)') do
+					if b.nk == i and not b.lock then
+						LogMe(b.nk .. " to be deleted.")
+						table.insert(ohTable2[1][1], b.uid)
+						--wait(3)
+						--sendbreak = true
+						break
+					end
+					wait()
+				end
+			end
+			--if sendbreak then break end
+			wait()
+		end
+		
+		game:GetService("ReplicatedStorage").Remotes["delete pets"]:FireServer(ohTable2)
+		wait(1)
 	end
 end
 
-	pet:Dropdown("Delete Mode", {location = _G, flag = "DeletePetMode", list = {"Off", "Delete When Full", "Custom Delete"} })
+	pet:Dropdown("Delete Mode", {location = _G, flag = "DeletePetMode", list = {"Off", "Delete When Full", "Custom Delete", "List of Names"} })
 	pet:Box('Num Pets to Delete', {flag = "AutoDeleteNum",
         type = 'number'
     })
 	pet:Box('Delete at Pet #', {flag = "KeepOnlyNum",
     type = 'number'
     })
+	pet:Box('Pet Names', {flag = "DeleteNames"})
 
 _G.ClaimingMail = false	
 	
