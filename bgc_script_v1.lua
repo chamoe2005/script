@@ -1,4 +1,4 @@
-print("Version 5.5.1")
+print("Version 5.5.3")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1876,10 +1876,17 @@ local doEggQuests = function()
 									if b.progress >= b.goal and string.find(b.name, "Egg") then
 										LogMe("Switch Back Eggs")
 										switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, {}, true)
+										changeSetting("Checkmark", "Godly Luck Use", false, true)
+										changeSetting("Checkmark", "Mega Luck Use", false, true)
+										changeSetting("Checkmark", "Super Lucky Use", false, true)
+										changeSetting("Checkmark", "Fast Hatch Use", false, true)
 										_G.eggQuests["Spawn World"][a] = true									
 									elseif b.progress >= b.goal and (b.name == "EpicPets" or b.name == "LegendaryPets" or b.name == "GodlyPets") then
 										LogMe("Switch Back Eggs")
+										changeSetting("Checkmark", "Godly Luck Use", false, true)
 										changeSetting("Checkmark", "Mega Luck Use", false, true)
+										changeSetting("Checkmark", "Super Lucky Use", false, true)
+										changeSetting("Checkmark", "Fast Hatch Use", false, true)
 										switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, {}, true)
 										_G.eggQuests["Spawn World"][a] = true
 									elseif b.progress >= b.goal and (b.name == "Coins") then
@@ -1897,9 +1904,14 @@ local doEggQuests = function()
 										wait(10)
 										changeSetting("Selection", "Delete Mode", "Custom Delete", true)
 										changeSetting("Box", "Delete at Pet #", 50, true)
+										changeSetting("Checkmark", "Godly Luck Use", false, true)
+										changeSetting("Checkmark", "Mega Luck Use", false, true)
+										changeSetting("Checkmark", "Super Lucky Use", false, true)
+										changeSetting("Checkmark", "Fast Hatch Use", false, true)
 										_G.eggQuests["Spawn World"][a] = true
 									elseif b.progress < b.goal and string.find(b.name, "Egg") then
 										LogMe("Switch to " .. b.name .. " Challenge")
+										changeSetting("Checkmark", "Fast Hatch Use", true, true)
 										if _G.oldeggs["Buy Mode"] == nil then
 											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {b.name}}, {}, true)
 											LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
@@ -1928,8 +1940,12 @@ local doEggQuests = function()
 											--_G.oldeggs = oldeggs
 										end
 										if b.name == "GodlyPets" then
+											changeSetting("Checkmark", "Godly Luck Use", true, true)
 											changeSetting("Checkmark", "Mega Luck Use", true, true)
+										elseif b.name == "EpicPets" or b.name == "LegendaryPets" then
+											changeSetting("Checkmark", "Super Lucky Use", true, true)
 										end
+										changeSetting("Checkmark", "Fast Hatch Use", true, true)
 										break
 									elseif b.progress < b.goal and (b.name == "Coins") then
 										LogMe("Switch to " .. b.name .. " Challenge")
@@ -1957,6 +1973,8 @@ local doEggQuests = function()
 										changeSetting("Selection", "Delete Pet Type", "Shiny", true)
 										changeSetting("Selection", "Delete Mode", "List of Names", true)
 										changeSetting("Box", "Pet Names", "Void Hydra,Reaper,Scorpion,Void Overlord", true)
+										changeSetting("Checkmark", "Super Lucky Use", true, true)
+										changeSetting("Checkmark", "Fast Hatch Use", true, true)
 										--startQuest({["challengeType"] = "Pearls"})
 										break
 									elseif b.progress >= b.goal then
