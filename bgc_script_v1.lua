@@ -1,4 +1,4 @@
-print("Version 5.5")
+print("Version 5.5.1")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1867,6 +1867,7 @@ local doEggQuests = function()
 							changeSetting("Box", "Auto Shiny Amount", 0, true)
 							changeSetting("Selection", "Delete Mode", "Custom Delete", true)
 							changeSetting("Box", "Delete at Pet #", 50, true)
+							changeSetting("Selection", "Delete Pet Type", "Shiny", true)
 							local playerLibrary = library.Save.Get()
 							
 							for a,b in pairs(playerLibrary.EggQuests["Spawn World"]) do
@@ -1889,8 +1890,8 @@ local doEggQuests = function()
 										_G.eggQuests["Spawn World"][a] = true
 									elseif b.progress >= b.goal and b.name == "ShinyLegendaryPets" then
 										changeSetting("Box", "Auto Shiny Amount", 0, true)
-										changeSetting("Selection", "Delete Mode", "List of Names", true)
 										changeSetting("Selection", "Delete Pet Type", "Shiny", true)
+										changeSetting("Selection", "Delete Mode", "List of Names", true)
 										changeSetting("Box", "Pet Names", "Void Hydra,Reaper,Scorpion,Void Overlord", true)
 										DeletePets()
 										wait(10)
@@ -1953,8 +1954,8 @@ local doEggQuests = function()
 											--_G.oldeggs = oldeggs
 										end
 										changeSetting("Box", "Auto Shiny Amount", 6, true)
-										changeSetting("Selection", "Delete Mode", "List of Names", true)
 										changeSetting("Selection", "Delete Pet Type", "Shiny", true)
+										changeSetting("Selection", "Delete Mode", "List of Names", true)
 										changeSetting("Box", "Pet Names", "Void Hydra,Reaper,Scorpion,Void Overlord", true)
 										--startQuest({["challengeType"] = "Pearls"})
 										break
