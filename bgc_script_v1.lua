@@ -1,4 +1,4 @@
-print("Version 5.5.5.5")
+print("Version 5.5.5.5.5")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1866,8 +1866,16 @@ local doEggQuests = function()
 						if _G["Spawn World Egg Quests"] then
 							changeSetting("Box", "Auto Shiny Amount", 0, true)
 							changeSetting("Selection", "Delete Mode", "Custom Delete", true)
-							changeSetting("Box", "Delete at Pet #", 50, true)
+							changeSetting("Box", "Delete at Pet #", 200, true)
 							changeSetting("Selection", "Delete Pet Type", "Shiny", true)
+							
+							changeSetting("Checkmark", "Sky Chest", false, true)
+							changeSetting("Checkmark", "Heavenly Chest", false, true)
+							changeSetting("Checkmark", "Void Chest", false, true)
+							changeSetting("Checkmark", "XP Chest", false, true)
+							changeSetting("Checkmark", "Group Rewards", false, true)
+																			
+						
 							local playerLibrary = library.Save.Get()
 							
 							for a,b in pairs(playerLibrary.EggQuests["Spawn World"]) do
@@ -1895,6 +1903,13 @@ local doEggQuests = function()
 									elseif b.progress >= b.goal and (b.name == "Diamonds") then
 										endQuest({["challengeType"] = "Diamonds"})
 										_G.eggQuests["Spawn World"][a] = true
+									elseif b.progress >= b.goal and (b.name == "Chests") then
+										changeSetting("Checkmark", "Sky Chest", false, true)
+										changeSetting("Checkmark", "Heavenly Chest", false, true)
+										changeSetting("Checkmark", "Void Chest", false, true)
+										changeSetting("Checkmark", "XP Chest", false, true)
+										changeSetting("Checkmark", "Group Rewards", false, true)
+										_G.eggQuests["Spawn World"][a] = true	
 									elseif b.progress >= b.goal and b.name == "ShinyLegendaryPets" then
 										changeSetting("Box", "Auto Shiny Amount", 0, true)
 										changeSetting("Selection", "Delete Pet Type", "Shiny", true)
@@ -1903,7 +1918,7 @@ local doEggQuests = function()
 										DeletePets()
 										wait(10)
 										changeSetting("Selection", "Delete Mode", "Custom Delete", true)
-										changeSetting("Box", "Delete at Pet #", 50, true)
+										changeSetting("Box", "Delete at Pet #", 200, true)
 										changeSetting("Checkmark", "Godly Luck Use", false, true)
 										changeSetting("Checkmark", "Mega Luck Use", false, true)
 										changeSetting("Checkmark", "Super Lucky Use", false, true)
@@ -1962,6 +1977,7 @@ local doEggQuests = function()
 										changeSetting("Checkmark", "Fast Hatch Use", true, true)
 									elseif b.progress < b.goal and b.name == "ShinyLegendaryPets" then
 										LogMe("Switch to " .. b.name .. " Challenge")
+										--[[
 										if _G.oldeggs["Buy Mode"] == nil then
 											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, {}, true)
 											LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
@@ -1974,10 +1990,11 @@ local doEggQuests = function()
 											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, _G.oldeggs, false)
 											--_G.oldeggs = oldeggs
 										end
+										]]--
 										changeSetting("Box", "Auto Shiny Amount", 6, true)
 										changeSetting("Selection", "Delete Pet Type", "Shiny", true)
 										changeSetting("Selection", "Delete Mode", "List of Names", true)
-										changeSetting("Box", "Pet Names", "Void Hydra,Reaper,Scorpion,Void Overlord", true)
+										changeSetting("Box", "Pet Names", "Space Serpent,Lucky Cat,Void Hydra,Reaper,Scorpion,Void Overlord", true)
 										changeSetting("Checkmark", "Super Lucky Use", true, true)
 										changeSetting("Checkmark", "Fast Hatch Use", true, true)
 										--startQuest({["challengeType"] = "Pearls"})
@@ -1988,6 +2005,13 @@ local doEggQuests = function()
 									elseif b.progress < b.goal and (b.name == "Diamonds") then
 										LogMe("Switch to " .. b.name .. " Challenge")
 										startQuest({["challengeType"] = "Diamonds"})
+									elseif b.progress < b.goal and (b.name == "Chests") then
+										LogMe("Switch to " .. b.name .. " Challenge")
+										changeSetting("Checkmark", "Sky Chest", true, true)
+										changeSetting("Checkmark", "Heavenly Chest", true, true)
+										changeSetting("Checkmark", "Void Chest", true, true)
+										changeSetting("Checkmark", "XP Chest", true, true)
+										changeSetting("Checkmark", "Group Rewards", true, true)
 									elseif b.progress >= b.goal then
 										_G.eggQuests["Spawn World"][a] = true
 									end
