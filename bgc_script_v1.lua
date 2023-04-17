@@ -1,4 +1,4 @@
-print("Version 5.5.4")
+print("Version 5.5.5")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1871,8 +1871,8 @@ local doEggQuests = function()
 							local playerLibrary = library.Save.Get()
 							
 							for a,b in pairs(playerLibrary.EggQuests["Spawn World"]) do
+								LogMe("Egg Quest #" .. a .. " " .. b.name .. " " .. b.progress / b.goal * 100 .. "%")
 								if not _G.eggQuests["Spawn World"][a] then
-									LogMe("Egg Quest #" .. a .. " " .. b.name .. " " .. b.progress / b.goal * 100 .. "%")
 									if b.progress >= b.goal and string.find(b.name, "Egg") then
 										LogMe("Switch Back Eggs")
 										switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, {}, true)
