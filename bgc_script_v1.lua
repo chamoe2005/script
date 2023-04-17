@@ -1,4 +1,4 @@
-print("Version 5.6")
+print("Version 5.7")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1991,7 +1991,7 @@ local doEggQuests = function()
 							changeSetting("Checkmark", "Void Chest", false, true)
 							changeSetting("Checkmark", "XP Chest", false, true)
 							changeSetting("Checkmark", "Group Rewards", false, true)
-																			
+							changeSetting("Checkmark", "Collect Drops", false, true)												
 						
 							local playerLibrary = library.Save.Get()
 							
@@ -2115,7 +2115,6 @@ local doEggQuests = function()
 										changeSetting("Checkmark", "Super Lucky Use", true, true)
 										changeSetting("Checkmark", "Fast Hatch Use", true, true)
 										--startQuest({["challengeType"] = "Pearls"})
-										break
 									elseif b.progress < b.goal and (b.name == "Coins") then
 										LogMe("Switch to " .. b.name .. " Challenge")
 										startQuest({["challengeType"] = "Coins"})
@@ -2239,6 +2238,7 @@ local doEggQuests = function()
 								end
 							end
 							
+						
 							if claimquest then
 								LogMe("Claiming Egg Quest")
 							
@@ -2275,7 +2275,7 @@ end
 
 
 spawn(function()
-				while wait(30) do
+				while wait(15) do
 					DeletePets()
 					ShinyPets()
 					doEggQuests()
