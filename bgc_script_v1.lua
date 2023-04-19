@@ -1,4 +1,4 @@
-print("Version 6.0")
+print("Version 6.0.1")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1988,17 +1988,29 @@ local doEggQuests = function()
 
 						if _G["Spawn World Egg Quests"] then
 							if _G.changeAutoDelete then
+								local playerLibrary = library.Save.Get()
 								for a,b in pairs({["34"] = false,["42"] = false,["47"] = false,["57"] = false,["58"] = false,["43"] = true,["49"] = true}) do
-									local ohTable1 = {
-											[1] = {
-												[1] = a
-											},
-											[2] = {
-												[1] = b
+									local petfound = false
+									for c,d in pairs(playerLibrary.AutoDeletePets) do
+										if d == a then
+											petfound = true
+											print("Pet " .. a .. " is being Auto Deleted")
+										end
+									end
+									
+									if (petfound and not b) or (not petfound and b) then
+										print("Pet " .. a .. " auto delete setting is switched")
+										local ohTable1 = {
+												[1] = {
+													[1] = a
+												},
+												[2] = {
+													[1] = false
+												}
 											}
-										}
 
-									game:GetService("ReplicatedStorage").Remotes["auto delete pet"]:FireServer(ohTable1)
+										game:GetService("ReplicatedStorage").Remotes["auto delete pet"]:FireServer(ohTable1)
+									end
 									wait(.25)
 								end
 								_G.changeAutoDelete = false
