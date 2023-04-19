@@ -1,4 +1,4 @@
-print("Version 6.0.2")
+print("Version 6.0.3")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -2026,7 +2026,9 @@ local doEggQuests = function()
 							changeSetting("Checkmark", "Void Chest", false, true)
 							changeSetting("Checkmark", "XP Chest", false, true)
 							changeSetting("Checkmark", "Group Rewards", false, true)
-							changeSetting("Checkmark", "Collect Drops", false, true)												
+							changeSetting("Checkmark", "Collect Drops", false, true)	
+							
+							switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, {}, true)
 						
 							local playerLibrary = library.Save.Get()
 							
@@ -2130,18 +2132,7 @@ local doEggQuests = function()
 									elseif b.progress < b.goal and b.name == "ShinyLegendaryPets" then
 										LogMe("Switch to " .. b.name .. " Challenge")
 										--[[
-										if _G.oldeggs["Buy Mode"] == nil then
-											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, {}, true)
-											LogMe("return old eggs", oldeggs["Buy Mode"], oldeggs["Eggs"][1])
-											_G.oldeggs = oldeggs
-										else
-											LogMe("Chal" .. _G.oldeggs["Buy Mode"])
-											for a,b in pairs(_G.oldeggs["Eggs"]) do
-												LogMe(b)
-											end
-											local oldeggs = switchEggs({["Buy Mode"] = "Best", ["Eggs"] = {"Void Egg"}}, _G.oldeggs, false)
-											--_G.oldeggs = oldeggs
-										end
+										
 										]]--
 										changeSetting("Box", "Auto Shiny Amount", 6, true)
 										changeSetting("Selection", "Delete Pet Type", "Shiny", true)
