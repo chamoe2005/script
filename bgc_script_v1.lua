@@ -1,4 +1,4 @@
-print("Version 6.0.1")
+print("Version 6.0.2")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -2735,8 +2735,8 @@ local saveSettings = function(preset)
 	local update = {}
 	local counter = 1
 
-	if preset and preset == 1 then
-		playername = "Preset1"
+	if preset and tonumber(preset) ~= nil and tonumber(preset) > 0 then
+		playername = "Preset" .. preset
 	end
 
 	
@@ -2811,8 +2811,8 @@ local loadSettings = function(preset)
 			
 			local playername = plr.Name
 			
-			if preset and preset == 1 then
-				playername = "Preset1"
+			if preset and tonumber(preset) ~= nil and tonumber(preset) > 0 then
+				playername = "Preset" .. preset
 			end
 			
 			--if json[playername] == nil then
@@ -2958,6 +2958,10 @@ settingsGUI:Button('Save Settings', function() saveSettings() end)
 settingsGUI:Section("Presets")
 settingsGUI:Button('Load Preset 1', function() loadSettings(1) end)
 settingsGUI:Button('Save Preset 1', function() saveSettings(1) end)
+settingsGUI:Button('Load Preset 2', function() loadSettings(2) end)
+settingsGUI:Button('Save Preset 2', function() saveSettings(2) end)
+settingsGUI:Button('Load Preset 3', function() loadSettings(3) end)
+settingsGUI:Button('Save Preset 3', function() saveSettings(3) end)
 
 local playernamewindow = wally:CreateWindow(GetLocalPlayer().name)
 game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].window_toggle:Destroy()
