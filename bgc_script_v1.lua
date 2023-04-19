@@ -1,4 +1,4 @@
-print("Version 6.0.4")
+print("Version 6.0.5")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1712,7 +1712,7 @@ local startQuest = 	function(quest)
 							--changeSetting("Checkmark", "Diamonds", true, true)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
-							changeSetting("Box", "Drop Delay", 30, true)
+							changeSetting("Box", "Drop Delay", 5, true)
 							changeSetting("Box", "Drop TimeOut", 120, true)
 							for a,b in pairs(currency) do
 								if a == "Coins" or a == "Diamonds" then
@@ -1731,7 +1731,7 @@ local startQuest = 	function(quest)
 							--changeSetting("Checkmark", "Pearls", true, true)
 							changeSetting("Checkmark", "Auto-Kick", false, true)
 							changeSetting("Box", "Range", 50000, true)
-							changeSetting("Box", "Drop Delay", 30, true)
+							changeSetting("Box", "Drop Delay", 5, true)
 							changeSetting("Box", "Drop TimeOut", 120, true)
 							for a,b in pairs(currency) do
 								if a == "Coins" or a == "Diamonds" or a == "Pearls" then
