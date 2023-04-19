@@ -1,4 +1,4 @@
-print("Version 5.9")
+print("Version 6.0")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1982,10 +1982,28 @@ end
 
 _G.eggQuests = {["Atlantis"] = {[1] = false, [2] = false, [3] = false},
 				["Spawn World"] = {[1] = false, [2] = false, [3] = false}}
+_G.changeAutoDelete = true
 
 local doEggQuests = function()
 
 						if _G["Spawn World Egg Quests"] then
+							if _G.changeAutoDelete then
+								for a,b in pairs({["34"] = false,["42"] = false,["47"] = false,["57"] = false,["58"] = false,["43"] = true,["49"] = true}) do
+									local ohTable1 = {
+											[1] = {
+												[1] = a
+											},
+											[2] = {
+												[1] = b
+											}
+										}
+
+									game:GetService("ReplicatedStorage").Remotes["auto delete pet"]:FireServer(ohTable1)
+									wait(.25)
+								end
+								_G.changeAutoDelete = false
+							end
+						
 							changeSetting("Box", "Auto Shiny Amount", 0, true)
 							changeSetting("Selection", "Delete Mode", "Custom Delete", true)
 							changeSetting("Box", "Delete at Pet #", 100, true)
