@@ -30,8 +30,10 @@ function()
 					 "The Void" = true,
 					 "Lucky Landing" = true,
 					 "Fairy World" = true,
-					 "VIP" = true}
-					}
+					 "VIP" = true,
+					 "Server Sync" = true
+					 }
+				 }
 	
 	sync["CheekyDeliverance"] = sync["sync"]
 	sync["CheekyDeliverance"]["Power 3 "] = true
