@@ -4,8 +4,8 @@
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
-					 ["Sell Bubble Delay"] = "600",
-					 ["Sell Bubble Area"] = "Sell 2",
+					 ["Sell Bubble Delay"] = "0",
+					 ["Sell Bubble Area"] = "None",
 					 ["Free Prize Wheel"] = true,
 					 ["Free Loot"] = true,
 					 ["Claim Bubble Pass"] = true,
