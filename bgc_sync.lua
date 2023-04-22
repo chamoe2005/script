@@ -37,8 +37,8 @@
 					 }
 				 }
 	
-	sync["CheekyDeliverance"] = sync["sync"]
-	sync["CheekyDeliverance"]["Power 3 "] = true
+	--sync["CheekyDeliverance"] = sync["sync"]
+	--sync["CheekyDeliverance"]["Power 3 "] = true
 	
 
 	return sync
