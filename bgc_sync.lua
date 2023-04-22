@@ -1,6 +1,6 @@
 
 --function()
-	local version = "1.07"
+	local version = "1.08"
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -14,8 +14,9 @@
 					 ["Equip Best"] = true,
 					 ["Auto Claim"] = true,
 					 ["Auto Send"] = false,
-					 ["Recipient"] = "",
-					 ["Gift Pet"] = "",
+					 ["Recipient"] = "xyzzy1111111122",
+					 ["Gift Pet"] = "S3 Shard Spirit",
+					 ["Pet Type"] = "Normal",
 					 ["Num To Send"] = 0,
 					 ["2x Coins "] = true,
 					 ["2x Diamonds "] = true,
@@ -43,7 +44,12 @@
 					 ["Server Sync"] = true
 					 }
 				 }
-	
+	sync["DadaRogueBlox"] = {}
+	for a,b in pairs(sync["sync"]) do
+		sync["DadaRogueBlox"][a] = b
+	end
+	sync["DadaRogueBlox"]["Power 3 "] = true
+
 	sync["CheekyDeliverance"] = {}
 	for a,b in pairs(sync["sync"]) do
 		sync["CheekyDeliverance"][a] = b
