@@ -1,4 +1,4 @@
-print("Version 6.1.2")
+print("Version 6.1.3")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -2744,11 +2744,16 @@ local saveSettings = function(preset)
 	if preset == "sync" then
 		local version, sync = loadstring(game:HttpGet(("https://raw.githubusercontent.com/chamoe2005/script/main/bgc_sync.lua"),true))()
 		LogMe("Version " .. version .. " settings saved")
+		update[playername] = nil
+		update[playername] = {}
 		if sync[playername] ~= nil then
-			update[playername] = nil
-			update[playername] = sync[playername]
+			for a,b in pairs(sync[playername]) do
+				update[playername][a] = b
+			end
 		else
-			update[playername] = sync["sync"]
+			for a,b in pairs(sync["sync"]) do
+				update[playername][a] = b
+			end
 		end
 		
 	else
@@ -2827,10 +2832,16 @@ local loadSettings = function(preset)
 			LogMe("Version " .. version .. " settings loaded")
 			if sync[playername] ~= nil then
 				json[playername] = nil
-				json[playername] = sync[playername]
+				json[playername] = {}
+				for a,b in pairs(sync[playername]) do
+					json[playername][a] = b
+				end
 			else
 				json[playername] = nil
-				json[playername] = sync["sync"]
+				json[playername] = {}
+				for a,b in pairs(sync["sync"]) do
+					json[playername][a] = b
+				end
 			end
 		end
 			

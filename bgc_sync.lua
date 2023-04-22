@@ -1,6 +1,6 @@
 
 --function()
-	local version = "1.05"
+	local version = "1.06"
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -37,7 +37,10 @@
 					 }
 				 }
 	
-	sync["CheekyDeliverance"] = sync["sync"]
+	sync["CheekyDeliverance"] = {}
+	for a,b in pairs(sync["sync"]) do
+		sync["CheekyDeliverance"][a] = b
+	end
 	sync["CheekyDeliverance"]["Power 3 "] = true
 	
 
