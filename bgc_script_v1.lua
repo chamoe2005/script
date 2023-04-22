@@ -1,4 +1,4 @@
-print("Version 6.1.3")
+print("Version 6.1.4")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -2746,6 +2746,8 @@ local saveSettings = function(preset)
 		LogMe("Version " .. version .. " settings saved")
 		update[playername] = nil
 		update[playername] = {}
+		update[playername]["Server Sync"] = true
+		--[[
 		if sync[playername] ~= nil then
 			for a,b in pairs(sync[playername]) do
 				update[playername][a] = b
@@ -2755,7 +2757,7 @@ local saveSettings = function(preset)
 				update[playername][a] = b
 			end
 		end
-		
+		]]--
 	else
 		
 	
