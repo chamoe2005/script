@@ -18,7 +18,7 @@
 					 ["Auto Claim"] = true,
 					 ["Auto Send"] = true,
 					 ["Recipient"] = "xyzzy1111111122",
-					 ["Gift Pet"] = "Void Shard,Galacticorn,Huge Lucky Cat,King Doggy,S3 Shard Spirit",
+					 ["Gift Pet"] = "Huge Mushroom,Void Shard,Galacticorn,Huge Lucky Cat,King Doggy,S3 Shard Spirit",
 					 ["Pet Type"] = "Normal",
 					 ["Num To Send"] = "1",
 					 ["2x Coins "] = true,
