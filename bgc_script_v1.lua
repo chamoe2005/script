@@ -1,4 +1,4 @@
-print("Version 6.0.5")
+print("Version 6.0.6")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -2720,13 +2720,27 @@ function toTarget(pos, targetPos, targetCFrame)
 	if not tween then return err end
 end
 
+local syncuser = function()
+
+	_G.settingsloaded = false
+	loadSettings("sync")
+	while not _G.settingsloaded do
+		wait()
+	end
+	LogMe("Synced Settings Loaded")
+	saveSettings("sync")
+	LogMe("Synced Settings Saved")
+	
+end
+
+
 local saveSettings = function(preset)
 
 	local playername = plr.Name
 	local update = {}
 	local counter = 1
 
-	if preset and tonumber(preset) ~= nil and tonumber(preset) > 0 then
+	if preset and preset ~= sync and tonumber(preset) ~= nil and tonumber(preset) > 0 then
 		playername = "Preset" .. preset
 	end
 
@@ -2739,72 +2753,90 @@ local saveSettings = function(preset)
 		update[playername] = {}
 	end
 	
+	if preset == "sync" then
+		local sync = loadstring(game:HttpGet(("https://raw.githubusercontent.com/chamoe2005/script/main/bgc_sync.lua"),true))()
+		update[playername] = sync["sync"]
+	else
+		
 	
-	
-	for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
-	
-			if b.Name == "Checkmark" and b.Text == utf8.char(10003) then
-			
-				update[playername][b.Parent.name] = true
+		for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
+		
+				if b.Name == "Checkmark" and b.Text == utf8.char(10003) then
 				
-			elseif b.Name == "Checkmark" and b.Text ~= utf8.char(10003) then
-			
-				update[playername][b.Parent.name] = false
+					update[playername][b.Parent.name] = true
+					
+				elseif b.Name == "Checkmark" and b.Text ~= utf8.char(10003) then
+				
+					update[playername][b.Parent.name] = false
 
-			elseif b.Name == "Box" and b.Text ~= nil and b.Text ~= "" and b.Text ~= 0 and not library.Directory.Boosts[b.Parent.Name] then
-			
-				update[playername][b.Parent.name] = b.Text
+				elseif b.Name == "Box" and b.Text ~= nil and b.Text ~= "" and b.Text ~= 0 and not library.Directory.Boosts[b.Parent.Name] then
 				
-			elseif b.Name == "Box" and (b.Text == nil or b.Text == "" or b.Text == 0) and not library.Directory.Boosts[b.Parent.Name] then
-				
-				update[playername][b.Parent.name] = 0
-				--print(b.Parent.Name)
+					update[playername][b.Parent.name] = b.Text
+					
+				elseif b.Name == "Box" and (b.Text == nil or b.Text == "" or b.Text == 0) and not library.Directory.Boosts[b.Parent.Name] then
+					
+					update[playername][b.Parent.name] = 0
+					--print(b.Parent.Name)
 
-			elseif b.Name == "Selection" then
-			
-				local currentsetting = b.Text
-			
-				for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
-					v:Fire()
-				end
-				wait(.5)
-				update[playername][b.Text] = currentsetting
-				for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
-					if v.Name == "TextButton" and v.Text == currentsetting then
-						for x,y in pairs(getconnections(v.MouseButton1Click)) do
-							y:Fire()
+				elseif b.Name == "Selection" then
+				
+					local currentsetting = b.Text
+				
+					for i,v in pairs(getconnections(b.Parent.drop.MouseButton1Click)) do
+						v:Fire()
+					end
+					wait(.5)
+					update[playername][b.Text] = currentsetting
+					for i,v in pairs(b.Parent.DropContainer:GetChildren()) do
+						if v.Name == "TextButton" and v.Text == currentsetting then
+							for x,y in pairs(getconnections(v.MouseButton1Click)) do
+								y:Fire()
+							end
 						end
 					end
-				end
-			
-				--for c,d in pairs(dropdowns) do
-					--for e,f in pairs(d) do
-						--if f == b.Text then
-							--print(c)
-							--update[plr.Name][c] = b.Text
+				
+					--for c,d in pairs(dropdowns) do
+						--for e,f in pairs(d) do
+							--if f == b.Text then
+								--print(c)
+								--update[plr.Name][c] = b.Text
+							--end
 						--end
 					--end
-				--end
-			end
-			
-			
-			writefile("bgcsettings.txt", game:GetService("HttpService"):JSONEncode(update))
+				end
+				
+		end
 			
 	end
+	
+	writefile("bgcsettings.txt", game:GetService("HttpService"):JSONEncode(update))
+		
 
 end
 
 local loadSettings = function(preset)
 
+		local json = {}
+		local playername = plr.Name
+
 		if isfile("bgcsettings.txt") then
 
-			local json = game:GetService("HttpService"):JSONDecode(readfile("bgcsettings.txt"))
+			json = game:GetService("HttpService"):JSONDecode(readfile("bgcsettings.txt"))
 			
-			local playername = plr.Name
-			
-			if preset and tonumber(preset) ~= nil and tonumber(preset) > 0 then
+			if preset and preset ~= "sync" and tonumber(preset) ~= nil and tonumber(preset) > 0 then
 				playername = "Preset" .. preset
 			end
+		end
+		
+		if preset == "sync" then
+			
+			local sync = loadstring(game:HttpGet(("https://raw.githubusercontent.com/chamoe2005/script/main/bgc_sync.lua"),true))()
+			if sync[playername] ~= nil then
+				json[playername] = sync[playername]
+			else
+				json[playername] = sync["sync"]
+			end
+		end
 			
 			--if json[playername] == nil then
 				--playername = "newuser"
@@ -2861,10 +2893,19 @@ local loadSettings = function(preset)
 						end			
 				end
 			end
-		end
 		
 		_G.settingsloaded = true
 end
+
+spawn(	function()
+			while wait(300) do
+				if _G["Server Sync"] then
+					syncuser()
+				end
+			end
+		end
+end)
+
 
 _G.chesttimers = {}
 _G.chestwait = 10
@@ -2953,6 +2994,8 @@ settingsGUI:Button('Load Preset 2', function() loadSettings(2) end)
 settingsGUI:Button('Save Preset 2', function() saveSettings(2) end)
 settingsGUI:Button('Load Preset 3', function() loadSettings(3) end)
 settingsGUI:Button('Save Preset 3', function() saveSettings(3) end)
+settingsGUI:Toggle("Server Sync", {location = _G, flag = "Server Sync"}
+
 
 local playernamewindow = wally:CreateWindow(GetLocalPlayer().name)
 game:GetService("CoreGui").ScreenGui.Container[GetLocalPlayer().name].window_toggle:Destroy()
