@@ -13,7 +13,7 @@
 					 ["Spawn World Egg Quests"] = true,
 					 ["Equip Best"] = true,
 					 ["Delete Mode"] = "List of Names",
-					 ["Pet Names"] = "Pop Cat,Huge Chill Axolotl,Huge Shark",
+					 ["Pet Names"] = "Pop Cat,Huge Chill Axolotl,Huge Shark,Easter Chick Trio",
 					 ["Delete Pet Type"] = "Both",
 					 ["Auto Claim"] = true,
 					 ["Auto Send"] = true,
