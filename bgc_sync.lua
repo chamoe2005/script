@@ -1,6 +1,6 @@
---Version 1.02
+--Version 1.03
 
-function()
+--function()
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -44,4 +44,4 @@ function()
 	return sync
 				
 
-end
+--end
