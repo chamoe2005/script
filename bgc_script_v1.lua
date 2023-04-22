@@ -1,4 +1,4 @@
-print("Version 6.0.6")
+print("Version 6.1.1")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -2720,18 +2720,6 @@ function toTarget(pos, targetPos, targetCFrame)
 	if not tween then return err end
 end
 
-local syncuser = function()
-
-	_G.settingsloaded = false
-	loadSettings("sync")
-	while not _G.settingsloaded do
-		wait()
-	end
-	LogMe("Synced Settings Loaded")
-	saveSettings("sync")
-	LogMe("Synced Settings Saved")
-	
-end
 
 
 local saveSettings = function(preset)
@@ -2755,7 +2743,13 @@ local saveSettings = function(preset)
 	
 	if preset == "sync" then
 		local sync = loadstring(game:HttpGet(("https://raw.githubusercontent.com/chamoe2005/script/main/bgc_sync.lua"),true))()
-		update[playername] = sync["sync"]
+		if sync[playername] ~= nil then
+			update[playername] = nil
+			update[playername] = sync[playername]
+		else
+			update[playername] = sync["sync"]
+		end
+		
 	else
 		
 	
@@ -2803,10 +2797,8 @@ local saveSettings = function(preset)
 							--end
 						--end
 					--end
-				end
-				
+				end	
 		end
-			
 	end
 	
 	writefile("bgcsettings.txt", game:GetService("HttpService"):JSONEncode(update))
@@ -2832,8 +2824,10 @@ local loadSettings = function(preset)
 			
 			local sync = loadstring(game:HttpGet(("https://raw.githubusercontent.com/chamoe2005/script/main/bgc_sync.lua"),true))()
 			if sync[playername] ~= nil then
+				json[playername] = nil
 				json[playername] = sync[playername]
 			else
+				json[playername] = nil
 				json[playername] = sync["sync"]
 			end
 		end
@@ -2897,14 +2891,27 @@ local loadSettings = function(preset)
 		_G.settingsloaded = true
 end
 
-spawn(	function()
+local syncuser = function()
+
+	_G.settingsloaded = false
+	loadSettings("sync")
+	while not _G.settingsloaded do
+		wait()
+	end
+	LogMe("Synced Settings Loaded")
+	saveSettings("sync")
+	LogMe("Synced Settings Saved")
+	
+end
+
+
+spawn(function()
 			while wait(300) do
 				if _G["Server Sync"] then
 					syncuser()
 				end
 			end
-		end
-end)
+	  end)
 
 
 _G.chesttimers = {}
@@ -2994,7 +3001,7 @@ settingsGUI:Button('Load Preset 2', function() loadSettings(2) end)
 settingsGUI:Button('Save Preset 2', function() saveSettings(2) end)
 settingsGUI:Button('Load Preset 3', function() loadSettings(3) end)
 settingsGUI:Button('Save Preset 3', function() saveSettings(3) end)
-settingsGUI:Toggle("Server Sync", {location = _G, flag = "Server Sync"}
+settingsGUI:Toggle("Server Sync", {location = _G, flag = "Server Sync"}, function() spawn(function() syncuser() end) end)
 
 
 local playernamewindow = wally:CreateWindow(GetLocalPlayer().name)

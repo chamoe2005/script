@@ -1,4 +1,4 @@
---Version 1.03
+--Version 1.04
 
 --function()
 
@@ -37,8 +37,8 @@
 					 }
 				 }
 	
-	--sync["CheekyDeliverance"] = sync["sync"]
-	--sync["CheekyDeliverance"]["Power 3 "] = true
+	sync["CheekyDeliverance"] = sync["sync"]
+	sync["CheekyDeliverance"]["Power 3 "] = true
 	
 
 	return sync
