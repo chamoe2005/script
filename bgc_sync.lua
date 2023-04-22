@@ -17,7 +17,7 @@
 					 ["Recipient"] = "xyzzy1111111122",
 					 ["Gift Pet"] = "S3 Shard Spirit",
 					 ["Pet Type"] = "Normal",
-					 ["Num To Send"] = 1,
+					 ["Num To Send"] = "1",
 					 ["2x Coins "] = true,
 					 ["2x Diamonds "] = true,
 					 ["3x Shiny Luck "] = true,
