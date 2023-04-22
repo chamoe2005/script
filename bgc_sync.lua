@@ -1,6 +1,6 @@
---Version 1.04
 
 --function()
+	local version = "1.05"
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -41,7 +41,7 @@
 	sync["CheekyDeliverance"]["Power 3 "] = true
 	
 
-	return sync
+	return version, sync
 				
 
 --end
