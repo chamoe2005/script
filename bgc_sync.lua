@@ -1,6 +1,6 @@
 function()
 
-	local sync = {["xyzzy1111111127"] = 
+	local sync = {["sync"] = 
 					{"Auto-Bubble Blow V2" = true,
 					 "Sell Bubble Delay" = "600",
 					 "Sell Bubble Area" = "Sell 2",
@@ -32,6 +32,10 @@ function()
 					 "Fairy World" = true,
 					 "VIP" = true}
 					}
+	
+	sync["CheekyDeliverance"] = sync["sync"]
+	sync["CheekyDeliverance"]["Power 3 "] = true
+	
 
 	return sync
 				
