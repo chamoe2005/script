@@ -1,4 +1,4 @@
-print("Version 6.1.4")
+print("Version 6.1.5")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -2907,16 +2907,16 @@ local loadSettings = function(preset)
 end
 
 local syncuser = function()
-
-	_G.settingsloaded = false
-	loadSettings("sync")
-	while not _G.settingsloaded do
-		wait()
+	if _G["Server Sync"] then
+		_G.settingsloaded = false
+		loadSettings("sync")
+		while not _G.settingsloaded do
+			wait()
+		end
+		LogMe("Synced Settings Loaded")
+		saveSettings("sync")
+		LogMe("Synced Settings Saved")
 	end
-	LogMe("Synced Settings Loaded")
-	saveSettings("sync")
-	LogMe("Synced Settings Saved")
-	
 end
 
 
