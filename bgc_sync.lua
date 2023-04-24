@@ -1,6 +1,6 @@
 
 --function()
-	local version = 2
+	local version = 3
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -24,15 +24,19 @@
 					 ["2x Coins "] = true,
 					 ["2x Diamonds "] = true,
 					 ["3x Shiny Luck "] = true,
-					 ["Power 1 "] = false,
-					 ["Power 2 "] = false,
-					 ["Power 3 "] = false,
+					 ["Power 1 "] = true,
+					 ["Power 2 "] = true,
+					 ["Power 3 "] = true,
+					 ["Bubble "] = true,
+					 ["Shadow "] = true,
+					 ["1 Pet Level "] = true,
+					 ["Max Pet Level "] = true,
 					 ["Fast Hatch "] = true,
 					 ["Mega Luck "] = true,
 					 ["Super Lucky "] = true,
-					 ["1 Pet Level Use"] = true,
-					 ["Power 1 Use"] = true,
-					 ["Power 2 Use"] = true,
+					 ["1 Pet Level Use"] = false,
+					 ["Power 1 Use"] = false,
+					 ["Power 2 Use"] = false,
 					 ["Hide Animation"] = true,
 					 ["Buy Mode"] = "Best",
 					 ["Common Egg"] = true,
