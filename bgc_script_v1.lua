@@ -2929,8 +2929,15 @@ local loadSettings = function(preset)
 		_G.settingsloaded = true
 end
 
+_G.syncversion = 0
+
 local syncuser = function()
-	if _G["Server Sync"] and _G.settingsloaded then
+	local sync = {}
+	local version = 0
+	
+	version, sync = loadstring(game:HttpGet(("https://raw.githubusercontent.com/chamoe2005/script/main/bgc_sync.lua"),true))()
+			
+	if _G["Server Sync"] and _G.settingsloaded and version > _G.syncversion then
 		_G.settingsloaded = false
 		loadSettings("sync")
 		while not _G.settingsloaded do
@@ -2939,12 +2946,13 @@ local syncuser = function()
 		LogMe("Synced Settings Loaded")
 		saveSettings("sync")
 		LogMe("Synced Settings Saved")
+		_G.syncversion = version
 	end
 end
 
 
 spawn(function()
-			while wait(300) do
+			while wait(60) do
 				if _G["Server Sync"] then
 					syncuser()
 				end
