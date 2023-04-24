@@ -27,7 +27,7 @@
 					 ["Power 1 "] = true,
 					 ["Power 2 "] = true,
 					 ["Power 3 "] = true,
-					 ["Bubble "] = true,
+					 ["Bubbles "] = true,
 					 ["Shadow "] = true,
 					 ["1 Pet Level "] = true,
 					 ["Max Pet Level "] = true,
