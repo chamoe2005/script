@@ -1,4 +1,4 @@
-print("Version 6.2.4")
+print("Version 6.2.7")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -945,7 +945,79 @@ local SendMail = 	function()
 	pet:Button("Send Mail", function() spawn(function() if not _G.SendingMail then SendMail() end end) end)
 	--pet:Button("Send All", function() end)
 	pet:Toggle("Auto Send", {flag = "AutoSendMail"})
+	pet:Section("Dark Dimension")
+	pet:Section("Auto Brew")
+	for a,b in pairs(library.Directory.Brewing) do
+		pet:Toggle(b.potion .. " Brew", {flag = b.potion .. " Brew"})
+	end
 	
+local brewPotions = function()
+
+						local playerLibrary = library.Save.Get()
+						
+						local playerPotions = {}
+						
+						
+						for a,b in pairs(playerLibrary.Potions) do
+							playerPotions[b.name] = b.amount
+						end
+						
+						local brewslots = 3
+
+						for a,b in pairs(playerLibrary.Brewing) do
+							if b.timer <= 0 then
+								LogMe("Claiming " .. b.name)
+								local ohTable1 = {
+									[1] = {
+										[1] = b.uid
+									},
+									[2] = {
+										[1] = false
+									}
+								}
+
+								game:GetService("ReplicatedStorage").Remotes["claim potion brew"]:InvokeServer(ohTable1)
+							elseif b.timer > 0 then
+								brewslots = brewslots - 1
+							end
+							wait(1)
+						end
+						
+						LogMe("Brew Slots: " .. brewslots)
+						
+						
+						for a,b in pairs(library.Directory.Brewing) do
+							if brewslots > 0 and pet.flags[b.potion .. " Brew"] and playerLibrary.DarkCoins >= b.cost and b.potionRequired == nil or (playerPotions[b.potionRequired] ~= nil and playerPotions[b.potionRequired] >= b.potionAmountRequired) then
+								LogMe("Brewing " .. b.potion)
+								local ohTable1 = {
+									[1] = {
+										[1] = a
+									},
+									[2] = {
+										[1] = false
+									}
+								}
+								game:GetService("ReplicatedStorage").Remotes["brew potion"]:InvokeServer(ohTable1)
+								
+								if b.potionRequired ~= nil then
+									playerPotions[b.potionRequired] = playerPotions[b.potionRequired] - b.potionAmountRequired
+								end
+								brewslots = brewslots - 1
+							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and playerLibrary.DarkCoins < b.cost then
+								LogMe(b.cost - playerLibrary.DarkCoins .. " more Dark Coins to start " .. b.potion)
+							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and b.potionRequired ~= nil and playerPotions[b.potionRequired] == nil then
+								LogMe("No " .. b.potionRequired .. " to brew " .. b.potion)
+							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and b.potionRequired ~= nil and playerPotions[b.potionRequired] ~= nil and playerPotions[b.potionRequired] < b.potionAmountRequired then
+								LogMe(b.potionAmountRequired - playerPotions[b.potionRequired] .. " more " .. b.potionRequired .. " needed to brew " .. b.potion)
+							elseif brewslots == 0 then
+								LogMe("No Brew Slots")
+								break
+							end
+							wait(1)
+						end
+
+						
+					end
 	
 spawn(function()
 
@@ -957,6 +1029,7 @@ spawn(function()
 			if pet.flags.AutoSendMail then
 				SendMail()
 			end
+			brewPotions()
 		
 		end
 
