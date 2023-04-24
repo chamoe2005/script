@@ -1,4 +1,4 @@
-print("Version 6.1.9")
+print("Version 6.2")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -2937,7 +2937,7 @@ local syncuser = function()
 	
 	version, sync = loadstring(game:HttpGet(("https://raw.githubusercontent.com/chamoe2005/script/main/bgc_sync.lua"),true))()
 			
-	if _G["Server Sync"] and _G.settingsloaded and version > _G.syncversion then
+	if _G["Server Sync"] and _G.settingsloaded and tonumber(version) > tonumber(_G.syncversion) then
 		_G.settingsloaded = false
 		loadSettings("sync")
 		while not _G.settingsloaded do
@@ -2946,7 +2946,7 @@ local syncuser = function()
 		LogMe("Synced Settings Loaded")
 		saveSettings("sync")
 		LogMe("Synced Settings Saved")
-		_G.syncversion = version
+		_G.syncversion = tonumber(version)
 	end
 end
 
