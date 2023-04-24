@@ -1,4 +1,4 @@
-print("Version 6.2.7")
+print("Version 6.2.8")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -987,7 +987,7 @@ local brewPotions = function()
 						
 						
 						for a,b in pairs(library.Directory.Brewing) do
-							if brewslots > 0 and pet.flags[b.potion .. " Brew"] and playerLibrary.DarkCoins >= b.cost and b.potionRequired == nil or (playerPotions[b.potionRequired] ~= nil and playerPotions[b.potionRequired] >= b.potionAmountRequired) then
+							if brewslots > 0 and pet.flags[b.potion .. " Brew"] and playerLibrary.DarkCoins >= b.cost and (b.potionRequired == nil or (playerPotions[b.potionRequired] ~= nil and playerPotions[b.potionRequired] >= b.potionAmountRequired)) then
 								LogMe("Brewing " .. b.potion)
 								local ohTable1 = {
 									[1] = {
