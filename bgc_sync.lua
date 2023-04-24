@@ -1,6 +1,6 @@
 
 --function()
-	local version = 5
+	local version = 6
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -33,7 +33,6 @@
 					 ["1 Pet Level "] = true,
 					 ["Max Pet Level "] = true,
 					 ["Fast Hatch "] = true,
-					 ["Mega Luck "] = true,
 					 ["Super Lucky "] = true,
 					 ["1 Pet Level Use"] = false,
 					 ["Power 1 Use"] = false,
