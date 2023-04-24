@@ -1,6 +1,6 @@
 
 --function()
-	local version = 4
+	local version = 5
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -21,6 +21,7 @@
 					 ["Gift Pet"] = "Huge Mushroom,Void Shard,Galacticorn,Huge Lucky Cat,King Doggy,S3 Shard Spirit,Midas",
 					 ["Pet Type"] = "Normal",
 					 ["Num To Send"] = "1",
+					 ["Bubbles Brew"] = true,
 					 ["2x Coins "] = true,
 					 ["2x Diamonds "] = true,
 					 ["3x Shiny Luck "] = true,
