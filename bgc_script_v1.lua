@@ -1,4 +1,4 @@
-print("Version 6.2")
+print("Version 6.2.1")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -2457,7 +2457,9 @@ local changeWorld = function(old, new)
 			elseif new == old then
 				wait(1)
 			elseif not newworldfound and new ~= "Spawn World" then
-				LogMe(library.Functions.NumberShorten(library.Directory.Worlds[new].cost.amount - playerLibrary[library.Directory.Worlds[new].cost.currency]) .. " more " .. library.Directory.Worlds[new].cost.currency .. " needed to buy " .. new)
+				if library.Directory.Worlds[new].cost ~= nil then
+					LogMe(library.Functions.NumberShorten(library.Directory.Worlds[new].cost.amount - playerLibrary[library.Directory.Worlds[new].cost.currency]) .. " more " .. library.Directory.Worlds[new].cost.currency .. " needed to buy " .. new)
+				end
 			end
 
 end
