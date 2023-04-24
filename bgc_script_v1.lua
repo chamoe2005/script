@@ -1,4 +1,4 @@
-print("Version 6.1.8")
+print("Version 6.1.9")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -356,12 +356,9 @@ end
 
 local changeSetting = function(settingtype, settingname, value, fire)
 
-	while not _G.settingsloaded do
-		LogMe("Settings not loaded")
-		wait(1)
-	end
 	
-	_G.settingsloaded = false
+	
+	--_G.settingsloaded = false
 
 	for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
 	
@@ -417,7 +414,7 @@ local changeSetting = function(settingtype, settingname, value, fire)
 		end
 	end
 	
-	_G.settingsloaded = true
+	--_G.settingsloaded = true
 end
 
 
