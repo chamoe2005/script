@@ -1,6 +1,6 @@
 
 --function()
-	local version = 6
+	local version = 7
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -55,13 +55,13 @@
 	for a,b in pairs(sync["sync"]) do
 		sync["DadaRogueBlox"][a] = b
 	end
-	sync["DadaRogueBlox"]["Power 3 "] = true
+	sync["DadaRogueBlox"]["Mega Luck "] = true
 
 	sync["CheekyDeliverance"] = {}
 	for a,b in pairs(sync["sync"]) do
 		sync["CheekyDeliverance"][a] = b
 	end
-	sync["CheekyDeliverance"]["Power 3 "] = true
+	sync["CheekyDeliverance"]["Mega Luck "] = true
 	
 
 	return version, sync
