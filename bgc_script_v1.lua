@@ -953,96 +953,6 @@ local SendMail = 	function()
 	for a,b in orderedPairs(library.Directory.Potions) do
 		pet:Box(a, {flag = a})
 	end
-	
-local brewPotions = function()
-
-						local playerLibrary = library.Save.Get()
-						
-						local playerPotions = {}
-						
-						
-						for a,b in pairs(playerLibrary.Potions) do
-							playerPotions[b.name] = b.amount
-						end
-						
-						local brewslots = 3
-
-						for a,b in pairs(playerLibrary.Brewing) do
-							if b.timer <= 0 then
-								LogMe("Claiming " .. b.name .. " potion brew")
-								local ohTable1 = {
-									[1] = {
-										[1] = b.uid
-									},
-									[2] = {
-										[1] = false
-									}
-								}
-
-								game:GetService("ReplicatedStorage").Remotes["claim potion brew"]:InvokeServer(ohTable1)
-								wait(5)
-								updateBoosts()
-							elseif b.timer > 0 then
-								LogMe(b.timer / 60 .. " minutes left on " .. b.name .. " potion brew")
-								brewslots = brewslots - 1
-							end
-						end
-						
-						LogMe("Brew Slots: " .. brewslots)
-						
-						
-						for a,b in pairs(library.Directory.Brewing) do
-							if brewslots > 0 and pet.flags[b.potion .. " Brew"] and playerLibrary.DarkCoins >= b.cost and (b.potionRequired == nil or (playerPotions[b.potionRequired] ~= nil and playerPotions[b.potionRequired] >= b.potionAmountRequired)) then
-								LogMe("Brewing " .. b.potion)
-								local ohTable1 = {
-									[1] = {
-										[1] = a
-									},
-									[2] = {
-										[1] = false
-									}
-								}
-								game:GetService("ReplicatedStorage").Remotes["brew potion"]:InvokeServer(ohTable1)
-								
-								if b.potionRequired ~= nil then
-									playerPotions[b.potionRequired] = playerPotions[b.potionRequired] - b.potionAmountRequired
-									changeSetting("Checkmark", b.potionRequired .. " Brew", false, true)
-								end
-								brewslots = brewslots - 1
-							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and b.potionRequired ~= nil and playerPotions[b.potionRequired] == nil then
-								LogMe("No " .. b.potionRequired .. " to brew " .. b.potion)
-								changeSetting("Checkmark", b.potionRequired .. " Brew", true, true)
-							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and b.potionRequired ~= nil and playerPotions[b.potionRequired] ~= nil and playerPotions[b.potionRequired] < b.potionAmountRequired then
-								LogMe(b.potionAmountRequired - playerPotions[b.potionRequired] .. " more " .. b.potionRequired .. " needed to brew " .. b.potion)
-								changeSetting("Checkmark", b.potionRequired .. " Brew", true, true)
-							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and playerLibrary.DarkCoins < b.cost then
-								LogMe(b.cost - playerLibrary.DarkCoins .. " more Dark Coins to brew " .. b.potion)
-							elseif brewslots == 0 then
-								LogMe("No Brew Slots")
-								break
-							end
-							wait(1)
-						end
-
-						
-					end
-	
-spawn(function()
-
-		while wait(60) do
-		
-			if pet.flags.AutoClaimMail then
-				ClaimMail()
-			end
-			if pet.flags.AutoSendMail then
-				SendMail()
-			end
-			brewPotions()
-		
-		end
-
-
-	end)
 
 spawn(function()
 	while wait(600) do
@@ -1488,6 +1398,97 @@ local function updateBoosts()
 end
 
 	--boosts:Section("Boosts")
+
+	
+local brewPotions = function()
+
+						local playerLibrary = library.Save.Get()
+						
+						local playerPotions = {}
+						
+						
+						for a,b in pairs(playerLibrary.Potions) do
+							playerPotions[b.name] = b.amount
+						end
+						
+						local brewslots = 3
+
+						for a,b in pairs(playerLibrary.Brewing) do
+							if b.timer <= 0 then
+								LogMe("Claiming " .. b.name .. " potion brew")
+								local ohTable1 = {
+									[1] = {
+										[1] = b.uid
+									},
+									[2] = {
+										[1] = false
+									}
+								}
+
+								game:GetService("ReplicatedStorage").Remotes["claim potion brew"]:InvokeServer(ohTable1)
+								wait(5)
+								updateBoosts()
+							elseif b.timer > 0 then
+								LogMe(b.timer / 60 .. " minutes left on " .. b.name .. " potion brew")
+								brewslots = brewslots - 1
+							end
+						end
+						
+						LogMe("Brew Slots: " .. brewslots)
+						
+						
+						for a,b in pairs(library.Directory.Brewing) do
+							if brewslots > 0 and pet.flags[b.potion .. " Brew"] and playerLibrary.DarkCoins >= b.cost and (b.potionRequired == nil or (playerPotions[b.potionRequired] ~= nil and playerPotions[b.potionRequired] >= b.potionAmountRequired)) then
+								LogMe("Brewing " .. b.potion)
+								local ohTable1 = {
+									[1] = {
+										[1] = a
+									},
+									[2] = {
+										[1] = false
+									}
+								}
+								game:GetService("ReplicatedStorage").Remotes["brew potion"]:InvokeServer(ohTable1)
+								
+								if b.potionRequired ~= nil then
+									playerPotions[b.potionRequired] = playerPotions[b.potionRequired] - b.potionAmountRequired
+									changeSetting("Checkmark", b.potionRequired .. " Brew", false, true)
+								end
+								brewslots = brewslots - 1
+							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and b.potionRequired ~= nil and playerPotions[b.potionRequired] == nil then
+								LogMe("No " .. b.potionRequired .. " to brew " .. b.potion)
+								changeSetting("Checkmark", b.potionRequired .. " Brew", true, true)
+							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and b.potionRequired ~= nil and playerPotions[b.potionRequired] ~= nil and playerPotions[b.potionRequired] < b.potionAmountRequired then
+								LogMe(b.potionAmountRequired - playerPotions[b.potionRequired] .. " more " .. b.potionRequired .. " needed to brew " .. b.potion)
+								changeSetting("Checkmark", b.potionRequired .. " Brew", true, true)
+							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and playerLibrary.DarkCoins < b.cost then
+								LogMe(b.cost - playerLibrary.DarkCoins .. " more Dark Coins to brew " .. b.potion)
+							elseif brewslots == 0 then
+								LogMe("No Brew Slots")
+								break
+							end
+							wait(1)
+						end
+
+						
+					end
+	
+spawn(function()
+
+		while wait(60) do
+		
+			if pet.flags.AutoClaimMail then
+				ClaimMail()
+			end
+			if pet.flags.AutoSendMail then
+				SendMail()
+			end
+			brewPotions()
+		
+		end
+
+
+	end)
 
 
 
