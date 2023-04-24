@@ -1,4 +1,4 @@
-print("Version 6.1.6")
+print("Version 6.1.8")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -356,6 +356,13 @@ end
 
 local changeSetting = function(settingtype, settingname, value, fire)
 
+	while not _G.settingsloaded do
+		LogMe("Settings not loaded")
+		wait(1)
+	end
+	
+	_G.settingsloaded = false
+
 	for a,b in pairs(game:GetService("CoreGui").ScreenGui:GetDescendants()) do
 	
 		if settingtype == "Checkmark" and b.Name == "Checkmark" and b.Parent.name == settingname and ((value and b.Text ~= utf8.char(10003)) or (not value and b.Text == utf8.char(10003))) then
@@ -409,6 +416,8 @@ local changeSetting = function(settingtype, settingname, value, fire)
 			end	
 		end
 	end
+	
+	_G.settingsloaded = true
 end
 
 
@@ -1604,9 +1613,15 @@ library.Signal.Fired("Merchant Active"):Connect(function()
 		
 
 function switchEggs(args, old, switch)
-	if _G.settingsloaded then
+	--if _G.settingsloaded then
 		--LogMe("Switching Eggs")
 		--print(args[2])
+		
+		while not _G.settingsloaded do
+			LogMe("Settings not loaded")
+			wait(1)
+		end
+		
 		if old["Buy Mode"] == nil then
 			--LogMe("New Settings")
 			old = {["Buy Mode"] = _G.BuyEggMode}
@@ -1676,9 +1691,9 @@ function switchEggs(args, old, switch)
 		
 		return old
 		
-	else
-		LogMe("Settings not loaded")
-	end
+	--else
+		
+	--end
 end
 
 local EquipTeam = function(team)
@@ -2014,6 +2029,11 @@ local doEggQuests = function()
 									wait(.25)
 								end
 								_G.changeAutoDelete = false
+							end
+						
+							while not _G.settingsloaded do
+								LogMe("Waiting for settings to load")
+								wait(1)
 							end
 						
 							changeSetting("Box", "Auto Shiny Amount", 0, true)
@@ -2913,7 +2933,7 @@ local loadSettings = function(preset)
 end
 
 local syncuser = function()
-	if _G["Server Sync"] then
+	if _G["Server Sync"] and _G.settingsloaded then
 		_G.settingsloaded = false
 		loadSettings("sync")
 		while not _G.settingsloaded do
