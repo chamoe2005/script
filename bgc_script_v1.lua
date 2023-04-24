@@ -1,4 +1,4 @@
-print("Version 6.6.6")
+print("Version 666")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -950,6 +950,9 @@ local SendMail = 	function()
 	for a,b in pairs(library.Directory.Brewing) do
 		pet:Toggle(b.potion .. " Brew", {flag = b.potion .. " Brew"})
 	end
+	for a,b in orderedPairs(library.Directory.Potions) do
+		pet:Box(a, {flag = a})
+	end
 	
 local brewPotions = function()
 
@@ -1465,6 +1468,19 @@ local function updateBoosts()
 		if value and tonumber(value) > 0 then
 			changeSetting("Box", a, tonumber(value), false)
 		else
+			changeSetting("Box", a, 0, false)
+		end
+	end
+	for a,b in pairs(library.Directory.Potions) do
+		--print(library.Save.Get().BoostsInventory[a])
+		local potionfound = false
+		for c,d in pairs(library.Save.Get().Potions) do
+			if a == d.name then
+				changeSetting("Box", d.name, tonumber(d.amount), false)
+				potionfound = true
+			end
+		end
+		if not potionfound then
 			changeSetting("Box", a, 0, false)
 		end
 	end
@@ -2870,11 +2886,11 @@ local saveSettings = function(preset)
 				
 					update[playername][b.Parent.name] = false
 
-				elseif b.Name == "Box" and b.Text ~= nil and b.Text ~= "" and b.Text ~= 0 and not library.Directory.Boosts[b.Parent.Name] then
+				elseif b.Name == "Box" and b.Text ~= nil and b.Text ~= "" and b.Text ~= 0 and not library.Directory.Boosts[b.Parent.Name] and not library.Directory.Potions[b.Parent.Name] then
 				
 					update[playername][b.Parent.name] = b.Text
 					
-				elseif b.Name == "Box" and (b.Text == nil or b.Text == "" or b.Text == 0) and not library.Directory.Boosts[b.Parent.Name] then
+				elseif b.Name == "Box" and (b.Text == nil or b.Text == "" or b.Text == 0) and not library.Directory.Boosts[b.Parent.Name] and not library.Directory.Potions[b.Parent.Name] then
 					
 					update[playername][b.Parent.name] = 0
 					--print(b.Parent.Name)
