@@ -1,4 +1,4 @@
-print("Version 666")
+print("Version 6.6.7")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1457,10 +1457,48 @@ local brewPotions = function()
 								brewslots = brewslots - 1
 							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and b.potionRequired ~= nil and playerPotions[b.potionRequired] == nil then
 								LogMe("No " .. b.potionRequired .. " to brew " .. b.potion)
-								changeSetting("Checkmark", b.potionRequired .. " Brew", true, true)
+								local purchasepotion = false
+								for c,d in pairs(playerLibrary.DarkShop.Items) do
+									if d.name == b.potionRequired and d.amount > 0 and playerLibrary.DarkCoins >= d.cost then
+										local ohTable1 = {
+											[1] = {
+												[1] = c
+											},
+											[2] = {
+												[1] = false
+											}
+										}
+
+										game:GetService("ReplicatedStorage").Remotes["buy dark shop item"]:InvokeServer(ohTable1)
+										purchasepotion = true
+										LogMe("Purchased " .. b.potionRequired .. " to brew " .. b.potion)
+									end
+								end
+								if not purchasepotion then
+									changeSetting("Checkmark", b.potionRequired .. " Brew", true, true)
+								end
 							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and b.potionRequired ~= nil and playerPotions[b.potionRequired] ~= nil and playerPotions[b.potionRequired] < b.potionAmountRequired then
 								LogMe(b.potionAmountRequired - playerPotions[b.potionRequired] .. " more " .. b.potionRequired .. " needed to brew " .. b.potion)
-								changeSetting("Checkmark", b.potionRequired .. " Brew", true, true)
+								local purchasepotion = false
+								for c,d in pairs(playerLibrary.DarkShop.Items) do
+									if d.name == b.potionRequired and d.amount > 0 and playerLibrary.DarkCoins >= d.cost then
+										local ohTable1 = {
+											[1] = {
+												[1] = c
+											},
+											[2] = {
+												[1] = false
+											}
+										}
+
+										game:GetService("ReplicatedStorage").Remotes["buy dark shop item"]:InvokeServer(ohTable1)
+										purchasepotion = true
+										LogMe("Purchased " .. b.potionRequired .. " to brew " .. b.potion)
+									end
+								end
+								if not purchasepotion then
+									changeSetting("Checkmark", b.potionRequired .. " Brew", true, true)
+								end
 							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and playerLibrary.DarkCoins < b.cost then
 								LogMe(b.cost - playerLibrary.DarkCoins .. " more Dark Coins to brew " .. b.potion)
 							elseif brewslots == 0 then
