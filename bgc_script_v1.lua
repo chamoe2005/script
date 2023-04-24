@@ -1,4 +1,4 @@
-print("Version 6.66")
+print("Version 6.6.6")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -966,7 +966,7 @@ local brewPotions = function()
 
 						for a,b in pairs(playerLibrary.Brewing) do
 							if b.timer <= 0 then
-								LogMe("Claiming " .. b.name)
+								LogMe("Claiming " .. b.name .. " potion brew")
 								local ohTable1 = {
 									[1] = {
 										[1] = b.uid
@@ -978,6 +978,7 @@ local brewPotions = function()
 
 								game:GetService("ReplicatedStorage").Remotes["claim potion brew"]:InvokeServer(ohTable1)
 							elseif b.timer > 0 then
+								LogMe(b.timer .. " left on " .. b.name .. " potion brew")
 								brewslots = brewslots - 1
 							end
 							wait(1)
@@ -1011,7 +1012,7 @@ local brewPotions = function()
 								LogMe(b.potionAmountRequired - playerPotions[b.potionRequired] .. " more " .. b.potionRequired .. " needed to brew " .. b.potion)
 								changeSetting("Checkmark", b.potionRequired .. " Brew", true, true)
 							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and playerLibrary.DarkCoins < b.cost then
-								LogMe(b.cost - playerLibrary.DarkCoins .. " more Dark Coins to start " .. b.potion)
+								LogMe(b.cost - playerLibrary.DarkCoins .. " more Dark Coins to brew " .. b.potion)
 							elseif brewslots == 0 then
 								LogMe("No Brew Slots")
 								break
