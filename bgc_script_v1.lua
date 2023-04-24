@@ -1,4 +1,4 @@
-print("Version 6.2.1")
+print("Version 6.2.2")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3787,11 +3787,40 @@ spawn(function()
 	end
 end)
 
+
+local claimDarkQuests = function()
+
+							for a,b in pairs(playerLibrary.DarkQuests) do
+
+								if b.Progress >= b.Goal then
+									
+									local ohTable1 = {
+										[1] = {
+											[1] = a
+										},
+										[2] = {
+											[1] = false
+										}
+									}
+
+									game:GetService("ReplicatedStorage").Remotes["claim dark quest"]:InvokeServer(ohTable1)
+									
+									LogMe(a .. " Dark Quest Claimed)
+								else
+									--print(b.Goal - b.Progress .. " " .. b.Type .. " left for " .. a .. " Dark Quest")
+								end
+
+							end
+
+						end
+
 spawn(function()
 	while wait(5) do
 		if not library.Variables.LoadingWorld then
 			EquipBestPets()
 		end
+		
+		claimDarkQuests()
 	end
 end)
 
