@@ -1,4 +1,4 @@
-print("Version 6.2.8")
+print("Version 6.2.9")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1001,14 +1001,17 @@ local brewPotions = function()
 								
 								if b.potionRequired ~= nil then
 									playerPotions[b.potionRequired] = playerPotions[b.potionRequired] - b.potionAmountRequired
+									changeSetting("Checkmark", b.potionRequired .. " Brew", disabled, true)
 								end
 								brewslots = brewslots - 1
-							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and playerLibrary.DarkCoins < b.cost then
-								LogMe(b.cost - playerLibrary.DarkCoins .. " more Dark Coins to start " .. b.potion)
 							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and b.potionRequired ~= nil and playerPotions[b.potionRequired] == nil then
 								LogMe("No " .. b.potionRequired .. " to brew " .. b.potion)
+								changeSetting("Checkmark", b.potionRequired .. " Brew", enabled, true)
 							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and b.potionRequired ~= nil and playerPotions[b.potionRequired] ~= nil and playerPotions[b.potionRequired] < b.potionAmountRequired then
 								LogMe(b.potionAmountRequired - playerPotions[b.potionRequired] .. " more " .. b.potionRequired .. " needed to brew " .. b.potion)
+								changeSetting("Checkmark", b.potionRequired .. " Brew", enabled, true)
+							elseif brewslots > 0 and pet.flags[b.potion .. " Brew"] and playerLibrary.DarkCoins < b.cost then
+								LogMe(b.cost - playerLibrary.DarkCoins .. " more Dark Coins to start " .. b.potion)
 							elseif brewslots == 0 then
 								LogMe("No Brew Slots")
 								break
