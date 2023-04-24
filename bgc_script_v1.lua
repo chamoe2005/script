@@ -980,11 +980,12 @@ local brewPotions = function()
 								}
 
 								game:GetService("ReplicatedStorage").Remotes["claim potion brew"]:InvokeServer(ohTable1)
+								wait(5)
+								updateBoosts()
 							elseif b.timer > 0 then
-								LogMe(b.timer .. " left on " .. b.name .. " potion brew")
+								LogMe(b.timer / 60 .. " minutes left on " .. b.name .. " potion brew")
 								brewslots = brewslots - 1
 							end
-							wait(1)
 						end
 						
 						LogMe("Brew Slots: " .. brewslots)
