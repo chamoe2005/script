@@ -1,4 +1,4 @@
-print("Version 6.2.3")
+print("Version 6.2.4")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3789,6 +3789,9 @@ end)
 
 
 local claimDarkQuests = function()
+
+							local playerLibrary = library.Save.Get()
+
 
 							for a,b in pairs(playerLibrary.DarkQuests) do
 
