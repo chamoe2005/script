@@ -1,4 +1,4 @@
-print("Version 6.2.2")
+print("Version 6.2.3")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -3805,7 +3805,7 @@ local claimDarkQuests = function()
 
 									game:GetService("ReplicatedStorage").Remotes["claim dark quest"]:InvokeServer(ohTable1)
 									
-									LogMe(a .. " Dark Quest Claimed)
+									LogMe(a .. " Dark Quest Claimed")
 								else
 									--print(b.Goal - b.Progress .. " " .. b.Type .. " left for " .. a .. " Dark Quest")
 								end
