@@ -1,6 +1,6 @@
 
 --function()
-	local version = 10
+	local version = 11
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -21,7 +21,13 @@
 					 ["Gift Pet"] = "Huge Mushroom,Void Shard,Galacticorn,Huge Lucky Cat,King Doggy,S3 Shard Spirit,Midas",
 					 ["Pet Type"] = "Normal",
 					 ["Num To Send"] = "1",
-					 ["Shadow Brew"] = true,
+					 ["1 Pet Level Brew"] = false,
+					 ["Max Pet Level Brew"] = false,
+					 ["Power 1 Brew"] = false,
+					 ["Power 2 Brew"] = false,
+					 ["Power 3 Brew"] = false,
+					 ["Bubbles Brew"] = false,
+					 ["Shadow Brew"] = false,
 					 ["2x Coins "] = true,
 					 ["2x Diamonds "] = true,
 					 ["3x Shiny Luck "] = true,
