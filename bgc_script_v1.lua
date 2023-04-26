@@ -1,4 +1,4 @@
-print("Version 6.6.7")
+print("Version 6.68")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -1397,7 +1397,36 @@ local function updateBoosts()
 	end
 end
 
+_G.BuyDarkShop = {"Pet"}
 	--boosts:Section("Boosts")
+spawn(function()
+		while wait(300) do
+			local playerLibrary = library.Save.Get()
+
+		  for c,d in pairs(playerLibrary.DarkShop.Items) do
+			if d.amount > 0 then
+				LogMe(d.amount .. " - " .. d.name .. " - Cost: " .. d.cost .. " Dark Coins")
+			end
+			for e,f in pairs(_G.BuyDarkShop) do
+				if (d.name == f or d.reward == f) and d.amount > 0 and playerLibrary[d.currency] >= d.cost then
+					local ohTable1 = {
+						[1] = {
+							[1] = c
+						},
+						[2] = {
+							[1] = false
+						}
+					}
+
+					game:GetService("ReplicatedStorage").Remotes["buy dark shop item"]:InvokeServer(ohTable1)
+					--purchasepotion = true
+				elseif d.reward == f and d.reward == "Pet" and d.amount > 0 and playerLibrary[d.currency] < d.cost then
+					LogMe(d.cost - playerLibrary[d.currency] .. " " .. d.currency .. " needed to purchase Dark Pet")
+				end
+			end
+		  end
+		end
+	  end)
 
 	
 local brewPotions = function()
