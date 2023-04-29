@@ -1,4 +1,4 @@
-print("Version 6.68")
+print("Version 6.69")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -534,10 +534,17 @@ local doGroupRewards = function()
 		while library.Variables.LoadingWorld and wait(1) do
 			LogMe("Waiting on world to load")
 		end
+		
+		local inGroup = false
+		
+		local success, reponse = pcall(function() inGroup = GetLocalPlayer():IsInGroup(13004189) end)
+		if not success then
+			LogMe("Could not get Group info for player")
+		end
 
-		if _G["Group Rewards"] and GetMap().Activations:FindFirstChild("Group Rewards") ~= nil then
+		if inGroup and _G["Group Rewards"] and GetMap().Activations:FindFirstChild("Group Rewards") ~= nil then
 			local playerLibrary = library.Save.Get()
-			if GetPlayerRoot() ~= nil and GetLocalPlayer():IsInGroup(13004189) and (not playerLibrary.GroupReward or (os.time() - (playerLibrary.GroupReward + (6 * 60 * 60)) > 0)) then
+			if GetPlayerRoot() ~= nil and inGroup and (not playerLibrary.GroupReward or (os.time() - (playerLibrary.GroupReward + (6 * 60 * 60)) > 0)) then
 				local grouprewards = game:GetService("Workspace").MAP.Activations["Group Rewards"]
 				local startTime = os.time()
 				repeat
@@ -549,7 +556,7 @@ local doGroupRewards = function()
 					playerLibrary = library.Save.Get()
 				until (os.time() - (playerLibrary.GroupReward + (6 * 60 * 60)) < 0) or (os.time() > startTime + 10)
 				LogMe("Grabbed Group Rewards!!!")
-			elseif not GetLocalPlayer():IsInGroup(13004189) then
+			elseif not inGroup then
 				LogMe("Cannot Collect Group Rewards if Player is not in Group")
 			elseif os.time() - (playerLibrary.GroupReward + (6 * 60 * 60)) < 0 then
 				--LogMe(((6 * 60 * 60) - (os.time() - playerLibrary.GroupReward)) / 60 / 60 .. " hours until Group Rewards")
