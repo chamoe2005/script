@@ -1,4 +1,4 @@
-print("Version 6.69")
+print("Version 6.71")
 _G.DoChall = true
 				
 _G.TwitterCodes = {"happyeaster", "spongebob", "underthesea", "gofast", "secrets", "season1", "bubblegum", "banana", "bandana", "nana", "scramble", "OPE", "stayfrosty", "lucky", "happynewyear", "2022", "OmgSanta", "Rudolph", "Release"}
@@ -876,14 +876,22 @@ _G.ClaimingMail = false
 local ClaimMail = 	function()
 						_G.ClaimingMail = true
 						repeat
-							local mail = library.Network.Invoke("Get Incoming Mail")
-							if mail ~= nil then
+							local mail
+							local success, reponse = pcall(function() mail = library.Network.Invoke("Get Incoming Mail") end)
+							if not success then
+								LogMe("Could not get mail for player")
+							end
+							if success and mail ~= nil then
 								for a,b in pairs(mail) do
 									--if library.Directory.Pets[b.id].name == "Sea Horse" then
-										local pass, fail = library.Network.Invoke("Claim Mail", tostring(b.uid))
-										if pass then
+										local pass, fail
+										local success, reponse = pcall(function() pass, fail = library.Network.Invoke("Claim Mail", tostring(b.uid)) end)
+										if not success then
+											LogMe("Could not get mail for player")
+										end
+										if success and pass then
 											LogMe((b.s and "Shiny " or "") .. library.Directory.Pets[b.id].name .. " received from " .. b.senderName .. " successfully.  Message: " .. b.message)
-										elseif fail then
+										elseif success and fail then
 											LogMe((b.s and "Shiny " or "") .. library.Directory.Pets[b.id].name .. " receieve failed")
 										end
 										break
@@ -922,11 +930,15 @@ local SendMail = 	function()
 										for i in string.gmatch(pet.flags.MailGiftPet, '([^,]+)') do
 											if (b.nk == i or i == "Any") and (pet.flags.MailPetType == "Both" or (pet.flags.MailPetType == "Shiny" and b.s) or (pet.flags.MailPetType == "Normal" and not b.s)) and not b.lock then
 												petfound = true
-												local pass, fail = library.Network.Invoke("Send Mail Gift", pet.flags.MailRecipient, "Message", b.uid)
-												if pass then
+												local pass, fail
+												local success, reponse = pcall(function() pass, fail = library.Network.Invoke("Send Mail Gift", pet.flags.MailRecipient, "Message", b.uid) end)
+												if not success then
+													LogMe("Could not send mail for player")
+												end
+												if success and pass then
 													LogMe((b.s and "Shiny " or "") .. b.nk .. " sent sucessfully sent to " .. pet.flags.MailRecipient)
 													sendbreak = true
-												elseif fail then
+												elseif success and fail then
 													LogMe((b.s and "Shiny " or "") .. b.nk .. " failed")
 												end
 												wait(10)
