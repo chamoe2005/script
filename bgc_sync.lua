@@ -1,6 +1,6 @@
 
 --function()
-	local version = 26
+	local version = 27
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -8,7 +8,7 @@
 					 ["Sell Bubble Area"] = "No Sell",
 					 ["Free Prize Wheel"] = true,
 					 ["Free Loot"] = true,
-					 ["Claim Bubble Pass"] = true,
+					 ["Claim Bubble Pass"] = false,
 					 ["Fairy Exchange"] = true,
 					 ["Spawn World Egg Quests"] = true,
 					 ["Equip Best"] = true,
