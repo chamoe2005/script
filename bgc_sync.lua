@@ -1,6 +1,6 @@
 
 --function()
-	local version = 25
+	local version = 26
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -26,7 +26,7 @@
 					 ["Power 1 Brew"] = false,
 					 ["Power 2 Brew"] = false,
 					 ["Power 3 Brew"] = false,
-					 ["Bubbles Brew"] = true,
+					 ["Bubbles Brew"] = false,
 					 ["Shadow Brew"] = false,
 					 ["2x Coins "] = true,
 					 ["2x Diamonds "] = true,
