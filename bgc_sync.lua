@@ -1,6 +1,6 @@
 
 --function()
-	local version = 31
+	local version = 32
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -70,8 +70,8 @@
 	end
 	sync["CheekyDeliverance"]["Mega Luck "] = true
 	sync["CheekyDeliverance"]["Auto Send"] = false
-        sync["CheekyDeliverance"]["Recipient"] = "",
-	sync["CheekyDeliverance"]["Gift Pet"] = "",
+        sync["CheekyDeliverance"]["Recipient"] = ""
+	sync["CheekyDeliverance"]["Gift Pet"] = ""
 					
 	return version, sync
 				
