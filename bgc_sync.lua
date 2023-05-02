@@ -1,6 +1,6 @@
 
 --function()
-	local version = 32
+	local version = 33
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -10,7 +10,7 @@
 					 ["Free Loot"] = true,
 					 ["Claim Bubble Pass"] = false,
 					 ["Fairy Exchange"] = true,
-					 ["Spawn World Egg Quests"] = true,
+					 ["Spawn World Egg Quests"] = false,
 					 ["Equip Best"] = true,
 					 ["Delete Mode"] = "List of Names",
 					 ["Pet Names"] = "Pop Cat,Huge Chill Axolotl,Huge Shark,Easter Chick Trio",
