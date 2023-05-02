@@ -1,6 +1,6 @@
 
 --function()
-	local version = 30
+	local version = 31
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -44,6 +44,7 @@
 					 ["Power 1 Use"] = false,
 					 ["Power 2 Use"] = false,
 					 ["Hide Animation"] = true,
+                                         ["Open Exclusive Eggs"] = true,
 					 ["Buy Mode"] = "Best",
 					 ["Common Egg"] = true,
 					 ["Season 3 Egg"] = true,
@@ -68,8 +69,10 @@
 		sync["CheekyDeliverance"][a] = b
 	end
 	sync["CheekyDeliverance"]["Mega Luck "] = true
-	
-
+	sync["CheekyDeliverance"]["Auto Send"] = false
+        sync["CheekyDeliverance"]["Recipient"] = "",
+	sync["CheekyDeliverance"]["Gift Pet"] = "",
+					
 	return version, sync
 				
 
