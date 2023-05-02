@@ -1,6 +1,6 @@
 
 --function()
-	local version = 33
+	local version = 34
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -10,16 +10,16 @@
 					 ["Free Loot"] = true,
 					 ["Claim Bubble Pass"] = false,
 					 ["Fairy Exchange"] = true,
-					 ["Spawn World Egg Quests"] = false,
+					 ["Spawn World Egg Quests"] = true,
 					 ["Equip Best"] = true,
 					 ["Delete Mode"] = "List of Names",
 					 ["Pet Names"] = "Pop Cat,Huge Chill Axolotl,Huge Shark,Easter Chick Trio",
 					 ["Delete Pet Type"] = "Both",
 					 ["Auto Claim"] = true,
 					 ["Auto Send"] = true,
-					 ["Recipient"] = "CheekyDeliverance",
-					 ["Gift Pet"] = "Gigantic Pop Cat,Huge Pop Cat",
-					 ["Pet Type"] = "Both",
+					 ["Recipient"] = "xyzzy1111111122",
+					 ["Gift Pet"] = "Gigantic Pop Cat,Huge Pop Cat,Huge Hell Axolotl,Pog Cat,Huge Mushroom,Void Shard,Galacticorn,Huge Lucky Cat,King Doggy,S3 Shard Spirit,Midas",
+					 ["Pet Type"] = "Normal",
 					 ["Num To Send"] = "1",
 					 ["1 Pet Level Brew"] = false,
 					 ["Max Pet Level Brew"] = false,
