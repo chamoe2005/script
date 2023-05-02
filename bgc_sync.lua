@@ -1,6 +1,6 @@
 
 --function()
-	local version = 29
+	local version = 30
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
@@ -18,7 +18,7 @@
 					 ["Auto Claim"] = true,
 					 ["Auto Send"] = true,
 					 ["Recipient"] = "CheekyDeliverance",
-					 ["Gift Pet"] = "Gigantic Pop Cat, Huge Pop Cat",
+					 ["Gift Pet"] = "Gigantic Pop Cat,Huge Pop Cat",
 					 ["Pet Type"] = "Both",
 					 ["Num To Send"] = "1",
 					 ["1 Pet Level Brew"] = false,
