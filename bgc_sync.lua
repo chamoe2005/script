@@ -1,6 +1,6 @@
 
 --function()
-	local version = 37
+	local version = 38
 
 	local sync = {["sync"] = 
 					{["Auto-Bubble Blow V2"] = true,
